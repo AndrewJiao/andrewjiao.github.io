@@ -35,7 +35,7 @@
       if (document.images) {
         var avatar = new Image();
         avatar.src = '/imgs/avatar.jpg'
-        var previews = 'preview1.jpg,preview2.jpg,preview3.jpg,preview4.jpg,preview5.jpg,preview6.jpg,preview7.jpg,preview8.jpg'.split(',')
+        var previews = 'http://ypimage.oss-cn-shenzhen.aliyuncs.com/theme/preview/preview1.jpg,http://ypimage.oss-cn-shenzhen.aliyuncs.com/theme/preview/preview2.jpg,http://ypimage.oss-cn-shenzhen.aliyuncs.com/theme/preview/preview3.jpg,http://ypimage.oss-cn-shenzhen.aliyuncs.com/theme/preview/preview4.jpg,http://ypimage.oss-cn-shenzhen.aliyuncs.com/theme/preview/preview5.jpg,http://ypimage.oss-cn-shenzhen.aliyuncs.com/theme/preview/preview6.jpg,http://ypimage.oss-cn-shenzhen.aliyuncs.com/theme/preview/preview7.jpg,http://ypimage.oss-cn-shenzhen.aliyuncs.com/theme/preview/preview8.jpg,http://ypimage.oss-cn-shenzhen.aliyuncs.com/theme/preview/preview9.jpg'.split(',')
         var previewsPreLoad = []
         for(var i = 0; i < length; i++) {
           previewsPreLoad.push(new Image())
@@ -255,9 +255,9 @@
 <h2 id="获取Redis镜像"><a href="#获取Redis镜像" class="headerlink" title="获取Redis镜像"></a>获取Redis镜像</h2><p>关于镜像的获取建议使用代理，因为有些镜像在国内仓库中没有回到外网节点中获取</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker search redis			<span class="comment">#镜像库提供的多个镜像</span></span><br><span class="line">docker pull redis			<span class="comment">#拉取最新版本的docker-redis镜像</span></span><br><span class="line">docker pull redis:3.2.8		<span class="comment">#拉取指定版本的redis镜像</span></span><br></pre></td></tr></table></figure>
 
-<p><img src="https://andrewjiao.github.io/upload_image%5CDocker%5CdockerPull.png" alt="s"></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5CDocker%5CdockerPull.png" alt="s"></p>
 <p>上图表示拉取成功并完成，可用<code>docker images</code>查看本地是否有镜像</p>
-<p><img src="https://andrewjiao.github.io/upload_image%5CDocker%5CdockerImages.png" alt></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5CDocker%5CdockerImages.png" alt></p>
 <p>注意：拉取速度会很慢，因为docker中央仓库在国外，中国虽然有镜像仓库，如阿里、网易蜂巢等，但速度也不理想。好在，docker文件可以反复拉取，拉取失败，重新拉取即可。</p>
 <h2 id="使用Redis镜像启动实例"><a href="#使用Redis镜像启动实例" class="headerlink" title="使用Redis镜像启动实例"></a>使用Redis镜像启动实例</h2><p>启动docker容器以及内部的redis服务</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --name redis7000 -p 7000:6379 redis			<span class="comment">#最高版本</span></span><br><span class="line">docker run -d --name redis7000 -p 7000:6379 redis:3.2.8		<span class="comment">#执行版本</span></span><br></pre></td></tr></table></figure>
@@ -276,7 +276,7 @@
 
 <p>进入redis客户端<code>redis-cli</code></p>
 <p>退出docker中的redis环境<code>exit</code></p>
-<h2 id="端口映射关系"><a href="#端口映射关系" class="headerlink" title="端口映射关系"></a>端口映射关系</h2><p><img src="https://andrewjiao.github.io/upload_image%5CDocker%5CportMapping.png" alt></p>
+<h2 id="端口映射关系"><a href="#端口映射关系" class="headerlink" title="端口映射关系"></a>端口映射关系</h2><p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5CDocker%5CportMapping.png" alt></p>
 <h2 id="防火墙设置"><a href="#防火墙设置" class="headerlink" title="防火墙设置"></a>防火墙设置</h2><p><code>systemctlstop firewalld.service</code>    关闭防火墙服务</p>
 <p><code>systemctldisable firewalld.service</code>  禁止防火墙开启启动</p>
 <p><code>systemctlrestart iptables.service</code>  重启防火墙使配置生效</p>
@@ -286,14 +286,14 @@
 <p>以上案例中我们先获取了redis中的那么键值并打印，随后又为这个name设新的值，进入容器中的redis客户端查看这个值是否有变动</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看容器id</span></span><br><span class="line">docker ps</span><br><span class="line"><span class="comment"># 进入容器</span></span><br><span class="line">docker exet -it 容器ID bash</span><br><span class="line"><span class="comment"># 进入redis</span></span><br><span class="line">redis-cli</span><br><span class="line"><span class="comment"># 查看值</span></span><br><span class="line">get name</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://andrewjiao.github.io/upload_image%5CDocker%5CdockerSingleTest.png" alt="s"></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5CDocker%5CdockerSingleTest.png" alt="s"></p>
 <h2 id="测试分片的Redis"><a href="#测试分片的Redis" class="headerlink" title="测试分片的Redis"></a>测试分片的Redis</h2><p>启动多个redis，这里基于上一步的单个redis继续启动两个容器</p>
 <p>以类似的方式启动，注意修改暴露的端口</p>
-<p><img src="https://andrewjiao.github.io/upload_image%5CDocker%5CdockerShardTest.png" alt="s"></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5CDocker%5CdockerShardTest.png" alt="s"></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testShard</span><span class="params">()</span></span>&#123;</span><br><span class="line">		JedisPoolConfig config = <span class="keyword">new</span> JedisPoolConfig();</span><br><span class="line">		<span class="comment">//设置连接池数量</span></span><br><span class="line">		config.setMaxTotal(<span class="number">200</span>);</span><br><span class="line">		List&lt;JedisShardInfo&gt; list = <span class="keyword">new</span> ArrayList&lt;JedisShardInfo&gt;();</span><br><span class="line">		<span class="comment">//构造各个分片</span></span><br><span class="line">		list.add(<span class="keyword">new</span> JedisShardInfo(<span class="string">"192.168.163.101"</span>, <span class="number">7000</span>));</span><br><span class="line">		list.add(<span class="keyword">new</span> JedisShardInfo(<span class="string">"192.168.163.101"</span>, <span class="number">7001</span>));</span><br><span class="line">		list.add(<span class="keyword">new</span> JedisShardInfo(<span class="string">"192.168.163.101"</span>, <span class="number">7002</span>));</span><br><span class="line">		<span class="comment">//jedis分片</span></span><br><span class="line">		ShardedJedisPool pool = <span class="keyword">new</span> ShardedJedisPool(config, list);</span><br><span class="line">		ShardedJedis shardJedis = pool.getResource();</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">20</span>;i++)&#123;</span><br><span class="line">			shardJedis.set(<span class="string">"n"</span>+i, Integer.toString(i));</span><br><span class="line">		&#125;</span><br><span class="line">		shardJedis.close();</span><br><span class="line">		pool.close();</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
 
 <p>上述java类是一个循环20次写值的过程，理论上分片后所有容器均会分担存储部分键值，查看结果如下</p>
-<p><img src="https://andrewjiao.github.io/upload_image%5CDocker%5CshardRedisCheck.png" alt></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5CDocker%5CshardRedisCheck.png" alt></p>
 <h1 id="创建自定义镜像"><a href="#创建自定义镜像" class="headerlink" title="创建自定义镜像"></a>创建自定义镜像</h1><h2 id="Dockerfile"><a href="#Dockerfile" class="headerlink" title="Dockerfile"></a>Dockerfile</h2><ul>
 <li><p>Dockerfile通过逐层layer叠加，使资源得到重复利用，同时变化无穷。</p>
 <p>注意：FROM指定的镜像，本地如果有直接使用，无需网上下载。</p>
@@ -407,7 +407,7 @@
 <ul>
 <li><code>docker build --no-cache -t 镜像名称 Dockerfile目录</code></li>
 </ul>
-<p><img src="https://andrewjiao.github.io/upload_image%5CDocker%5CbuildImageJDK.png" alt></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5CDocker%5CbuildImageJDK.png" alt></p>
 </li>
 <li><p>运行镜像</p>
 <ul>
@@ -444,7 +444,7 @@
 </ul>
 </li>
 <li><p>访问tomcat</p>
-<p><img src="https://andrewjiao.github.io/upload_image%5CDocker%5CbuildSuccessTomcat.png" alt></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5CDocker%5CbuildSuccessTomcat.png" alt></p>
 </li>
 </ol>
 <h2 id="部署war包"><a href="#部署war包" class="headerlink" title="部署war包"></a>部署war包</h2><ol>
@@ -467,7 +467,7 @@
 <li><p>访问这个项目</p>
 </li>
 </ol>
-<p><img src="https://andrewjiao.github.io/upload_image%5CDocker%5CdockerWebSuccess.png" alt></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5CDocker%5CdockerWebSuccess.png" alt></p>
 <h1 id="Docker数据卷"><a href="#Docker数据卷" class="headerlink" title="Docker数据卷"></a>Docker数据卷</h1><p>有状态容器都有数据持久化需求。Docker 采用 AFUS 分层文件系统时，文件系统的改动都是发生在最上面的容器层。在容器的生命周期内，它是持续的，包括容器在被停止后。但是，当容器被删除后，该数据层也随之被删除了。因此，Docker 采用 volume （卷）的形式来向容器提供持久化存储。</p>
 <p><code>docker run -p 53306:3306 -v $PWD/msyql:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=root --name mysql5719 -d bf1219a0a00d</code></p>
 <p>一个 data volume是容器中绕过文件系统的一个特定的目录。它被设计用来保存数据，而不管容器的生命周期。因此，当你删除一个容器时，Docker 肯定不会自动地删除一个volume。</p>
@@ -712,17 +712,17 @@
                 
                 <div class="cloud-tags tab-pane nav bs-sidenav fade" id="sidebar-tags">
     
-    <a href="/tags/Docker/" style="font-size: 15.09049168354777px;" class="tag-cloud-link">Docker</a>
+    <a href="/tags/Docker/" style="font-size: 12.6122464993103px;" class="tag-cloud-link">Docker</a>
     
-    <a href="/tags/just-Test/" style="font-size: 18.207236278020723px;" class="tag-cloud-link">just Test</a>
+    <a href="/tags/just-Test/" style="font-size: 13.605758880050082px;" class="tag-cloud-link">just Test</a>
     
-    <a href="/tags/git/" style="font-size: 18.27232065459266px;" class="tag-cloud-link">git</a>
+    <a href="/tags/git/" style="font-size: 11.959809171090797px;" class="tag-cloud-link">git</a>
     
-    <a href="/tags/repository/" style="font-size: 15.310423205152514px;" class="tag-cloud-link">repository</a>
+    <a href="/tags/repository/" style="font-size: 15.982270922740732px;" class="tag-cloud-link">repository</a>
     
-    <a href="/tags/Redis/" style="font-size: 8.369582006181956px;" class="tag-cloud-link">Redis</a>
+    <a href="/tags/Redis/" style="font-size: 13.274357477659013px;" class="tag-cloud-link">Redis</a>
     
-    <a href="/tags/Maven/" style="font-size: 9.27964356809794px;" class="tag-cloud-link">Maven</a>
+    <a href="/tags/Maven/" style="font-size: 8.911883609892598px;" class="tag-cloud-link">Maven</a>
     
 </div>
                 
@@ -821,9 +821,9 @@
 </script>
 <script>
     window.slideConfig = {
-      prefix: '/imgs/slide/background',
+      prefix: 'http://ypimage.oss-cn-shenzhen.aliyuncs.com/theme/slide/background',
       ext: 'jpg',
-      maxCount: '7'
+      maxCount: '6'
     }
 </script>
 <script src="/js/hs.js"></script>

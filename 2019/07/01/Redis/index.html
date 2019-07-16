@@ -35,7 +35,7 @@
       if (document.images) {
         var avatar = new Image();
         avatar.src = '/imgs/avatar.jpg'
-        var previews = 'preview1.jpg,preview2.jpg,preview3.jpg,preview4.jpg,preview5.jpg,preview6.jpg,preview7.jpg,preview8.jpg'.split(',')
+        var previews = 'http://ypimage.oss-cn-shenzhen.aliyuncs.com/theme/preview/preview1.jpg,http://ypimage.oss-cn-shenzhen.aliyuncs.com/theme/preview/preview2.jpg,http://ypimage.oss-cn-shenzhen.aliyuncs.com/theme/preview/preview3.jpg,http://ypimage.oss-cn-shenzhen.aliyuncs.com/theme/preview/preview4.jpg,http://ypimage.oss-cn-shenzhen.aliyuncs.com/theme/preview/preview5.jpg,http://ypimage.oss-cn-shenzhen.aliyuncs.com/theme/preview/preview6.jpg,http://ypimage.oss-cn-shenzhen.aliyuncs.com/theme/preview/preview7.jpg,http://ypimage.oss-cn-shenzhen.aliyuncs.com/theme/preview/preview8.jpg,http://ypimage.oss-cn-shenzhen.aliyuncs.com/theme/preview/preview9.jpg'.split(',')
         var previewsPreLoad = []
         for(var i = 0; i < length; i++) {
           previewsPreLoad.push(new Image())
@@ -278,7 +278,7 @@
 <h2 id="linux安装Redis"><a href="#linux安装Redis" class="headerlink" title="linux安装Redis"></a>linux安装Redis</h2><ul>
 <li><a href="https://redis.io" target="_blank" rel="noopener">获取Redis安装包</a></li>
 </ul>
-<p><img src="https://andrewjiao.github.io/upload_image%5Credis%5Credis_loading.png" alt></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5Credis%5Credis_loading.png" alt></p>
 <ul>
 <li>执行linux命令下载并安装Redis</li>
 </ul>
@@ -366,7 +366,7 @@
 <ul>
 <li>也可在<a href="http://www.redis.io" target="_blank" rel="noopener">Redis官网</a>直接获取帮助</li>
 </ul>
-<p><img src="https://andrewjiao.github.io/upload_image%5Credis%5Credis_help.png" alt="redis_help"></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5Credis%5Credis_help.png" alt="redis_help"></p>
 <h3 id="flushall-flushdb"><a href="#flushall-flushdb" class="headerlink" title="flushall/flushdb"></a>flushall/flushdb</h3><ul>
 <li>清除数据库<ol>
 <li>flushall清除所有数据库</li>
@@ -457,7 +457,7 @@
 <li>如果在业务上只是更新age属性，则需要Redis数据类型的散列类型hash</li>
 <li>散列类型存储了字段（field）和字段值的映射，<strong>但字段值只能是字符串</strong>，不支持其他类型，也就是说，散列类型不能嵌套其他的数据类型。一个散列类型可以包含最多232-1个字段。</li>
 </ul>
-<p><img src="https://andrewjiao.github.io/upload_image%5Credis%5Cperson_value.png" alt></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5Credis%5Cperson_value.png" alt></p>
 <h2 id="hash基础命令"><a href="#hash基础命令" class="headerlink" title="hash基础命令"></a>hash基础命令</h2><ul>
 <li>hget、hset、hincrby、hmset、hmget、hexists、hdel增删改查字符串操作等与普通字符串类型一致，但取值或操作时需考虑字段值的添加<ul>
 <li>语法：基础命令 键 字段 （值）</li>
@@ -804,7 +804,7 @@
 </ul>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">set name tony 表达为：</span><br><span class="line">*<span class="number">3</span>\r\n</span><br><span class="line">$<span class="number">3</span>\r\n</span><br><span class="line">set\r\n</span><br><span class="line">$<span class="number">4</span>\r\n</span><br><span class="line">name\r\n</span><br><span class="line">$<span class="number">4</span>\r\n</span><br><span class="line">tony\r\n</span><br><span class="line"><span class="comment">//注意：此处的\r\n为换行符，不是输入的字符。</span></span><br></pre></td></tr></table></figure>
 
-<p><img src="https://andrewjiao.github.io/upload_image%5Credis%5Cpipe_input.png" alt="pipe"></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5Credis%5Cpipe_input.png" alt="pipe"></p>
 <h2 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> redis;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.BufferedWriter;</span><br><span class="line"><span class="keyword">import</span> java.io.FileOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.OutputStreamWriter;</span><br><span class="line"><span class="keyword">import</span> java.io.UnsupportedEncodingException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.junit.Test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestRedisPipe</span> </span>&#123;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 格式化成输入字符串</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="function"><span class="keyword">private</span> String <span class="title">getString</span><span class="params">(String... args)</span> </span>&#123;</span><br><span class="line">		StringBuilder sb = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">		sb.append(<span class="string">"*"</span>).append(args.length).append(<span class="string">"\r\n"</span>);</span><br><span class="line">		<span class="keyword">for</span> (String arg : args) &#123;</span><br><span class="line">			sb.append(<span class="string">"$"</span>).append(arg.length()).append(<span class="string">"\r\n"</span>);</span><br><span class="line">			sb.append(arg).append(<span class="string">"\r\n"</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> sb.toString();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Test</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">initFile2</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		Long startTime = System.currentTimeMillis();</span><br><span class="line">		String file = <span class="string">"d:\\d.txt"</span>;</span><br><span class="line">		BufferedWriter w = <span class="keyword">null</span>;</span><br><span class="line">		StringBuilder sb = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			w = <span class="keyword">new</span> BufferedWriter(<span class="keyword">new</span> OutputStreamWriter(<span class="keyword">new</span> FileOutputStream(file), <span class="string">"utf-8"</span>));</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">100000000</span> ;i &lt; <span class="number">100100000</span>;i++)&#123;</span><br><span class="line">			<span class="comment">//for (int i = 1; i &lt;= 100; i++) &#123;</span></span><br><span class="line">	<span class="keyword">if</span> (i / <span class="number">30000</span> == <span class="number">0</span>) &#123;</span><br><span class="line">					w.flush();</span><br><span class="line">				&#125;</span><br><span class="line">				sb.setLength(<span class="number">0</span>);</span><br><span class="line">				sb.append(<span class="keyword">this</span>.getString(<span class="string">"set"</span>, <span class="string">"u"</span> + i, <span class="string">"name"</span> + i));</span><br><span class="line"><span class="comment">//sb.append(this.getString("hmset", "usr" + i, "userid", "usr" + i, "username", "usrname" + i));</span></span><br><span class="line">				w.append(sb.toString());</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; <span class="keyword">catch</span> (UnsupportedEncodingException e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				w.flush();</span><br><span class="line">				w.close();</span><br><span class="line">			&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">				e.printStackTrace();</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">long</span> endTime = System.currentTimeMillis();</span><br><span class="line">		System.out.println(<span class="string">"耗时: "</span>+(endTime - startTime)/<span class="number">1000</span>+<span class="string">" s。"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//查看命令都耗时2.42秒，可以看到管道命令有多快，令人乍舌！</span></span><br></pre></td></tr></table></figure>
 
 <h2 id="缓存预热"><a href="#缓存预热" class="headerlink" title="缓存预热"></a>缓存预热</h2><ul>
@@ -833,15 +833,15 @@
 <ol>
 <li>找到redis的client</li>
 </ol>
-<p><img src="https://andrewjiao.github.io/upload_image%5Credis%5Credis_client1.png" alt></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5Credis%5Credis_client1.png" alt></p>
 <ol start="2">
 <li>找到Java项选择Jedis客户端</li>
 </ol>
-<p><img src="https://andrewjiao.github.io/upload_image%5Credis%5Cjedis_client.png" alt></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5Credis%5Cjedis_client.png" alt></p>
 <ol start="3">
 <li>下载jedis的jar包</li>
 </ol>
-<p><img src="https://andrewjiao.github.io/upload_image%5Credis%5Cjedis_client1.png" alt></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5Credis%5Cjedis_client1.png" alt></p>
 </li>
 <li><p>也可以通过网上找Maven依赖依赖jedis的jar包</p>
 </li>
@@ -860,7 +860,7 @@
 <h2 id="分片原理"><a href="#分片原理" class="headerlink" title="分片原理"></a>分片原理</h2><ul>
 <li>在分布式集群中，对机器的添加删除，或者机器故障后自动脱离集群这些操作是分布式集群管理最基本的功能。如果采用常用的hash(object)%N算法，那么在有机器添加或者删除后，很多原有的数据就无法找到了，这样严重的违反了单调性原则。（hash取余算法一般用在集合中）</li>
 </ul>
-<p><img src="https://andrewjiao.github.io/upload_image%5Credis%5Chash1.png" alt></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5Credis%5Chash1.png" alt></p>
 <h2 id="Hash一致性算法"><a href="#Hash一致性算法" class="headerlink" title="Hash一致性算法"></a>Hash一致性算法</h2><ul>
 <li>一致性哈希算法在1997年由麻省理工学院提出。</li>
 <li>hash取余产生的问题：新增节点、删除节点会让绝大多数的缓存失效，除了导致性能骤降外很有可能会压垮后台服务器。</li>
@@ -875,7 +875,7 @@
 </ul>
 </li>
 </ul>
-<p><img src="https://andrewjiao.github.io/upload_image%5Credis%5Chash2.png" alt></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5Credis%5Chash2.png" alt></p>
 <ul>
 <li>注意：虽然虚拟并不能百分百的解决缓存命中失效的问题，但把问题缩小化，这样影响面小，即使缓存失效，数据库也能承受起用户的负载，从而稳定过渡。</li>
 </ul>
@@ -1083,17 +1083,17 @@
                 
                 <div class="cloud-tags tab-pane nav bs-sidenav fade" id="sidebar-tags">
     
-    <a href="/tags/Docker/" style="font-size: 19.508104726209492px;" class="tag-cloud-link">Docker</a>
+    <a href="/tags/Docker/" style="font-size: 12.616928249966223px;" class="tag-cloud-link">Docker</a>
     
-    <a href="/tags/just-Test/" style="font-size: 14.972571329535437px;" class="tag-cloud-link">just Test</a>
+    <a href="/tags/just-Test/" style="font-size: 17.520392889389043px;" class="tag-cloud-link">just Test</a>
     
-    <a href="/tags/git/" style="font-size: 10.911259265523228px;" class="tag-cloud-link">git</a>
+    <a href="/tags/git/" style="font-size: 13.052696729071542px;" class="tag-cloud-link">git</a>
     
-    <a href="/tags/repository/" style="font-size: 13.329878249351623px;" class="tag-cloud-link">repository</a>
+    <a href="/tags/repository/" style="font-size: 13.049558573214972px;" class="tag-cloud-link">repository</a>
     
-    <a href="/tags/Redis/" style="font-size: 13.303390624997107px;" class="tag-cloud-link">Redis</a>
+    <a href="/tags/Redis/" style="font-size: 19.177005023873264px;" class="tag-cloud-link">Redis</a>
     
-    <a href="/tags/Maven/" style="font-size: 17.70646104065282px;" class="tag-cloud-link">Maven</a>
+    <a href="/tags/Maven/" style="font-size: 15.342811897376171px;" class="tag-cloud-link">Maven</a>
     
 </div>
                 
@@ -1192,9 +1192,9 @@
 </script>
 <script>
     window.slideConfig = {
-      prefix: '/imgs/slide/background',
+      prefix: 'http://ypimage.oss-cn-shenzhen.aliyuncs.com/theme/slide/background',
       ext: 'jpg',
-      maxCount: '7'
+      maxCount: '6'
     }
 </script>
 <script src="/js/hs.js"></script>
