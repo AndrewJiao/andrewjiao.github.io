@@ -902,6 +902,15 @@
 </article>
 
 
+<div id="comments-template"></div>
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script>
+	if(!window.commentConfig) {
+      window.commentConfig = {}
+      window.commentConfig.title = 'Redis'
+    }
+</script>
+
                 </div>
                 <aside class="col-md-4 gal-left" id="sidebar">
     <!-- 此为sidebar的搜索框, 非搜索结果页面 -->
@@ -1109,17 +1118,17 @@
                 
                 <div class="cloud-tags tab-pane nav bs-sidenav fade" id="sidebar-tags">
     
-    <a href="/tags/Docker/" style="font-size: 18.932896697839958px;" class="tag-cloud-link">Docker</a>
+    <a href="/tags/Docker/" style="font-size: 9.849913852758476px;" class="tag-cloud-link">Docker</a>
     
-    <a href="/tags/just-Test/" style="font-size: 14.808612915543122px;" class="tag-cloud-link">just Test</a>
+    <a href="/tags/just-Test/" style="font-size: 17.140563724216573px;" class="tag-cloud-link">just Test</a>
     
-    <a href="/tags/git/" style="font-size: 14.38650147665834px;" class="tag-cloud-link">git</a>
+    <a href="/tags/git/" style="font-size: 9.33399556741788px;" class="tag-cloud-link">git</a>
     
-    <a href="/tags/repository/" style="font-size: 17.20072388659792px;" class="tag-cloud-link">repository</a>
+    <a href="/tags/repository/" style="font-size: 16.01578441464342px;" class="tag-cloud-link">repository</a>
     
-    <a href="/tags/Redis/" style="font-size: 18.788430251620024px;" class="tag-cloud-link">Redis</a>
+    <a href="/tags/Redis/" style="font-size: 14.319878048981545px;" class="tag-cloud-link">Redis</a>
     
-    <a href="/tags/Maven/" style="font-size: 10.63139321294256px;" class="tag-cloud-link">Maven</a>
+    <a href="/tags/Maven/" style="font-size: 19.220221839817356px;" class="tag-cloud-link">Maven</a>
     
 </div>
                 
@@ -1233,5 +1242,27 @@
 </script>
 <script src="/js/comment/leancloud.js"></script>
 
+
+<script src="https://myau.moe/js/comment/gitment.browser.js"></script>
+<script>
+    if(window.commentConfig) {
+      window.commentConfig.id = 'Mon Jul 01 2019 23:31:30 GMT+0800'
+      window.commentConfig.owner = 'AndrewJiao'
+      window.commentConfig.repo = 'gitment'
+      window.commentConfig.client_id = '9c9b8afccbbabb9602e6'
+      window.commentConfig.client_secret = 'ea8f9c439387edcd5c533c58e7999cad7cd3efc0'
+      window.commentConfig.redirect_uri = ''
+    } else {
+      window.commentConfig = {
+      	id: 'Mon Jul 01 2019 23:31:30 GMT+0800',
+        owner: 'AndrewJiao',
+        repo: 'gitment',
+        client_id: '9c9b8afccbbabb9602e6',
+        client_secret: 'ea8f9c439387edcd5c533c58e7999cad7cd3efc0',
+        redirect_uri: ''
+      }
+    }
+</script>
+<script src="/js/comment/gitment.js"></script>
 
 </html>
