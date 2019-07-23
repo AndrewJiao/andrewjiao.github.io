@@ -122,11 +122,15 @@
                         
                         
                         <li>
-                            <a href="/categories/Docker/">Docker</a>
+                            <a href="/categories/poetry/">poetry</a>
                         </li>
                         
                         <li>
                             <a href="/categories/Test/">Test</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/Docker/">Docker</a>
                         </li>
                         
                         <li>
@@ -160,11 +164,15 @@
                         
                         
                         <li>
-                            <a href="/tags/Docker/">Docker</a>
+                            <a href="/tags/warrior/">warrior</a>
                         </li>
                         
                         <li>
                             <a href="/tags/just-Test/">just Test</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/tags/Docker/">Docker</a>
                         </li>
                         
                         <li>
@@ -180,7 +188,7 @@
                         </li>
                         
                         <li>
-                            <a href="/tags/Maven/">Maven</a>
+                            <a href="/tags/project/">project</a>
                         </li>
                         
                         
@@ -226,7 +234,7 @@
             <span class="label label-gal">
                 <i class="fa fa-tags"></i>
                 
-                <a href="/tags/Maven/">Maven</a>
+                <a href="/tags/project/">project</a>
                 
             </span>
             
@@ -255,7 +263,7 @@
                 
                 <i class="fa fa-tags"></i>
                 
-                <a href="/tags/Maven/">Maven</a>
+                <a href="/tags/project/">project</a>
                 
                 
                 
@@ -313,15 +321,29 @@
 <td>下载解压：                                                                                                                                                  <code># wget http://mirrors.hust.edu.cn/apache/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz                                                                                       # tar -xvf  apache-maven-3.3.9-bin.tar.gz                                                        # sudo mv -f apache-maven-3.3.9 /usr/local/</code>                                                                                         编辑 <strong>/etc/profile</strong> 文件 sudo vim /etc/profile，在文件末尾添加如下代码：                                                <code>export MAVEN_HOME=/usr/local/apache-maven-3.3.9export PATH=${PATH}:${MAVEN_HOME}/bin</code>                               保存文件，并运行如下命令使环境变量生效：# source /etc/profile在控制台输入如下命令，如果能看到 Maven 相关版本信息，则说明 Maven 已经安装成功：                                                                                              <code># mvn -v</code></td>
 </tr>
 </tbody></table>
-<h2 id="Maven的配置文件设置"><a href="#Maven的配置文件设置" class="headerlink" title="Maven的配置文件设置"></a>Maven的配置文件设置</h2><p>配置文件路径一般在Maven项目路径的conf目录中</p>
+<h2 id="Maven的配置文件基本设置"><a href="#Maven的配置文件基本设置" class="headerlink" title="Maven的配置文件基本设置"></a>Maven的配置文件基本设置</h2><p>配置文件路径一般在Maven项目路径的conf目录中</p>
 <p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5CMaven%5CMavenPath.png" alt></p>
-<ul>
+<h3 id="本地仓库设置"><a href="#本地仓库设置" class="headerlink" title="本地仓库设置"></a>本地仓库设置</h3><ul>
 <li>maven指定的本地仓库的默认位置是在c盘，默认在：C:\Users{当前用户}.m2\repository,也可通过修改<code>&lt;localRepository/&gt;</code>标签来修改仓库路径</li>
-<li>在settings文件中配置私服服务器为<strong>私服服务器</strong>或者<strong>云服务器</strong>。如果不配置默认连接的是中央仓库，由于中央仓库面对的是全球用户，所以在下载jar包时，效率可能会比较低。,配置方法如下</li>
+</ul>
+<h3 id="远程镜像服务器设置"><a href="#远程镜像服务器设置" class="headerlink" title="远程镜像服务器设置"></a>远程镜像服务器设置</h3><ul>
+<li>在settings文件中配置私服服务器为<strong>私服服务器</strong>或者<strong>云服务器</strong>。如果不配置默认连接的是<strong>中央仓库</strong>，由于中央仓库面对的是全球用户，所以在下载jar包时，效率可能会比较低。,配置方法如下</li>
 </ul>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mirrors</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!--  配置阿里云  --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">mirror</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">id</span>&gt;</span>nexus-aliyun<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span>*<span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">name</span>&gt;</span>Nexus aliyun<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://maven.aliyun.com/nexus/content/groups/public<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">mirror</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">mirrors</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-<h1 id="项目构建"><a href="#项目构建" class="headerlink" title="项目构建"></a>项目构建</h1><p>new一个Maven项目，是否选用骨架均可。</p>
+<h3 id="代理服务器设置"><a href="#代理服务器设置" class="headerlink" title="代理服务器设置"></a>代理服务器设置</h3><p>一些公司和部门有专有的防火墙设置，使用http代理服务器来阻止用户直接访问互联网，因此还需要为maven设置代理才能使maven正常下载依赖包</p>
+<ul>
+<li>取消<code>&lt;proxies&gt;</code>标签内的代理服务器配置注释，并配置正确的代理服务器</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">proxies</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- proxy</span></span><br><span class="line"><span class="comment">     | Specification for one proxy, to be used in connecting to the network.</span></span><br><span class="line"><span class="comment">     |</span></span><br><span class="line"><span class="comment">    --&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">proxies</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">proxy</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">id</span>&gt;</span>optional<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">active</span>&gt;</span>true<span class="tag">&lt;/<span class="name">active</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">protocol</span>&gt;</span>http<span class="tag">&lt;/<span class="name">protocol</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">username</span>&gt;</span>yiibai<span class="tag">&lt;/<span class="name">username</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">password</span>&gt;</span>password<span class="tag">&lt;/<span class="name">password</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">host</span>&gt;</span>proxy.yiibai.com<span class="tag">&lt;/<span class="name">host</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">port</span>&gt;</span>8888<span class="tag">&lt;/<span class="name">port</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">nonProxyHosts</span>&gt;</span>local.net|some.host.com<span class="tag">&lt;/<span class="name">nonProxyHosts</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">proxy</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">proxies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="Maven中央仓库"><a href="#Maven中央仓库" class="headerlink" title="Maven中央仓库"></a>Maven中央仓库</h1><h2 id="查找依赖包"><a href="#查找依赖包" class="headerlink" title="查找依赖包"></a>查找依赖包</h2><p>如果Maven的本地仓库没有找到指定依赖，会直连<a href="http://repo1.maven.org/maven2/" target="_blank" rel="noopener">中央仓库</a>获取依赖，也可直接访问这个中央仓库路径找到想要的依赖包</p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/Maven/MavenMasterRepository.png" alt></p>
+<p>直接从目录中找依赖包可能不太方便，因此可在改版后的<a href="http://search.maven.org/" target="_blank" rel="noopener">Maven中心存储网站</a>查找依赖包</p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/Maven/MavenMasterRepository2.png" alt></p>
+<p>不过目前比较常用的是通过<a href="https://mvnrepository.com来查找依赖" target="_blank" rel="noopener">https://mvnrepository.com来查找依赖</a></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/Maven/MavenRepository.png" alt></p>
+<h2 id="配置中央仓库"><a href="#配置中央仓库" class="headerlink" title="配置中央仓库"></a>配置中央仓库</h2><h1 id="项目构建"><a href="#项目构建" class="headerlink" title="项目构建"></a>项目构建</h1><p>new一个Maven项目，是否选用骨架均可。</p>
 <p>Maven项目目录介绍</p>
 <ol>
 <li>/src/main/java – 主目录下的Java目录，用于存放项目中的.java文件</li>
@@ -498,6 +520,12 @@
             
             <li class="list-group-item">
                 <span class="post-title">
+                    <a href="/2019/06/28/poetry_卫青/">中文測試</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
                     <a href="/2018/12/24/GIT之远程仓库/">git远程仓库</a>
                 </span>
             </li>
@@ -538,13 +566,19 @@
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2019/07/13/dockerInstall/">Docker安装配置</a>
+                    <a href="/2019/06/28/poetry_卫青/">中文測試</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
                     <a href="/2013/12/24/中文測試/">中文測試</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2019/07/13/dockerInstall/">Docker安装配置</a>
                 </span>
             </li>
             
@@ -613,17 +647,19 @@
                 
                 <div class="cloud-tags tab-pane nav bs-sidenav fade" id="sidebar-tags">
     
-    <a href="/tags/Docker/" style="font-size: 12.172916047328073px;" class="tag-cloud-link">Docker</a>
+    <a href="/tags/warrior/" style="font-size: 13.495723179114535px;" class="tag-cloud-link">warrior</a>
     
-    <a href="/tags/just-Test/" style="font-size: 15.163610951857786px;" class="tag-cloud-link">just Test</a>
+    <a href="/tags/just-Test/" style="font-size: 8.643527252261784px;" class="tag-cloud-link">just Test</a>
     
-    <a href="/tags/git/" style="font-size: 15.890709369159712px;" class="tag-cloud-link">git</a>
+    <a href="/tags/Docker/" style="font-size: 13.615333850779908px;" class="tag-cloud-link">Docker</a>
     
-    <a href="/tags/repository/" style="font-size: 19.22328212620224px;" class="tag-cloud-link">repository</a>
+    <a href="/tags/git/" style="font-size: 16.738823703340493px;" class="tag-cloud-link">git</a>
     
-    <a href="/tags/Redis/" style="font-size: 10.660589956442275px;" class="tag-cloud-link">Redis</a>
+    <a href="/tags/repository/" style="font-size: 18.05482601058561px;" class="tag-cloud-link">repository</a>
     
-    <a href="/tags/Maven/" style="font-size: 15.411336462284872px;" class="tag-cloud-link">Maven</a>
+    <a href="/tags/Redis/" style="font-size: 14.997636500700395px;" class="tag-cloud-link">Redis</a>
+    
+    <a href="/tags/project/" style="font-size: 18.71500894404055px;" class="tag-cloud-link">project</a>
     
 </div>
                 
