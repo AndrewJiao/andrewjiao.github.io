@@ -122,15 +122,15 @@
                         
                         
                         <li>
+                            <a href="/categories/Docker/">Docker</a>
+                        </li>
+                        
+                        <li>
                             <a href="/categories/poetry/">poetry</a>
                         </li>
                         
                         <li>
                             <a href="/categories/Test/">Test</a>
-                        </li>
-                        
-                        <li>
-                            <a href="/categories/Docker/">Docker</a>
                         </li>
                         
                         <li>
@@ -143,6 +143,10 @@
                         
                         <li>
                             <a href="/categories/Maven/">Maven</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/repository/">repository</a>
                         </li>
                         
                         
@@ -164,15 +168,15 @@
                         
                         
                         <li>
+                            <a href="/tags/Docker/">Docker</a>
+                        </li>
+                        
+                        <li>
                             <a href="/tags/warrior/">warrior</a>
                         </li>
                         
                         <li>
                             <a href="/tags/just-Test/">just Test</a>
-                        </li>
-                        
-                        <li>
-                            <a href="/tags/Docker/">Docker</a>
                         </li>
                         
                         <li>
@@ -189,6 +193,10 @@
                         
                         <li>
                             <a href="/tags/project/">project</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/tags/Maven/">Maven</a>
                         </li>
                         
                         
@@ -326,11 +334,6 @@
 <h3 id="本地仓库设置"><a href="#本地仓库设置" class="headerlink" title="本地仓库设置"></a>本地仓库设置</h3><ul>
 <li>maven指定的本地仓库的默认位置是在c盘，默认在：C:\Users{当前用户}.m2\repository,也可通过修改<code>&lt;localRepository/&gt;</code>标签来修改仓库路径</li>
 </ul>
-<h3 id="远程镜像服务器设置"><a href="#远程镜像服务器设置" class="headerlink" title="远程镜像服务器设置"></a>远程镜像服务器设置</h3><ul>
-<li>在settings文件中配置私服服务器为<strong>私服服务器</strong>或者<strong>云服务器</strong>。如果不配置默认连接的是<strong>中央仓库</strong>，由于中央仓库面对的是全球用户，所以在下载jar包时，效率可能会比较低。,配置方法如下</li>
-</ul>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mirrors</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!--  配置阿里云  --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">mirror</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">id</span>&gt;</span>nexus-aliyun<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span>*<span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">name</span>&gt;</span>Nexus aliyun<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://maven.aliyun.com/nexus/content/groups/public<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">mirror</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">mirrors</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
 <h3 id="代理服务器设置"><a href="#代理服务器设置" class="headerlink" title="代理服务器设置"></a>代理服务器设置</h3><p>一些公司和部门有专有的防火墙设置，使用http代理服务器来阻止用户直接访问互联网，因此还需要为maven设置代理才能使maven正常下载依赖包</p>
 <ul>
 <li>取消<code>&lt;proxies&gt;</code>标签内的代理服务器配置注释，并配置正确的代理服务器</li>
@@ -343,7 +346,27 @@
 <p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/Maven/MavenMasterRepository2.png" alt></p>
 <p>不过目前比较常用的是通过<a href="https://mvnrepository.com来查找依赖" target="_blank" rel="noopener">https://mvnrepository.com来查找依赖</a></p>
 <p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/Maven/MavenRepository.png" alt></p>
-<h2 id="配置中央仓库"><a href="#配置中央仓库" class="headerlink" title="配置中央仓库"></a>配置中央仓库</h2><h1 id="项目构建"><a href="#项目构建" class="headerlink" title="项目构建"></a>项目构建</h1><p>new一个Maven项目，是否选用骨架均可。</p>
+<h2 id="配置远程仓库"><a href="#配置远程仓库" class="headerlink" title="配置远程仓库"></a>配置远程仓库</h2><ul>
+<li>在settings文件中配置私服服务器为<strong>私服服务器</strong>或者<strong>云服务器</strong>。如果不配置默认连接的是<strong>中央仓库</strong>，由于中央仓库面对的是全球用户，所以在下载jar包时，效率可能会比较低。,配置方法如下</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mirrors</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!--  配置阿里云  --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">mirror</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">id</span>&gt;</span>nexus-aliyun<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span>*<span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">name</span>&gt;</span>Nexus aliyun<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://maven.aliyun.com/nexus/content/groups/public<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">mirror</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">mirrors</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>关于私库如何搭建请参考<a href>搭建私库</a></p>
+<h1 id="Maven仓库调用流程"><a href="#Maven仓库调用流程" class="headerlink" title="Maven仓库调用流程"></a>Maven仓库调用流程</h1><p>在一般情况下，依赖包拉取流程如下</p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/Maven/MavenProcess.png" alt></p>
+<ol>
+<li>从本地获取依赖，若没有则执行2</li>
+<li>从私库获取依赖，若没有则执行3（第二步需要有自定义的私库，若没有则直接执行第三步）</li>
+<li>从私库指定的远程仓库获取依赖，若没有则报错</li>
+</ol>
+<p>当我们需要的依赖既不存在于本地仓库，也不存在于远程的中央仓库（资源库）时，需要手动设置仓库拉取依赖；修改项目的pom.xml文件添加如下配置</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">repositories</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">repository</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;<span class="name">id</span>&gt;</span>资源库ID<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;<span class="name">url</span>&gt;</span>指定仓库的路径<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">repository</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">repositories</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>配置后在以上的依赖顺序上多出一条</p>
+<ol start="4">
+<li>从配置url指定仓库获取依赖，若没有则报错退出</li>
+</ol>
+<h1 id="项目构建"><a href="#项目构建" class="headerlink" title="项目构建"></a>项目构建</h1><p>new一个Maven项目，是否选用骨架均可。</p>
 <p>Maven项目目录介绍</p>
 <ol>
 <li>/src/main/java – 主目录下的Java目录，用于存放项目中的.java文件</li>
@@ -520,7 +543,13 @@
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2019/06/28/poetry_卫青/">中文測試</a>
+                    <a href="/2019/06/28/poetry_卫青/">出塞二首 其一</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2019/02/24/Maven仓库/">Maven仓库统计</a>
                 </span>
             </li>
             
@@ -566,19 +595,13 @@
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2019/06/28/poetry_卫青/">中文測試</a>
+                    <a href="/2019/06/28/poetry_卫青/">出塞二首 其一</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
                     <a href="/2013/12/24/中文測試/">中文測試</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2019/07/13/dockerInstall/">Docker安装配置</a>
                 </span>
             </li>
             
@@ -618,6 +641,18 @@
                 </span>
             </li>
             
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2019/02/24/Maven仓库/">Maven仓库统计</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2013/12/24/Maven私库/">中文測試</a>
+                </span>
+            </li>
+            
         </ul>
     </div>
 </aside>
@@ -647,19 +682,21 @@
                 
                 <div class="cloud-tags tab-pane nav bs-sidenav fade" id="sidebar-tags">
     
-    <a href="/tags/warrior/" style="font-size: 13.495723179114535px;" class="tag-cloud-link">warrior</a>
+    <a href="/tags/Docker/" style="font-size: 14.144953517816216px;" class="tag-cloud-link">Docker</a>
     
-    <a href="/tags/just-Test/" style="font-size: 8.643527252261784px;" class="tag-cloud-link">just Test</a>
+    <a href="/tags/warrior/" style="font-size: 18.916899486514303px;" class="tag-cloud-link">warrior</a>
     
-    <a href="/tags/Docker/" style="font-size: 13.615333850779908px;" class="tag-cloud-link">Docker</a>
+    <a href="/tags/just-Test/" style="font-size: 15.961709587702718px;" class="tag-cloud-link">just Test</a>
     
-    <a href="/tags/git/" style="font-size: 16.738823703340493px;" class="tag-cloud-link">git</a>
+    <a href="/tags/git/" style="font-size: 16.172262551093567px;" class="tag-cloud-link">git</a>
     
-    <a href="/tags/repository/" style="font-size: 18.05482601058561px;" class="tag-cloud-link">repository</a>
+    <a href="/tags/repository/" style="font-size: 18.0006779335706px;" class="tag-cloud-link">repository</a>
     
-    <a href="/tags/Redis/" style="font-size: 14.997636500700395px;" class="tag-cloud-link">Redis</a>
+    <a href="/tags/Redis/" style="font-size: 9.03709498358581px;" class="tag-cloud-link">Redis</a>
     
-    <a href="/tags/project/" style="font-size: 18.71500894404055px;" class="tag-cloud-link">project</a>
+    <a href="/tags/project/" style="font-size: 9.262461089883388px;" class="tag-cloud-link">project</a>
+    
+    <a href="/tags/Maven/" style="font-size: 13.3167225011392px;" class="tag-cloud-link">Maven</a>
     
 </div>
                 

@@ -10,7 +10,7 @@
     
     
     
-    <title>tags: just Test | abandon</title>
+    <title>Maven仓库统计 | abandon</title>
     <link href="”https://andrewjiao.github.io“" rel="”prefetch”">
 
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -222,19 +222,38 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-8 gal-right" id="mainstay">
-                    <article class="article well article-body" id="article-tag">
+                    
+<article class="article well article-body" id="article">
     <div class="breadcrumb">
         <i class="fa fa-home"></i>
         <a href="https://andrewjiao.github.io">abandon</a>
         >
-        <span>标签</span>
+        <span>Maven仓库统计</span>
     </div>
     <!-- 大型设备详细文章 -->
     <div class="hidden-xs">
         <div class="title-article">
             <h1>
-                <a href="/tags/just-Test/index.html">just Test</a>
+                <a href="/2019/02/24/Maven仓库/">Maven仓库统计</a>
             </h1>
+        </div>
+        <div class="tag-article">
+            
+            <span class="label label-gal">
+                <i class="fa fa-tags"></i>
+                
+                <a href="/tags/project/">project</a>
+                
+            </span>
+            
+            <span class="label label-gal">
+                <i class="fa fa-calendar"></i> 2019-02-24
+            </span>
+            
+            <span class="label label-gal">
+                <i class="fa fa-eye"></i>
+            </span>
+            
         </div>
     </div>
     <!-- 小型设备详细文章 -->
@@ -242,21 +261,124 @@
         <center>
             <div class="title-article">
                 <h4>
-                    <a href="/tags/just-Test/index.html">just Test</a>
+                    <a href="/2019/02/24/Maven仓库/">Maven仓库统计</a>
                 </h4>
             </div>
+            <p>
+                <i class="fa fa-calendar"></i> 2019-02-24
+            </p>
+            <p>
+                
+                <i class="fa fa-tags"></i>
+                
+                <a href="/tags/project/">project</a>
+                
+                
+                
+                <i class="fa fa-eye"></i>
+                
+            </p>
         </center>
     </div>
-    <div class="content-article" style="margin-top: 30px;">
-        <div class="alert alert-info" style="font-size: 14px; line-height: 2; font-weight: bold;">
-            
-            <a href="/2013/12/24/中文測試/">中文測試</a>
-            <br>
-            
-            
-        </div>
+    <div class="content-article">
+        <h1 id="仓库梳理"><a href="#仓库梳理" class="headerlink" title="仓库梳理"></a>仓库梳理</h1><p>之前说了很多仓库，想必已经很乱了，做一节梳理</p>
+<h1 id="Repository（仓库）"><a href="#Repository（仓库）" class="headerlink" title="Repository（仓库）"></a>Repository（仓库）</h1><p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/Maven/Repository2.png" alt></p>
+<ol>
+<li>Maven仓库主要有2种： <ul>
+<li>remote repository：相当于公共的仓库，大家都能访问到，一般可以用URL的形式访问</li>
+<li>local repository：存放在本地磁盘的一个文件夹，例如，windows上默认是C:\Users\｛用户名｝.m2\repository目录</li>
+</ul>
+</li>
+<li>Remote Repository主要有3种： <ul>
+<li>中央仓库：<a href="http://repo1.maven.org/maven2/" target="_blank" rel="noopener">http://repo1.maven.org/maven2/</a> </li>
+<li>私服：内网自建的maven repository，其URL是一个内部网址 </li>
+<li>其他公共仓库：其他可以互联网公共访问maven repository，例如 jboss repository等</li>
+</ul>
+</li>
+</ol>
+<p>repository（本地库或远程库）存放各种jar包或Maven插件，当用户请求获取新的依赖时会访问本地库，若本地库没有相关依赖则访问远程库获取依赖并缓存到本地库中。可以将做好的jar包放到本地库中供自己使用，或上传到远程库供大家使用。</p>
+<h1 id="Mirror（镜像）"><a href="#Mirror（镜像）" class="headerlink" title="Mirror（镜像）"></a>Mirror（镜像）</h1><p>Mirror类似拦截器，会拦截maven向远程仓库的请求，将请求<strong>重定向</strong>到setting.xml中<code>&lt;Mirror&gt;</code>标签配置的仓库地址。</p>
+<ul>
+<li>没有配置Mirror</li>
+</ul>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/Maven/MavenMirrorFalse.png" alt></p>
+<ul>
+<li>配置了Mirror(B为A仓库的镜像)</li>
+</ul>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/Maven/MavenMirrorTrue.png" alt></p>
+<p>镜像仓库可认为是远程仓库的完全备份，从远程仓库获取的依赖一样可以从镜像仓库中获取</p>
+<h2 id="关于mirrorOf"><a href="#关于mirrorOf" class="headerlink" title="关于mirrorOf"></a>关于mirrorOf</h2><ul>
+<li>配置mirrorOf时需要确保仓库间实际上是有关联的，如何关联可参考<a href>私库创建</a></li>
+</ul>
+<p><code>&lt;mirrorOf&gt;</code>标签用于配置具体的远程仓库名称，它的作用是限定特定依赖请求访问特定镜像。例如本地中可能会配置多个镜像A和B，当我们想限定通过A镜像访问中央仓库，用B镜像访问阿里云仓库时，需要分别配置mirrorOf标签的远程仓库名称。  </p>
+<p>例如</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mirrors</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">mirror</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">id</span>&gt;</span>myRepository1<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span>nexus-aliyun<span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>Nexus aliyun<span class="tag">&lt;/<span class="name">name</span>&gt;</span>			       	<span class="tag">&lt;<span class="name">url</span>&gt;</span>http://maven.aliyun.com/nexus/content/groups/public<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mirror</span>&gt;</span> </span><br><span class="line">     <span class="tag">&lt;<span class="name">mirror</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">id</span>&gt;</span>nexus-myself<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span>central<span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">name</span>&gt;</span>Nexus myself<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://172.30.201.35:8081/repository/maven-public/<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">mirror</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">mirrors</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>可见</p>
+<ol>
+<li>需要访问aliyun仓库时会走myRepository1镜像</li>
+<li>需要访问中央仓库时会走nexus-myself镜像</li>
+</ol>
+<p>他们对应的jar包会分别缓存到上述不同的镜像库中取（镜像只是一个概念问题，本质上各个仓库时想和独立的，只是在构建仓库时会关联双方）</p>
+<p>具体配置如下</p>
+<ul>
+<li><code>&lt;mirrorOf&gt;*&lt;/mirrorOf&gt;</code></li>
+</ul>
+<p>​            匹配所有远程仓库。 </p>
+<ul>
+<li><code>&lt;mirrorOf&gt;repo1,repo2&lt;/mirrorOf&gt;</code></li>
+</ul>
+<p>​            匹配仓库repo1和repo2，使用逗号分隔多个远程仓库。 </p>
+<ul>
+<li><code>&lt;mirrorOf&gt;*,!repo1&lt;/miiroOf&gt;</code></li>
+</ul>
+<p>​            匹配所有远程仓库，repo1除外，使用感叹号将仓库从匹配中排除。</p>
+<h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>其实，mirror表示的是两个Repository之间的关系，在maven配置文件（setting.xml)里配置了<code>&lt;mirrors&gt;&lt;mirror&gt;..........&lt;/mirror&gt;&lt;/mirrors&gt;</code>，即定义了两个Repository之间的镜像关系。 </p>
+<h2 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h2><p>配置两个Repository之间的镜像关系，一般是出于访问速度和下载速度考虑。</p>
+<p>例如， 有一个项目，需要在公司和住所都编码，并在项目pom.xml配置了A Maven库。在公司，是电信网络，访问A库很快，所以maven管理依赖和插件都从A库下载；在住所，是网通网络，访问A库很慢，但是访问B库很快。这时，在住所的setting.xml里，只要配置一下<code>&lt;mirrors&gt;&lt;mirror&gt;....&lt;/mirror&gt;&lt;/mirrors&gt;</code>，让B库成为A库的mirror，即可不用更改项目pom.xml里对于A库的相关配置。</p>
+<p>如果该镜像仓库需要认证，则配置setting.xml中的<code>&lt;server&gt;&lt;/server&gt;</code>即可。</p>
+<p>需要注意的是，由于镜像仓库完全屏蔽了被镜像仓库，当镜像仓库不稳定或者停止服务的时候，Maven仍将无法访问被镜像仓库，因而将无法下载构件。</p>
+<h2 id="配置优先顺序"><a href="#配置优先顺序" class="headerlink" title="配置优先顺序"></a>配置优先顺序</h2><p>1、在mirrorOf与repositoryId相同的时候优先是使用mirror的地址</p>
+<p>2、mirrorOf等于*的时候覆盖所有repository配置</p>
+<p>3、存在多个mirror配置的时候mirrorOf等于*放到最后</p>
+<p>4、只配置mirrorOf为central的时候可以不用配置repository </p>
+<h1 id="私服"><a href="#私服" class="headerlink" title="私服"></a>私服</h1><p>私服是一种特殊的远程Maven仓库，它是架设在局域网内的仓库服务，私服一般被配置为互联网远程仓库的镜像，供局域网内的Maven用户使用。</p>
+<p>当Maven需要下载构件的时候，先向私服请求，如果私服上不存在该构件，则从外部的远程仓库下载，同时缓存在私服之上，然后为Maven下载请求提供下载服务，另外，对于自定义或第三方的jar可以从本地上传到私服，供局域网内其他maven用户使用。</p>
+<p>优点主要有：</p>
+<ol>
+<li>节省外网宽带</li>
+<li>加速Maven构建</li>
+<li>部署第三方构件</li>
+<li>提高稳定性、增强控制：原因是外网不稳定</li>
+<li>降低中央仓库的负荷：原因是中央仓库访问量太大</li>
+</ol>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/Maven/Repositorysifu.png" alt></p>
+<h1 id="Maven仓库示意图"><a href="#Maven仓库示意图" class="headerlink" title="Maven仓库示意图"></a>Maven仓库示意图</h1><p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/Maven/MavenProcess2.png" alt></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>简单点来说，repository就是个仓库。maven里有两种仓库，本地仓库和远程仓库。远程仓库相当于公共的仓库，大家都能看到。本地仓库是你本地的一个山寨版，只有你看的到，主要起缓存作用。当你向仓库请求插件或依赖的时候，会先检查本地仓库里是否有。如果有则直接返回，否则会向远程仓库请求，并做缓存。你也可以把你做的东西上传到本地仓库给你本地自己用，或上传到远程仓库，供大家使用。  </p>
+<p>远程仓库可以在工程的pom.xml文件里指定，楼上两位已经列的很清楚了。如果没指定，默认就会把下面这地方做远程仓库，即默认会到<a href="http://repo1.maven.org/maven2这个地方去请求插件和依赖包。" target="_blank" rel="noopener">http://repo1.maven.org/maven2这个地方去请求插件和依赖包。</a>  </p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">repository</span>&gt;</span>  </span><br><span class="line">      <span class="tag">&lt;<span class="name">snapshots</span>&gt;</span>  </span><br><span class="line">        <span class="tag">&lt;<span class="name">enabled</span>&gt;</span>false<span class="tag">&lt;/<span class="name">enabled</span>&gt;</span>  </span><br><span class="line">      <span class="tag">&lt;/<span class="name">snapshots</span>&gt;</span>  </span><br><span class="line">      <span class="tag">&lt;<span class="name">id</span>&gt;</span>central<span class="tag">&lt;/<span class="name">id</span>&gt;</span>  </span><br><span class="line">      <span class="tag">&lt;<span class="name">name</span>&gt;</span>Maven Repository Switchboard<span class="tag">&lt;/<span class="name">name</span>&gt;</span>  </span><br><span class="line">      <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://repo1.maven.org/maven2<span class="tag">&lt;/<span class="name">url</span>&gt;</span>  </span><br><span class="line">    <span class="tag">&lt;/<span class="name">repository</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>本地仓库默认在你本地的用户目录下的.m2/repository目录下。</p>
+<p>mirror就是镜像，主要提供一个方便地切换远程仓库地址的途径。比如，上班的时候在公司，用电信的网络，连的是电信的仓库。回到家后，是网通的网络，我想连网通的仓库，就可以通过mirror配置，统一把我工程里的仓库地址都改成联通的，而不用到具体工程配置文件里一个一个地改地址。  mirror的配置在.m2/settings.xml里。如：  </p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mirrors</span>&gt;</span>  </span><br><span class="line">  <span class="tag">&lt;<span class="name">mirror</span>&gt;</span>  </span><br><span class="line">    <span class="tag">&lt;<span class="name">id</span>&gt;</span>UK<span class="tag">&lt;/<span class="name">id</span>&gt;</span>  </span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>UK Central<span class="tag">&lt;/<span class="name">name</span>&gt;</span>  </span><br><span class="line">    <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://uk.maven.org/maven2<span class="tag">&lt;/<span class="name">url</span>&gt;</span>  </span><br><span class="line">    <span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span>central<span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span>  </span><br><span class="line">  <span class="tag">&lt;/<span class="name">mirror</span>&gt;</span>  </span><br><span class="line"><span class="tag">&lt;/<span class="name">mirrors</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这样的话，就会给上面id为central的远程仓库做了个镜像。以后向central这个仓库发的请求都会发到<a href="http://uk.maven.org/maven2而不是http://repo1.maven.org/maven2了。" target="_blank" rel="noopener">http://uk.maven.org/maven2而不是http://repo1.maven.org/maven2了。</a>  <mirrorof>central</mirrorof>里是要替代的仓库的id。如果填*，就会替代所有仓库。  </p>
+<p>参考资料：</p>
+<p><a href="https://blog.csdn.net/scythe666/article/details/51881534" target="_blank" rel="noopener">https://blog.csdn.net/scythe666/article/details/51881534</a></p>
+
     </div>
 </article>
+
+
+<div id="comments-template"></div>
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script>
+	if(!window.commentConfig) {
+      window.commentConfig = {}
+      window.commentConfig.title = 'Maven仓库统计'
+    }
+</script>
+
                 </div>
                 <aside class="col-md-4 gal-left" id="sidebar">
     <!-- 此为sidebar的搜索框, 非搜索结果页面 -->
@@ -401,13 +523,13 @@
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2019/07/13/dockerInstall/">Docker安装配置</a>
+                    <a href="/2019/06/28/poetry_卫青/">出塞二首 其一</a>
                 </span>
             </li>
             
             <li class="list-group-item">
                 <span class="post-title">
-                    <a href="/2019/06/28/poetry_卫青/">出塞二首 其一</a>
+                    <a href="/2013/12/24/中文測試/">中文測試</a>
                 </span>
             </li>
             
@@ -470,17 +592,17 @@
 
                 
                 <li>
-                    <a href="/tags/just-Test/index.html#sidebar-tags" data-toggle="tab" id="tags-tab">热门标签</a>
+                    <a href="/2019/02/24/Maven仓库/index.html#sidebar-tags" data-toggle="tab" id="tags-tab">热门标签</a>
                 </li>
                 
                 
                 <li>
-                    <a href="/tags/just-Test/index.html#sidebar-friend-links" data-toggle="tab" id="friend-links-tab">友情链接</a>
+                    <a href="/2019/02/24/Maven仓库/index.html#sidebar-friend-links" data-toggle="tab" id="friend-links-tab">友情链接</a>
                 </li>
                 
                 
                 <li>
-                    <a href="/tags/just-Test/index.html#sidebar-links" data-toggle="tab" id="links-tab">个人链接</a>
+                    <a href="/2019/02/24/Maven仓库/index.html#sidebar-links" data-toggle="tab" id="links-tab">个人链接</a>
                 </li>
                 
             </ul>
@@ -488,21 +610,21 @@
                 
                 <div class="cloud-tags tab-pane nav bs-sidenav fade" id="sidebar-tags">
     
-    <a href="/tags/Docker/" style="font-size: 15.026149988807937px;" class="tag-cloud-link">Docker</a>
+    <a href="/tags/Docker/" style="font-size: 11.726871331388926px;" class="tag-cloud-link">Docker</a>
     
-    <a href="/tags/warrior/" style="font-size: 12.685675710953422px;" class="tag-cloud-link">warrior</a>
+    <a href="/tags/warrior/" style="font-size: 14.520308201234817px;" class="tag-cloud-link">warrior</a>
     
-    <a href="/tags/just-Test/" style="font-size: 17.673423320743055px;" class="tag-cloud-link">just Test</a>
+    <a href="/tags/just-Test/" style="font-size: 10.74341059690913px;" class="tag-cloud-link">just Test</a>
     
-    <a href="/tags/git/" style="font-size: 9.446150821077211px;" class="tag-cloud-link">git</a>
+    <a href="/tags/git/" style="font-size: 11.706933210930744px;" class="tag-cloud-link">git</a>
     
-    <a href="/tags/repository/" style="font-size: 18.60400452130977px;" class="tag-cloud-link">repository</a>
+    <a href="/tags/repository/" style="font-size: 14.181722467683537px;" class="tag-cloud-link">repository</a>
     
-    <a href="/tags/Redis/" style="font-size: 9.503290709397291px;" class="tag-cloud-link">Redis</a>
+    <a href="/tags/Redis/" style="font-size: 8.69111921067097px;" class="tag-cloud-link">Redis</a>
     
-    <a href="/tags/project/" style="font-size: 12.521105948926493px;" class="tag-cloud-link">project</a>
+    <a href="/tags/project/" style="font-size: 14.587478286300708px;" class="tag-cloud-link">project</a>
     
-    <a href="/tags/Maven/" style="font-size: 16.452407794838134px;" class="tag-cloud-link">Maven</a>
+    <a href="/tags/Maven/" style="font-size: 9.586443640526618px;" class="tag-cloud-link">Maven</a>
     
 </div>
                 
@@ -620,7 +742,7 @@
 <script src="https://myau.moe/js/comment/gitment.browser.js"></script>
 <script>
     if(window.commentConfig) {
-      window.commentConfig.id = ''
+      window.commentConfig.id = 'Sun Feb 24 2019 11:01:52 GMT+0800'
       window.commentConfig.owner = 'AndrewJiao'
       window.commentConfig.repo = 'gitment'
       window.commentConfig.client_id = '9c9b8afccbbabb9602e6'
@@ -628,7 +750,7 @@
       window.commentConfig.redirect_uri = ''
     } else {
       window.commentConfig = {
-      	id: '',
+      	id: 'Sun Feb 24 2019 11:01:52 GMT+0800',
         owner: 'AndrewJiao',
         repo: 'gitment',
         client_id: '9c9b8afccbbabb9602e6',
