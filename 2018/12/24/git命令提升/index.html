@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content>
+  <meta name="author" content="Andrew_Jiao">
+  <meta name="keywords" content>
+  <title>git特殊命令 - abandon</title>
+
+  <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/5.12.1/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/mdbootstrap/4.13.0/css/mdb.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/3.0.1/github-markdown.min.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1067060_qzomjdt8bmp.css">
+
+
+  <link rel="stylesheet" href="/lib/prettify/tomorrow-night-eighties.min.css">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+  <link defer rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css">
+
+
+<!-- 自定义样式保持在最底部 -->
+
+
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>abandon</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/">首页</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/archives/">归档</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/categories/">分类</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/tags/">标签</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/about/">关于</a>
+          </li>
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask rgba-black-light flex-center">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+                <p class="mt-3 post-meta">
+                  <i class="fas fa-calendar-alt" aria-hidden="true"></i>
+                  星期一, 十二月 24日 2018, 11:31 晚上
+                </p>
+              
+
+              <p class="mt-1">
+                
+                  
+                  <span class="post-meta">
+                    <i class="far fa-chart-bar"></i>
+                    1.2k 字
+                  </span>
+                
+
+                
+                  
+                  <span class="post-meta">
+                      <i class="far fa-clock"></i>
+                      4 分钟
+                  </span>
+                
+
+                
+              </p>
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5 z-depth-3" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <div class="markdown-body">
+              <h1 id="git-config命令"><a href="#git-config命令" class="headerlink" title="git config命令"></a>git config命令</h1><h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2><p>这些变量可以被存储在三个不同的位置： </p>
+<ol>
+<li><code>/etc/gitconfig</code> 文件：包含了适用于系统所有用户和所有库的值。如果你传递参数选项’—system’ 给 git config，它将明确的读和写这个文件</li>
+<li><code>~/.gitconfig</code> 文件 ：具体到你的用户。你可以通过传递—global 选项使Git 读或写这个特定的文件 </li>
+<li>位于git目录的config文件 (也就是 <code>.git/config</code>) ：无论当前在用的库是什么，特定指向该单一的库。每个级别重写前一个级别的值。因此，在<code>.git/config</code>中的值覆盖了在<code>/etc/gitconfig</code>中的同一个值。</li>
+</ol>
+<h2 id="配置用户"><a href="#配置用户" class="headerlink" title="配置用户"></a>配置用户</h2><p>带global参数为全局设置，当希望不同工程用不同的用户名时（比如：个人项目和公司项目），则移除–global参数，系统回优先使用当前配置</p>
+<pre><code class="sh">$ git config  user.name &quot;maxsu&quot;
+$ git config user.email &quot;test.com@foxmail.com&quot;
+
+$ git config --global user.name &quot;maxsu&quot;
+$ git config --global user.email &quot;test.com@foxmail.com&quot;</code></pre>
+<h2 id="配置编辑器"><a href="#配置编辑器" class="headerlink" title="配置编辑器"></a>配置编辑器</h2><ul>
+<li>配置编辑工具<ul>
+<li>$ <code>git config --global core.editor 工具路径</code></li>
+</ul>
+</li>
+<li>配置合并工具<ul>
+<li><code>$ git config --global merge.tool 比较工具路径</code></li>
+</ul>
+</li>
+<li>配置比较工具<ul>
+<li><code>$ git config --global diff.tool  比较工具路径</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="检查配置"><a href="#检查配置" class="headerlink" title="检查配置"></a>检查配置</h2><p>如果想检查你的设置，可以使用 <code>git config --list</code> 命令来列出Git可以在该处找到的所有的设置: </p>
+<h2 id="添加删除配置"><a href="#添加删除配置" class="headerlink" title="添加删除配置"></a>添加删除配置</h2><ul>
+<li>添加<ul>
+<li><code>git config [–local|–global|–system] –add section.key value</code>(默认是添加在 <code>local</code> 配置中) </li>
+</ul>
+</li>
+<li>删除<ul>
+<li><code>git config [–local|–global|–system] –unset section.key</code></li>
+</ul>
+</li>
+</ul>
+<h1 id="git-log命令"><a href="#git-log命令" class="headerlink" title="git log命令"></a>git log命令</h1><h2 id="设置log命令"><a href="#设置log命令" class="headerlink" title="设置log命令"></a>设置log命令</h2><p>设置git log命令可方便查看日志，普通的gitlog指令不人性化</p>
+<ul>
+<li>命令</li>
+</ul>
+<pre><code class="sh">##单行列出详细信息
+git log --pretty=format:&quot;%cn committed %h on %cd&quot;
+git log --graph --pretty=format:&#39;%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)&lt;%an&gt;%Creset&#39; --abbrev-commit
+##绘制合并图 --graph
+git log --graph --oneline --decorate</code></pre>
+<ul>
+<li>定义别名 </li>
+</ul>
+<pre><code class="sh">git config --global alias.lg
+
+git config --global alias.lg &quot;log --color --graph --pretty=format:&#39;%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)&lt;%an&gt;%Creset&#39; --abbrev-commit&quot; </code></pre>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5Cgit%5CgitCommitLog.png" srcset="/img/loading.gif" alt></p>
+<h2 id="提交log的过滤"><a href="#提交log的过滤" class="headerlink" title="提交log的过滤"></a>提交log的过滤</h2><ul>
+<li><p>根据数量过滤</p>
+<ul>
+<li><code>git log -3</code></li>
+</ul>
+</li>
+<li><p>根据日期过滤</p>
+<ul>
+<li>可以用before或after参数，这两个参数接受多种日期格式<ul>
+<li>`git log –after=”2014-7-1” ``</li>
+<li>``git log –after=”yesterday” `</li>
+</ul>
+</li>
+<li>也可以接受时间概念,像”1 week ago”，或者是”yesterday” <ul>
+<li><code>git log --after=&quot;yesterday&quot;</code></li>
+</ul>
+</li>
+<li>可以用before和after来组成时间区间，同since，until<ul>
+<li><code>git log --after=&quot;2014-7-1&quot; --before=&quot;2014-7-4&quot;</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>根据提交者过滤</p>
+<ul>
+<li>–auther参数，传入一个正则表达式 可找到正则匹配的所有人，也可直接指定人名<ul>
+<li><code>git log --author=&quot;John\|Mary&quot;</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>根据提交内容过滤</p>
+<ul>
+<li>使用grep参数可以查找参数指定的关键字过滤，使用-i参数还能忽略大小写<ul>
+<li><code>git log --grep=&quot;TEST&quot;</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>根据文件过滤</p>
+<ul>
+<li>直接传入文件或文件及路径可直接过滤出想看的文件<ul>
+<li><code>git log -- foo.py bar.py</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>根据改动内容过滤</p>
+<ul>
+<li>通过-S””参数来判断引号中的内容过滤</li>
+<li>-G”” 参数根据正则匹配<ul>
+<li><code>git log -S&quot;Hello, World!&quot;</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>根据id范围过滤</p>
+<ul>
+<li><code>git log &lt;since&gt;..&lt;until&gt;</code></li>
+<li>当传入的是分支名称时，则表示展示分支独有的提交commit<ul>
+<li><code>git log &lt;since&gt;..&lt;until&gt;</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>滤过merge</p>
+<ul>
+<li>如不需要merge的commit<ul>
+<li><code>git log --no-merges</code></li>
+</ul>
+</li>
+<li>如只看merge<ul>
+<li><code>git log --merges</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="查看某次提交"><a href="#查看某次提交" class="headerlink" title="查看某次提交"></a>查看某次提交</h2><ul>
+<li>可通过git的GUI工具单独查看，通过输入<code>gitk</code>指令打开</li>
+<li>如果在知道commitID的情况下课通过指令<code>git show commitID</code>查看</li>
+</ul>
+<h1 id="git-rebase命令"><a href="#git-rebase命令" class="headerlink" title="git rebase命令"></a>git rebase命令</h1><p><code>git rebase</code>命令与<code>git merge</code>命令一样都是将<strong>目标分支</strong>的代码合并到<strong>本地分支</strong>，但实现的流程与效果与merge指令不同</p>
+<ul>
+<li><code>git merge</code> 指令是直接将<strong>目标分支</strong>中的提交合并到<strong>本地分支</strong>中，当有冲突时，会把额外生成一次合并冲突的提交记录</li>
+</ul>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5Cgit%5CgitMergeProcess.png" srcset="/img/loading.gif" alt></p>
+<ul>
+<li><code>git rebase</code>则是将<strong>本地分支</strong>中的提交记录保存为补丁（存储在.git/rebase目录），随后将<strong>目标分支</strong>的代码合并到<strong>本地分支</strong>中，最后再将暂存的分支重新添加提交到<strong>本地分支</strong>中</li>
+</ul>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5Cgit%5CgitRebaseProcess.png" srcset="/img/loading.gif" alt></p>
+<h2 id="关于冲突"><a href="#关于冲突" class="headerlink" title="关于冲突"></a>关于冲突</h2><p>在rebase的过程中，也许会出现冲突(conflict). 在这种情况，Git会停止rebase并会让你去解决 冲突；在解决完冲突后，用”git-add”命令去更新这些内容的索引(index), 然后，无需执行 git-commit,只要执行: </p>
+<ul>
+<li><code>$ git rebase --continue</code></li>
+</ul>
+<p>在任何时候，你可以用–abort参数来终止rebase的行动，并且”mywork” 分支会回到rebase开始前的状态。 </p>
+<ul>
+<li><p><code>$ git rebase --abort</code></p>
+<p>​            参考文件<a href="https://www.yiibai.com/git/git_config.html" target="_blank" rel="noopener">https://www.yiibai.com/git/git_config.html</a>    </p>
+</li>
+</ul>
+
+            </div>
+            <hr>
+            <div>
+              <p>
+                
+                  <span>
+                <i class="iconfont icon-inbox"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/git/">git</a>
+                      &nbsp;
+                    
+                  </span>&nbsp;&nbsp;
+                
+                
+                  <span>
+                <i class="iconfont icon-tag"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/git/">git</a>
+                    
+                  </span>
+                
+              </p>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+            </div>
+
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc-start"></div>
+<div id="toc">
+  <p class="h5"><i class="far fa-list-alt"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a class="z-depth-1" id="scroll-top-button" href="#" role="button">
+      <i class="fa fa-chevron-up scroll-top-arrow" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><b>Hexo</b></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"> <b>Fluid</b></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/popper.js/1.16.1/umd/popper.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="https://cdn.staticfile.org/mdbootstrap/4.13.0/js/mdb.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+  <script  src="/js/lazyload.js" ></script>
+
+
+
+  
+  <script  src="https://cdn.staticfile.org/tocbot/4.10.0/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var navHeight = $('#navbar').height();
+      var post = $('#post');
+      var toc = $('#toc');
+      var tocLimMax = post.offset().top + post.height() - navHeight;
+
+      $(window).scroll(function () {
+        var tocLimMin = $('#toc-start').offset().top - navHeight;
+        var scroH = document.body.scrollTop + document.documentElement.scrollTop;
+
+        if (tocLimMin <= scroH && scroH <= tocLimMax) {
+          toc.css({
+            'display': 'block',
+            'position': 'fixed',
+            'top': navHeight,
+          });
+        } else if (scroH <= tocLimMin) {
+          toc.css({
+            'position': '',
+            'top': '',
+          });
+        } else if (scroH > tocLimMax) {
+          toc.css('display', 'none');
+        }
+      });
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        scrollSmooth: true,
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc > p').css('visibility', 'visible');
+      }
+      var offset = $('#board-ctn').css('margin-right')
+      $('#toc-ctn').css({
+        'right': offset
+      })
+    });
+  </script>
+
+
+
+
+
+
+
+
+
+
+<!-- Plugins -->
+
+
+
+  <script  src="https://cdn.staticfile.org/prettify/188.0.0/prettify.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      $('pre').addClass('prettyprint  linenums');
+      prettyPrint();
+    })
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "git特殊命令&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      getSearchFile(path);
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <script>
+    $("#post img:not(.no-zoom img, img[no-zoom])").each(
+      function () {
+        var element = document.createElement("a");
+        $(element).attr("data-fancybox", "images");
+        $(element).attr("href", $(this).attr("src"));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/assets/shizuku.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"log":false});</script></body>
+</html>

@@ -1,297 +1,183 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
+
+
+
+
+
 <head><meta name="generator" content="Hexo 3.9.0">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <meta name="author" content="Andrew_Jiao">
-    
-    
-    
-    
-    
-    
-    <title>Docker安装应用 | abandon</title>
-    <link href="”https://andrewjiao.github.io“" rel="”prefetch”">
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content>
+  <meta name="author" content="Andrew_Jiao">
+  <meta name="keywords" content>
+  <title>Docker安装应用 - abandon</title>
 
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-<link rel="stylesheet" href="/css/aos.css">
-<link rel="stylesheet" href="/css/style.css">
-    <script src="/js/jquery.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
-    <script src="/js/aos.js"></script>
-    <script src="/js/highslide/highslide-full.min.js"></script>
-    <link rel="stylesheet" href="/js/highslide/highslide.css">
-    <style type="text/css">
-        @media (max-width: 768px) {
-            body {
-                background-color: #f0f0f0;
-                background: url('/imgs/xsbg.gif');
-                background-attachment: fixed;
-            }
-        }
-    </style>
-    
-    <script src="//cdn1.lncld.net/static/js/3.4.2/av-min.js"></script>
-    <script>
-      AV.init({
-        appId: 'm8Y43y6cX1ug5HFenYJ4iPRu-gzGzoHsz',
-        appKey: '0MerS4hWwRUxARs7cXQB2kQf'
-      })
-    </script>
-    
-    <!--<script type="text/javascript">
-      if (document.images) {
-        var avatar = new Image();
-        avatar.src = '/imgs/avatar.jpg'
-        var previews = 'http://ypimage.oss-cn-shenzhen.aliyuncs.com/theme/preview/preview1.jpg,http://ypimage.oss-cn-shenzhen.aliyuncs.com/theme/preview/preview2.jpg,http://ypimage.oss-cn-shenzhen.aliyuncs.com/theme/preview/preview3.jpg,http://ypimage.oss-cn-shenzhen.aliyuncs.com/theme/preview/preview4.jpg,http://ypimage.oss-cn-shenzhen.aliyuncs.com/theme/preview/preview5.jpg,http://ypimage.oss-cn-shenzhen.aliyuncs.com/theme/preview/preview6.jpg,http://ypimage.oss-cn-shenzhen.aliyuncs.com/theme/preview/preview7.jpg,http://ypimage.oss-cn-shenzhen.aliyuncs.com/theme/preview/preview8.jpg'.split(',')
-        var previewsPreLoad = []
-        for(var i = 0; i < length; i++) {
-          previewsPreLoad.push(new Image())
-          previewsPreLoad[previewsPreLoad.length - 1].src = '/imgs/preview' + previews[i]
-        }
-      }
-    </script>-->
-</head></html>
+  <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/5.12.1/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/mdbootstrap/4.13.0/css/mdb.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/3.0.1/github-markdown.min.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1067060_qzomjdt8bmp.css">
+
+
+  <link rel="stylesheet" href="/lib/prettify/tomorrow-night-eighties.min.css">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+  <link defer rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css">
+
+
+<!-- 自定义样式保持在最底部 -->
+
+
+</head>
+
+
 <body>
-    <!-- 背景轮播图功能 -->
-    <section class="hidden-xs">
-    <ul class="cb-slideshow">
-        <li><span>天若</span></li>
-        <li><span>有情</span></li>
-        <li><span>天亦老</span></li>
-        <li><span>我为</span></li>
-        <li><span>长者</span></li>
-        <li><span>续一秒</span></li>
-    </ul>
-</section>
-    <!-- 欧尼酱功能, 谁用谁知道 -->
-    
-    <header class="navbar navbar-inverse" id="gal-header">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed"
-                    data-toggle="collapse" data-target=".bs-navbar-collapse"
-                    aria-expanded="false">
-                <span class="fa fa-lg fa-reorder"></span>
-            </button>
-            <a href="https://andrewjiao.github.io">
-                
-                <style>
-                    #gal-header .navbar-brand {
-                        height: 54px;
-                        line-height: 24px;
-                        font-size: 28px;
-                        opacity: 1;
-                        background-color: rgba(0,0,0,0);
-                        text-shadow: 0 0 5px #fff,0 0 10px #fff,0 0 15px #fff,0 0 20px #228DFF,0 0 35px #228DFF,0 0 40px #228DFF,0 0 50px #228DFF,0 0 75px #228DFF;
-                    }
-                </style>
-                <!-- 这里使用文字(navbar_text or config.title) -->
-                <div class="navbar-brand">Andrew</div>
-                
-            </a>
-        </div>
-        <div class="collapse navbar-collapse bs-navbar-collapse">
-            <ul class="nav navbar-nav" id="menu-gal">
-                
-                
-                <li class="">
-                    <a href="/">
-                        <i class="fa fa-home"></i>首页
-                    </a>
-                </li>
-                
-                
-                
-                <li class="">
-                    <a href="/archives">
-                        <i class="fa fa-archive"></i>归档
-                    </a>
-                </li>
-                
-                
-                
-                
-                <li class="dropdown">
-                    <!-- TODO 添加hover dropdown效果 -->
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"
-                       aria-haspopup="true" aria-expanded="false" data-hover="dropdown">
-                        <i class="fa fa-list"></i>分类
-                    </a>
-                    <ul class="dropdown-menu">
-                        
-                        
-                        <li>
-                            <a href="/categories/Docker/">Docker</a>
-                        </li>
-                        
-                        <li>
-                            <a href="/categories/poetry/">poetry</a>
-                        </li>
-                        
-                        <li>
-                            <a href="/categories/Test/">Test</a>
-                        </li>
-                        
-                        <li>
-                            <a href="/categories/git/">git</a>
-                        </li>
-                        
-                        <li>
-                            <a href="/categories/Redis/">Redis</a>
-                        </li>
-                        
-                        <li>
-                            <a href="/categories/Maven/">Maven</a>
-                        </li>
-                        
-                        <li>
-                            <a href="/categories/repository/">repository</a>
-                        </li>
-                        
-                        
-                        
-                    </ul>
-                </li>
-                
-                
-                
-                
-                
-                <li class="dropdown">
-                    <!-- TODO 添加hover dropdown效果 -->
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"
-                       aria-haspopup="true" aria-expanded="false" data-hover="dropdown">
-                        <i class="fa fa-tags"></i>标签
-                    </a>
-                    <ul class="dropdown-menu">
-                        
-                        
-                        <li>
-                            <a href="/tags/Docker/">Docker</a>
-                        </li>
-                        
-                        <li>
-                            <a href="/tags/warrior/">warrior</a>
-                        </li>
-                        
-                        <li>
-                            <a href="/tags/just-Test/">just Test</a>
-                        </li>
-                        
-                        <li>
-                            <a href="/tags/git/">git</a>
-                        </li>
-                        
-                        <li>
-                            <a href="/tags/repository/">repository</a>
-                        </li>
-                        
-                        <li>
-                            <a href="/tags/Redis/">Redis</a>
-                        </li>
-                        
-                        <li>
-                            <a href="/tags/project/">project</a>
-                        </li>
-                        
-                        <li>
-                            <a href="/tags/Maven/">Maven</a>
-                        </li>
-                        
-                        
-                        
-                    </ul>
-                </li>
-                
-                
-                
-                
-                <li class="">
-                    <a href="/about">
-                        <i class="fa fa-user"></i>关于我
-                    </a>
-                </li>
-                
-                
-            </ul>
-        </div>
-    </div>
-</header>
-    <div id="gal-body">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-8 gal-right" id="mainstay">
-                    
-<article class="article well article-body" id="article">
-    <div class="breadcrumb">
-        <i class="fa fa-home"></i>
-        <a href="https://andrewjiao.github.io">abandon</a>
-        >
-        <span>Docker安装应用</span>
-    </div>
-    <!-- 大型设备详细文章 -->
-    <div class="hidden-xs">
-        <div class="title-article">
-            <h1>
-                <a href="/2019/07/14/docker安装应用/">Docker安装应用</a>
-            </h1>
-        </div>
-        <div class="tag-article">
-            
-            <span class="label label-gal">
-                <i class="fa fa-tags"></i>
-                
-                <a href="/tags/Docker/">Docker</a>
-                
-            </span>
-            
-            <span class="label label-gal">
-                <i class="fa fa-calendar"></i> 2019-07-14
-            </span>
-            
-            <span class="label label-gal">
-                <i class="fa fa-eye"></i>
-            </span>
-            
-        </div>
-    </div>
-    <!-- 小型设备详细文章 -->
-    <div class="visible-xs">
-        <center>
-            <div class="title-article">
-                <h4>
-                    <a href="/2019/07/14/docker安装应用/">Docker安装应用</a>
-                </h4>
-            </div>
-            <p>
-                <i class="fa fa-calendar"></i> 2019-07-14
-            </p>
-            <p>
-                
-                <i class="fa fa-tags"></i>
-                
-                <a href="/tags/Docker/">Docker</a>
-                
-                
-                
-                <i class="fa fa-eye"></i>
-                
-            </p>
-        </center>
-    </div>
-    <div class="content-article">
-        <h1 id="拉取已有镜像启动容器"><a href="#拉取已有镜像启动容器" class="headerlink" title="拉取已有镜像启动容器"></a>拉取已有镜像启动容器</h1><p>以下以Redis的部署为例</p>
-<h2 id="获取Redis镜像"><a href="#获取Redis镜像" class="headerlink" title="获取Redis镜像"></a>获取Redis镜像</h2><p>关于镜像的获取建议使用代理，因为有些镜像在国内仓库中没有回到外网节点中获取</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker search redis			<span class="comment">#镜像库提供的多个镜像</span></span><br><span class="line">docker pull redis			<span class="comment">#拉取最新版本的docker-redis镜像</span></span><br><span class="line">docker pull redis:3.2.8		<span class="comment">#拉取指定版本的redis镜像</span></span><br></pre></td></tr></table></figure>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>abandon</strong>&nbsp;</a>
 
-<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5CDocker%5CdockerPull.png" alt="s"></p>
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/">首页</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/archives/">归档</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/categories/">分类</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/tags/">标签</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/about/">关于</a>
+          </li>
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask rgba-black-light flex-center">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+                <p class="mt-3 post-meta">
+                  <i class="fas fa-calendar-alt" aria-hidden="true"></i>
+                  星期日, 七月 14日 2019, 6:41 晚上
+                </p>
+              
+
+              <p class="mt-1">
+                
+                  
+                  <span class="post-meta">
+                    <i class="far fa-chart-bar"></i>
+                    2.6k 字
+                  </span>
+                
+
+                
+                  
+                  <span class="post-meta">
+                      <i class="far fa-clock"></i>
+                      11 分钟
+                  </span>
+                
+
+                
+              </p>
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5 z-depth-3" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <div class="markdown-body">
+              <h1 id="拉取已有镜像启动容器"><a href="#拉取已有镜像启动容器" class="headerlink" title="拉取已有镜像启动容器"></a>拉取已有镜像启动容器</h1><p>以下以Redis的部署为例</p>
+<h2 id="获取Redis镜像"><a href="#获取Redis镜像" class="headerlink" title="获取Redis镜像"></a>获取Redis镜像</h2><p>关于镜像的获取建议使用代理，因为有些镜像在国内仓库中没有回到外网节点中获取</p>
+<pre><code class="sh">docker search redis            #镜像库提供的多个镜像
+docker pull redis            #拉取最新版本的docker-redis镜像
+docker pull redis:3.2.8        #拉取指定版本的redis镜像</code></pre>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5CDocker%5CdockerPull.png" srcset="/img/loading.gif" alt="s"></p>
 <p>上图表示拉取成功并完成，可用<code>docker images</code>查看本地是否有镜像</p>
-<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5CDocker%5CdockerImages.png" alt></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5CDocker%5CdockerImages.png" srcset="/img/loading.gif" alt></p>
 <p>注意：拉取速度会很慢，因为docker中央仓库在国外，中国虽然有镜像仓库，如阿里、网易蜂巢等，但速度也不理想。好在，docker文件可以反复拉取，拉取失败，重新拉取即可。</p>
 <h2 id="使用Redis镜像启动实例"><a href="#使用Redis镜像启动实例" class="headerlink" title="使用Redis镜像启动实例"></a>使用Redis镜像启动实例</h2><p>启动docker容器以及内部的redis服务</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --name redis7000 -p 7000:6379 redis			<span class="comment">#最高版本</span></span><br><span class="line">docker run -d --name redis7000 -p 7000:6379 redis:3.2.8		<span class="comment">#执行版本</span></span><br></pre></td></tr></table></figure>
-
+<pre><code class="sh">docker run -d --name redis7000 -p 7000:6379 redis            #最高版本
+docker run -d --name redis7000 -p 7000:6379 redis:3.2.8        #执行版本</code></pre>
 <ul>
 <li>参数说明：<ul>
 <li>-d，则containter将会运行在后台模式(Detached mode)</li>
@@ -302,28 +188,65 @@
 </li>
 </ul>
 <h2 id="进入Docker内部"><a href="#进入Docker内部" class="headerlink" title="进入Docker内部"></a>进入Docker内部</h2><p>有必要则可以进入容器内部操作服务</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#查看docker的容器ID，以方便根据容器ID进入容器</span></span><br><span class="line">docker ps</span><br><span class="line">docker <span class="built_in">exec</span> -it 0cfc4932b9a0(容器ID) bash</span><br><span class="line"><span class="comment">#进入docker内部，-it输入输出，展示信息在控制台，-t让docker分配一个伪终端，并绑定到容器的标准输入上</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#如果容器中执行ps命令出错，说明镜像中未有ps命令，执行下面命令安装</span></span><br><span class="line">apt-get update &amp;&amp; apt-get install procps</span><br></pre></td></tr></table></figure>
+<pre><code class="sh">#查看docker的容器ID，以方便根据容器ID进入容器
+docker ps
+docker exec -it 0cfc4932b9a0(容器ID) bash
+#进入docker内部，-it输入输出，展示信息在控制台，-t让docker分配一个伪终端，并绑定到容器的标准输入上
 
+#如果容器中执行ps命令出错，说明镜像中未有ps命令，执行下面命令安装
+apt-get update &amp;&amp; apt-get install procps</code></pre>
 <p>进入redis客户端<code>redis-cli</code></p>
 <p>退出docker中的redis环境<code>exit</code></p>
-<h2 id="端口映射关系"><a href="#端口映射关系" class="headerlink" title="端口映射关系"></a>端口映射关系</h2><p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5CDocker%5CportMapping.png" alt></p>
+<h2 id="端口映射关系"><a href="#端口映射关系" class="headerlink" title="端口映射关系"></a>端口映射关系</h2><p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5CDocker%5CportMapping.png" srcset="/img/loading.gif" alt></p>
 <h2 id="防火墙设置"><a href="#防火墙设置" class="headerlink" title="防火墙设置"></a>防火墙设置</h2><p><code>systemctlstop firewalld.service</code>    关闭防火墙服务</p>
 <p><code>systemctldisable firewalld.service</code>  禁止防火墙开启启动</p>
 <p><code>systemctlrestart iptables.service</code>  重启防火墙使配置生效</p>
 <p><code>systemctlenable iptables.service</code>   设置防火墙开机启动</p>
-<h2 id="测试单个Redis"><a href="#测试单个Redis" class="headerlink" title="测试单个Redis"></a>测试单个Redis</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSingle</span><span class="params">()</span></span>&#123;</span><br><span class="line">		Jedis jedis = <span class="keyword">new</span> Jedis(<span class="string">"192.168.163.101"</span>, <span class="number">7000</span>);</span><br><span class="line">		<span class="comment">//设置访问密码</span></span><br><span class="line">		<span class="comment">//jedis.auth("123456");</span></span><br><span class="line">		String name = jedis.get(<span class="string">"name"</span>);</span><br><span class="line">		System.out.println(<span class="string">"jedis_name="</span>+name);</span><br><span class="line">		<span class="comment">//调用redis命令set</span></span><br><span class="line">		jedis.set(<span class="string">"name"</span>, <span class="string">"Andrew"</span>);</span><br><span class="line">		jedis.close();</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
-
+<h2 id="测试单个Redis"><a href="#测试单个Redis" class="headerlink" title="测试单个Redis"></a>测试单个Redis</h2><pre><code class="java">@Test
+    public void testSingle(){
+        Jedis jedis = new Jedis(&quot;192.168.163.101&quot;, 7000);
+        //设置访问密码
+        //jedis.auth(&quot;123456&quot;);
+        String name = jedis.get(&quot;name&quot;);
+        System.out.println(&quot;jedis_name=&quot;+name);
+        //调用redis命令set
+        jedis.set(&quot;name&quot;, &quot;Andrew&quot;);
+        jedis.close();
+    }</code></pre>
 <p>以上案例中我们先获取了redis中的那么键值并打印，随后又为这个name设新的值，进入容器中的redis客户端查看这个值是否有变动</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看容器id</span></span><br><span class="line">docker ps</span><br><span class="line"><span class="comment"># 进入容器</span></span><br><span class="line">docker exet -it 容器ID bash</span><br><span class="line"><span class="comment"># 进入redis</span></span><br><span class="line">redis-cli</span><br><span class="line"><span class="comment"># 查看值</span></span><br><span class="line">get name</span><br></pre></td></tr></table></figure>
-
-<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5CDocker%5CdockerSingleTest.png" alt="s"></p>
+<pre><code class="sh"># 查看容器id
+docker ps
+# 进入容器
+docker exet -it 容器ID bash
+# 进入redis
+redis-cli
+# 查看值
+get name</code></pre>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5CDocker%5CdockerSingleTest.png" srcset="/img/loading.gif" alt="s"></p>
 <h2 id="测试分片的Redis"><a href="#测试分片的Redis" class="headerlink" title="测试分片的Redis"></a>测试分片的Redis</h2><p>启动多个redis，这里基于上一步的单个redis继续启动两个容器</p>
 <p>以类似的方式启动，注意修改暴露的端口</p>
-<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5CDocker%5CdockerShardTest.png" alt="s"></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testShard</span><span class="params">()</span></span>&#123;</span><br><span class="line">		JedisPoolConfig config = <span class="keyword">new</span> JedisPoolConfig();</span><br><span class="line">		<span class="comment">//设置连接池数量</span></span><br><span class="line">		config.setMaxTotal(<span class="number">200</span>);</span><br><span class="line">		List&lt;JedisShardInfo&gt; list = <span class="keyword">new</span> ArrayList&lt;JedisShardInfo&gt;();</span><br><span class="line">		<span class="comment">//构造各个分片</span></span><br><span class="line">		list.add(<span class="keyword">new</span> JedisShardInfo(<span class="string">"192.168.163.101"</span>, <span class="number">7000</span>));</span><br><span class="line">		list.add(<span class="keyword">new</span> JedisShardInfo(<span class="string">"192.168.163.101"</span>, <span class="number">7001</span>));</span><br><span class="line">		list.add(<span class="keyword">new</span> JedisShardInfo(<span class="string">"192.168.163.101"</span>, <span class="number">7002</span>));</span><br><span class="line">		<span class="comment">//jedis分片</span></span><br><span class="line">		ShardedJedisPool pool = <span class="keyword">new</span> ShardedJedisPool(config, list);</span><br><span class="line">		ShardedJedis shardJedis = pool.getResource();</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">20</span>;i++)&#123;</span><br><span class="line">			shardJedis.set(<span class="string">"n"</span>+i, Integer.toString(i));</span><br><span class="line">		&#125;</span><br><span class="line">		shardJedis.close();</span><br><span class="line">		pool.close();</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
-
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5CDocker%5CdockerShardTest.png" srcset="/img/loading.gif" alt="s"></p>
+<pre><code class="java">@Test
+    public void testShard(){
+        JedisPoolConfig config = new JedisPoolConfig();
+        //设置连接池数量
+        config.setMaxTotal(200);
+        List&lt;JedisShardInfo&gt; list = new ArrayList&lt;JedisShardInfo&gt;();
+        //构造各个分片
+        list.add(new JedisShardInfo(&quot;192.168.163.101&quot;, 7000));
+        list.add(new JedisShardInfo(&quot;192.168.163.101&quot;, 7001));
+        list.add(new JedisShardInfo(&quot;192.168.163.101&quot;, 7002));
+        //jedis分片
+        ShardedJedisPool pool = new ShardedJedisPool(config, list);
+        ShardedJedis shardJedis = pool.getResource();
+        for(int i=0;i&lt;20;i++){
+            shardJedis.set(&quot;n&quot;+i, Integer.toString(i));
+        }
+        shardJedis.close();
+        pool.close();
+    }</code></pre>
 <p>上述java类是一个循环20次写值的过程，理论上分片后所有容器均会分担存储部分键值，查看结果如下</p>
-<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5CDocker%5CshardRedisCheck.png" alt></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5CDocker%5CshardRedisCheck.png" srcset="/img/loading.gif" alt></p>
 <h1 id="创建自定义镜像"><a href="#创建自定义镜像" class="headerlink" title="创建自定义镜像"></a>创建自定义镜像</h1><h2 id="Dockerfile"><a href="#Dockerfile" class="headerlink" title="Dockerfile"></a>Dockerfile</h2><ul>
 <li><p>Dockerfile通过逐层layer叠加，使资源得到重复利用，同时变化无穷。</p>
 <p>注意：FROM指定的镜像，本地如果有直接使用，无需网上下载。</p>
@@ -389,8 +312,10 @@
 </tr>
 </tbody></table>
 <h2 id="简单镜像操作"><a href="#简单镜像操作" class="headerlink" title="简单镜像操作"></a>简单镜像操作</h2><p>在你所选的目录下创建一个Dockerfile文件</p>
-<h3 id="配置Dockerfile"><a href="#配置Dockerfile" class="headerlink" title="配置Dockerfile"></a>配置Dockerfile</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 配置基础镜像</span></span><br><span class="line">FROM index.alauda.cn/tutum/centos:6.5</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">FROM registry.cn-hangzhou.aliyuncs.com/repos_zyl/centos:0.0.1</span><br></pre></td></tr></table></figure>
-
+<h3 id="配置Dockerfile"><a href="#配置Dockerfile" class="headerlink" title="配置Dockerfile"></a>配置Dockerfile</h3><pre><code class="sh"># 配置基础镜像
+FROM index.alauda.cn/tutum/centos:6.5
+# 或者
+FROM registry.cn-hangzhou.aliyuncs.com/repos_zyl/centos:0.0.1</code></pre>
 <ul>
 <li>tips：实际上如果只写FROM就相当于对镜像重命名</li>
 </ul>
@@ -431,13 +356,19 @@
 </ul>
 </li>
 <li><p>编辑Dockerfile文件</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">FROM 镜像名称</span><br><span class="line"><span class="comment">#解压并安装jdk</span></span><br><span class="line">ADD jdk-8u211-linux-x64.tar.gz /usr/<span class="built_in">local</span>/src</span><br><span class="line"><span class="comment">#设置环境变量</span></span><br><span class="line">ENV JAVA_HOME=/usr/<span class="built_in">local</span>/src/jdk1.8.0_211</span><br><span class="line">ENV PATH=<span class="variable">$JAVA_HOME</span>/bin:<span class="variable">$PATH</span></span><br><span class="line">ENV CLASSPATH=.:<span class="variable">$JAVA_HOME</span>/lib/dt.jar:<span class="variable">$JAVA_HOME</span>/lib/tools.jar</span><br></pre></td></tr></table></figure>
+<pre><code class="sh">FROM 镜像名称
+#解压并安装jdk
+ADD jdk-8u211-linux-x64.tar.gz /usr/local/src
+#设置环境变量
+ENV JAVA_HOME=/usr/local/src/jdk1.8.0_211
+ENV PATH=$JAVA_HOME/bin:$PATH
+ENV CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar</code></pre>
 </li>
 <li><p>镜像制作</p>
 <ul>
 <li><code>docker build --no-cache -t 镜像名称 Dockerfile目录</code></li>
 </ul>
-<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5CDocker%5CbuildImageJDK.png" alt></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5CDocker%5CbuildImageJDK.png" srcset="/img/loading.gif" alt></p>
 </li>
 <li><p>运行镜像</p>
 <ul>
@@ -461,7 +392,21 @@
 <h2 id="配置TOMCAT"><a href="#配置TOMCAT" class="headerlink" title="配置TOMCAT"></a>配置TOMCAT</h2><p>在有jdk的基础上配置tomcat</p>
 <ol>
 <li><p>重新编辑Dockerfile</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">FROM 镜像名称</span><br><span class="line"><span class="comment">#解压并安装jdk</span></span><br><span class="line">ADD jdk-8u211-linux-x64.tar.gz /usr/<span class="built_in">local</span>/src</span><br><span class="line"><span class="comment">#设置环境变量</span></span><br><span class="line">ENV JAVA_HOME=/usr/<span class="built_in">local</span>/src/jdk1.8.0_211</span><br><span class="line">ENV PATH=<span class="variable">$JAVA_HOME</span>/bin:<span class="variable">$PATH</span></span><br><span class="line">ENV CLASSPATH=.:<span class="variable">$JAVA_HOME</span>/lib/dt.jar:<span class="variable">$JAVA_HOME</span>/lib/tools.jar</span><br><span class="line"><span class="comment"># install tomcat7</span></span><br><span class="line">ADD apache-tomcat-7.0.55.tar.gz /usr/<span class="built_in">local</span>/src</span><br><span class="line">ENV CATALINA_HOME /usr/<span class="built_in">local</span>/src/apache-tomcat-7.0.55</span><br><span class="line">ENV PATH=<span class="variable">$PATH</span>:<span class="variable">$CATALINA_HOME</span>/bin</span><br><span class="line"><span class="comment">#对外访问的端口</span></span><br><span class="line">EXPOSE 8080										</span><br><span class="line"><span class="comment">#执行命令</span></span><br><span class="line">CMD [<span class="string">"/usr/local/src/apache-tomcat-7.0.55/bin/catalina.sh"</span>,<span class="string">"run"</span>]</span><br></pre></td></tr></table></figure>
+<pre><code class="sh">FROM 镜像名称
+#解压并安装jdk
+ADD jdk-8u211-linux-x64.tar.gz /usr/local/src
+#设置环境变量
+ENV JAVA_HOME=/usr/local/src/jdk1.8.0_211
+ENV PATH=$JAVA_HOME/bin:$PATH
+ENV CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
+# install tomcat7
+ADD apache-tomcat-7.0.55.tar.gz /usr/local/src
+ENV CATALINA_HOME /usr/local/src/apache-tomcat-7.0.55
+ENV PATH=$PATH:$CATALINA_HOME/bin
+#对外访问的端口
+EXPOSE 8080                                        
+#执行命令
+CMD [&quot;/usr/local/src/apache-tomcat-7.0.55/bin/catalina.sh&quot;,&quot;run&quot;]</code></pre>
 </li>
 <li><p>创建镜像</p>
 <ul>
@@ -474,15 +419,39 @@
 </ul>
 </li>
 <li><p>访问tomcat</p>
-<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5CDocker%5CbuildSuccessTomcat.png" alt></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5CDocker%5CbuildSuccessTomcat.png" srcset="/img/loading.gif" alt></p>
 </li>
 </ol>
 <h2 id="部署war包"><a href="#部署war包" class="headerlink" title="部署war包"></a>部署war包</h2><ol>
 <li><p>重新编辑Dockerfile文件</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">FROM 镜像名称</span><br><span class="line"><span class="comment">#解压并安装jdk</span></span><br><span class="line">ADD jdk-8u211-linux-x64.tar.gz /usr/<span class="built_in">local</span>/src</span><br><span class="line"><span class="comment">#设置环境变量</span></span><br><span class="line">ENV JAVA_HOME=/usr/<span class="built_in">local</span>/src/jdk1.8.0_211</span><br><span class="line">ENV PATH=<span class="variable">$JAVA_HOME</span>/bin:<span class="variable">$PATH</span></span><br><span class="line">ENV CLASSPATH=.:<span class="variable">$JAVA_HOME</span>/lib/dt.jar:<span class="variable">$JAVA_HOME</span>/lib/tools.jar</span><br><span class="line"><span class="comment"># install tomcat7</span></span><br><span class="line">ADD apache-tomcat-7.0.55.tar.gz /usr/<span class="built_in">local</span>/src</span><br><span class="line">ENV CATALINA_HOME /usr/<span class="built_in">local</span>/src/apache-tomcat-7.0.55</span><br><span class="line">ENV PATH=<span class="variable">$PATH</span>:<span class="variable">$CATALINA_HOME</span>/bin</span><br><span class="line">RUN rm -rf <span class="variable">$CATALINA_HOME</span>/webapps/*</span><br><span class="line"></span><br><span class="line"><span class="comment">#deploy the war</span></span><br><span class="line">COPY ROOT.war <span class="variable">$CATALINA_HOME</span>/webapps/ROOT/ROOT.war</span><br><span class="line">WORKDIR <span class="variable">$CATALINA_HOME</span>/webapps/ROOT</span><br><span class="line">RUN jar xvf ROOT.war</span><br><span class="line">RUN rm -rf ROOT.war</span><br><span class="line"></span><br><span class="line"><span class="comment">#对外访问的端口</span></span><br><span class="line">EXPOSE 8080										</span><br><span class="line"><span class="comment">#执行命令</span></span><br><span class="line">CMD [<span class="string">"/usr/local/src/apache-tomcat-7.0.55/bin/catalina.sh"</span>,<span class="string">"run"</span>]</span><br></pre></td></tr></table></figure>
+<pre><code class="sh">FROM 镜像名称
+#解压并安装jdk
+ADD jdk-8u211-linux-x64.tar.gz /usr/local/src
+#设置环境变量
+ENV JAVA_HOME=/usr/local/src/jdk1.8.0_211
+ENV PATH=$JAVA_HOME/bin:$PATH
+ENV CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
+# install tomcat7
+ADD apache-tomcat-7.0.55.tar.gz /usr/local/src
+ENV CATALINA_HOME /usr/local/src/apache-tomcat-7.0.55
+ENV PATH=$PATH:$CATALINA_HOME/bin
+RUN rm -rf $CATALINA_HOME/webapps/*
+
+#deploy the war
+COPY ROOT.war $CATALINA_HOME/webapps/ROOT/ROOT.war
+WORKDIR $CATALINA_HOME/webapps/ROOT
+RUN jar xvf ROOT.war
+RUN rm -rf ROOT.war
+
+#对外访问的端口
+EXPOSE 8080                                        
+#执行命令
+CMD [&quot;/usr/local/src/apache-tomcat-7.0.55/bin/catalina.sh&quot;,&quot;run&quot;]</code></pre>
 </li>
 <li><p>上传文件到虚拟机中</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 上传文件到虚拟机中/user/local/src/docker/EasyMall.war</span></span><br><span class="line"><span class="comment"># 修改文件名文ROOT.war</span></span><br><span class="line">mv EasyMall.war ROOT.war</span><br></pre></td></tr></table></figure>
+<pre><code class="sh"># 上传文件到虚拟机中/user/local/src/docker/EasyMall.war
+# 修改文件名文ROOT.war
+mv EasyMall.war ROOT.war</code></pre>
 </li>
 <li><p>制作镜像</p>
 <ul>
@@ -497,7 +466,7 @@
 <li><p>访问这个项目</p>
 </li>
 </ol>
-<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5CDocker%5CdockerWebSuccess.png" alt></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5CDocker%5CdockerWebSuccess.png" srcset="/img/loading.gif" alt></p>
 <h1 id="Docker数据卷"><a href="#Docker数据卷" class="headerlink" title="Docker数据卷"></a>Docker数据卷</h1><p>有状态容器都有数据持久化需求。Docker 采用 AFUS 分层文件系统时，文件系统的改动都是发生在最上面的容器层。在容器的生命周期内，它是持续的，包括容器在被停止后。但是，当容器被删除后，该数据层也随之被删除了。因此，Docker 采用 volume （卷）的形式来向容器提供持久化存储。</p>
 <p><code>docker run -p 53306:3306 -v $PWD/msyql:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=root --name mysql5719 -d bf1219a0a00d</code></p>
 <p>一个 data volume是容器中绕过文件系统的一个特定的目录。它被设计用来保存数据，而不管容器的生命周期。因此，当你删除一个容器时，Docker 肯定不会自动地删除一个volume。</p>
@@ -531,411 +500,291 @@
 </ul>
 </li>
 <li><p>添加mysql数据</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">DROP TABLE IF EXISTS `user`;</span><br><span class="line"></span><br><span class="line">CREATE TABLE `user` (</span><br><span class="line">  `ID` INT(11) NOT NULL AUTO_INCREMENT,</span><br><span class="line">  `NAME` VARCHAR(30) DEFAULT NULL,</span><br><span class="line">  `BIRTHDAY` DATETIME DEFAULT NULL,</span><br><span class="line">  `ADDRESS` VARCHAR(200) DEFAULT NULL,</span><br><span class="line">  PRIMARY KEY (`ID`)</span><br><span class="line">) ENGINE=INNODB DEFAULT CHARSET=utf8;</span><br><span class="line"></span><br><span class="line">#插入数据</span><br><span class="line">insert  into `user`(`ID`,`NAME`,`BIRTHDAY`,`ADDRESS`) values (1,&apos;夏言&apos;,&apos;1573-01-01 00:00:00&apos;,&apos;桂州村&apos;),(2,&apos;严嵩&apos;,&apos;1587-01-01 00:00:00&apos;,&apos;分宜县城介桥村&apos;),(3,&apos;徐阶&apos;,&apos;1580-01-01 00:00:00&apos;,&apos;明松江府华亭县&apos;),(4,&apos;高拱&apos;,&apos;1566-01-01 00:00:00&apos;,&apos;河南省新郑市高老庄村&apos;),(5,&apos;张居正&apos;,&apos;1558-01-01 00:00:00&apos;,&apos;江陵&apos;);</span><br></pre></td></tr></table></figure>
+<pre><code class="mysql">DROP TABLE IF EXISTS `user`;
+
+CREATE TABLE `user` (
+  `ID` INT(11) NOT NULL AUTO_INCREMENT,
+  `NAME` VARCHAR(30) DEFAULT NULL,
+  `BIRTHDAY` DATETIME DEFAULT NULL,
+  `ADDRESS` VARCHAR(200) DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+#插入数据
+insert  into `user`(`ID`,`NAME`,`BIRTHDAY`,`ADDRESS`) values (1,&#39;夏言&#39;,&#39;1573-01-01 00:00:00&#39;,&#39;桂州村&#39;),(2,&#39;严嵩&#39;,&#39;1587-01-01 00:00:00&#39;,&#39;分宜县城介桥村&#39;),(3,&#39;徐阶&#39;,&#39;1580-01-01 00:00:00&#39;,&#39;明松江府华亭县&#39;),(4,&#39;高拱&#39;,&#39;1566-01-01 00:00:00&#39;,&#39;河南省新郑市高老庄村&#39;),(5,&#39;张居正&#39;,&#39;1558-01-01 00:00:00&#39;,&#39;江陵&#39;);</code></pre>
 </li>
 <li><p>停止容器</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker ps										<span class="comment">#查看开启的容器</span></span><br><span class="line">docker stop 4f1dd82095c1						<span class="comment">#停止指定的容器</span></span><br><span class="line">docker ps</span><br><span class="line">docker ps -a</span><br></pre></td></tr></table></figure>
+<pre><code class="sh">docker ps                                        #查看开启的容器
+docker stop 4f1dd82095c1                        #停止指定的容器
+docker ps
+docker ps -a    </code></pre>
 </li>
 <li><p>再次打开容器</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker start 4f1dd82095c1						<span class="comment">#开启停止的容器</span></span><br><span class="line">docker ps										<span class="comment">#查看容器</span></span><br><span class="line">docker <span class="built_in">exec</span> -it 71621b64efc8 bash			<span class="comment">#进入容器</span></span><br><span class="line">mysql -uroot –proot							<span class="comment">#登录</span></span><br><span class="line">mysql&gt; use test_db;								<span class="comment">#打开数据库</span></span><br><span class="line">mysql&gt; select * from user;					<span class="comment">#查看user表</span></span><br></pre></td></tr></table></figure>
-
+<pre><code class="sh">docker start 4f1dd82095c1                        #开启停止的容器
+docker ps                                        #查看容器
+docker exec -it 71621b64efc8 bash            #进入容器
+mysql -uroot –proot                            #登录
+mysql&gt; use test_db;                                #打开数据库
+mysql&gt; select * from user;                    #查看user表</code></pre>
 <p>​</p>
 </li>
 </ol>
 
-    </div>
-</article>
-
-
-<div id="comments-template"></div>
-<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
-<script>
-	if(!window.commentConfig) {
-      window.commentConfig = {}
-      window.commentConfig.title = 'Docker安装应用'
-    }
-</script>
-
-                </div>
-                <aside class="col-md-4 gal-left" id="sidebar">
-    <!-- 此为sidebar的搜索框, 非搜索结果页面 -->
-<aside id="sidebar-search">
-    <div class="search hidden-xs" data-aos="fade-up" data-aos-duration="2000">
-        <form class="form-inline clearfix" id="search-form" method="get"
-              action="/search/index.html">
-            <input type="text" name="s" class="form-control" id="searchInput" placeholder="搜索文章~" autocomplete="off">
-            <button class="btn btn-danger btn-gal" type="submit">
-                <i class="fa fa-search"></i>
-            </button>
-        </form>
-    </div>
-</aside>
-    <aside id="sidebar-author">
-    <div class="panel panel-gal" data-aos="flip-right" data-aos-duration="3000">
-        <div class="panel-heading" style="text-align: center">
-            <i class="fa fa-quote-left"></i>
-            Andrew_Jiao
-            <i class="fa fa-quote-right"></i>
-        </div>
-        <div class="author-panel text-center">
-            <img src="/imgs/avatar.jpg" width="140" height="140"
-                 alt="个人头像" class="author-image">
-            <p class="author-description"></p>
-        </div>
-    </div>
-</aside>
-    
-    <aside id="sidebar-recent_comments">
-    <div class="panel panel-gal recent hidden-xs" data-aos="fade-up" data-aos-duration="2000">
-        <div class="panel-heading">
-            <i class="fa fa-comments"></i>
-            最新评论
-            <i class="fa fa-times-circle panel-remove"></i>
-            <i class="fa fa-chevron-circle-up panel-toggle"></i>
-        </div>
-        <ul class="list-group list-group-flush"></ul>
-    </div>
-</aside>
-    
-    <!-- 要配置好leancloud才能开启此小工具 -->
-    
-    <aside id="sidebar-hot_posts">
-    <div class="panel panel-gal hot hidden-xs" data-aos="fade-up" data-aos-duration="2000">
-        <div class="panel-heading">
-            <i class="fa fa-fire"></i>
-            最热文章
-            <i class="fa fa-times-circle panel-remove"></i>
-            <i class="fa fa-chevron-circle-up panel-toggle"></i>
-        </div>
-        <ul class="list-group list-group-flush"></ul>
-    </div>
-</aside>
-    
-    
-    <aside id="sidebar-recent_posts">
-    <div class="panel panel-gal recent hidden-xs" data-aos="fade-up" data-aos-duration="2000">
-        <div class="panel-heading">
-            <i class="fa fa-refresh"></i>
-            近期文章
-            <i class="fa fa-times-circle panel-remove"></i>
-            <i class="fa fa-chevron-circle-up panel-toggle"></i>
-        </div>
-        <ul class="list-group list-group-flush">
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2019/07/14/docker安装应用/">Docker安装应用</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2019/07/13/dockerInstall/">Docker安装配置</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2019/07/12/Docker/">Docker容器技术</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2019/07/01/Redis/">Redis</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2019/06/28/poetry_卫青/">出塞二首 其一</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2019/02/24/Maven仓库/">Maven仓库统计</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2018/12/24/GIT之远程仓库/">git远程仓库</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2018/12/21/Maven/">Maven使用</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2018/12/20/git操作/">git基础</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2013/12/24/中文測試/">中文測試</a>
-                </span>
-            </li>
-            
-        </ul>
-    </div>
-</aside>
-    
-    
-    <aside id="sidebar-rand_posts">
-    <div class="panel panel-gal recent hidden-xs" data-aos="fade-up" data-aos-duration="2000">
-        <div class="panel-heading">
-            <i class="fa fa-refresh"></i>
-            随机文章
-            <i class="fa fa-times-circle panel-remove"></i>
-            <i class="fa fa-chevron-circle-up panel-toggle"></i>
-        </div>
-        <ul class="list-group list-group-flush">
-            
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2019/07/13/dockerInstall/">Docker安装配置</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2019/06/28/poetry_卫青/">出塞二首 其一</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2019/07/12/Docker/">Docker容器技术</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2018/12/24/GIT之远程仓库/">git远程仓库</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2019/07/14/docker安装应用/">Docker安装应用</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2018/12/20/git操作/">git基础</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2019/07/01/Redis/">Redis</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2018/12/21/Maven/">Maven使用</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2019/02/24/Maven仓库/">Maven仓库统计</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2013/12/24/Maven私库/">中文測試</a>
-                </span>
-            </li>
-            
-        </ul>
-    </div>
-</aside>
-    
-    
-    <aside id="gal-sets">
-        <div class="panel panel-gal hidden-xs" data-aos="fade-up" data-aos-duration="2000">
-            <ul class="nav nav-pills pills-gal">
-
-                
-                <li>
-                    <a href="/2019/07/14/docker安装应用/index.html#sidebar-tags" data-toggle="tab" id="tags-tab">热门标签</a>
-                </li>
-                
-                
-                <li>
-                    <a href="/2019/07/14/docker安装应用/index.html#sidebar-friend-links" data-toggle="tab" id="friend-links-tab">友情链接</a>
-                </li>
-                
-                
-                <li>
-                    <a href="/2019/07/14/docker安装应用/index.html#sidebar-links" data-toggle="tab" id="links-tab">个人链接</a>
-                </li>
-                
-            </ul>
-            <div class="tab-content">
-                
-                <div class="cloud-tags tab-pane nav bs-sidenav fade" id="sidebar-tags">
-    
-    <a href="/tags/Docker/" style="font-size: 12.58260517858438px;" class="tag-cloud-link">Docker</a>
-    
-    <a href="/tags/warrior/" style="font-size: 8.627588278781275px;" class="tag-cloud-link">warrior</a>
-    
-    <a href="/tags/just-Test/" style="font-size: 16.91975231554499px;" class="tag-cloud-link">just Test</a>
-    
-    <a href="/tags/git/" style="font-size: 17.996920430390436px;" class="tag-cloud-link">git</a>
-    
-    <a href="/tags/repository/" style="font-size: 16.885826087397785px;" class="tag-cloud-link">repository</a>
-    
-    <a href="/tags/Redis/" style="font-size: 8.717152835326534px;" class="tag-cloud-link">Redis</a>
-    
-    <a href="/tags/project/" style="font-size: 11.28788748436291px;" class="tag-cloud-link">project</a>
-    
-    <a href="/tags/Maven/" style="font-size: 19.021144175635268px;" class="tag-cloud-link">Maven</a>
-    
-</div>
-                
-                
-                <div class="friend-links tab-pane nav bs-sidenav fade" id="sidebar-friend-links">
-    
-    <li>
-        <a href="http://kdays.net/days/" target="_blank">KDays Forum</a>
-    </li>
-    
-    <li>
-        <a href="http://www.gal123.com/" target="_blank">绅士导航♂</a>
-    </li>
-    
-    <li>
-        <a href="http://www.moe123.com/" target="_blank">萌导航</a>
-    </li>
-    
-</div>
-                
-                
-                <div class="links tab-pane nav bs-sidenav fade" id="sidebar-links">
-    
-    <li>
-        <a href="https://github.com/AndrewJiao/" target="_blank">Github</a>
-    </li>
-    
-    <li>
-        <a href="" target="_blank">Coding</a>
-    </li>
-    
-    <li>
-        <a href="" target="_blank">知乎</a>
-    </li>
-    
-</div>
-                
             </div>
-        </div>
-    </aside>
-    
-</aside>
+            <hr>
+            <div>
+              <p>
+                
+                  <span>
+                <i class="iconfont icon-inbox"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Docker/">Docker</a>
+                      &nbsp;
+                    
+                  </span>&nbsp;&nbsp;
+                
+                
+                  <span>
+                <i class="iconfont icon-tag"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Docker/">Docker</a>
+                    
+                  </span>
+                
+              </p>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
             </div>
+
+            
+          </div>
         </div>
+      </div>
     </div>
-    <footer id="gal-footer">
-    <div class="container">
-        Copyright © 2018 Andrew_Jiao Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>.&nbsp;Theme by <a href="https://github.com/ZEROKISEKI" target="_blank">AONOSORA</a>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc-start"></div>
+<div id="toc">
+  <p class="h5"><i class="far fa-list-alt"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a class="z-depth-1" id="scroll-top-button" href="#" role="button">
+      <i class="fa fa-chevron-up scroll-top-arrow" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
     </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><b>Hexo</b></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"> <b>Fluid</b></a>
+    </div>
+    
+
+    
+
+    
+  </div>
 </footer>
 
-<!-- 回到顶端 -->
-<div id="gal-gotop">
-    <i class="fa fa-angle-up"></i>
-</div>
-<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/assets/shizuku.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"log":false});</script></body>
-<script src="/js/activate-power-mode.js"></script>
-<script>
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/popper.js/1.16.1/umd/popper.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="https://cdn.staticfile.org/mdbootstrap/4.13.0/js/mdb.min.js" ></script>
+<script  src="/js/main.js" ></script>
 
-    // 配置highslide
-	hs.graphicsDir = '/js/highslide/graphics/'
-    hs.outlineType = "rounded-white";
-    hs.dimmingOpacity = 0.8;
-    hs.outlineWhileAnimating = true;
-    hs.showCredits = false;
-    hs.captionEval = "this.thumb.alt";
-    hs.numberPosition = "caption";
-    hs.align = "center";
-    hs.transitions = ["expand", "crossfade"];
-    hs.lang.number = '共%2张图, 当前是第%1张';
-    hs.addSlideshow({
-      interval: 5000,
-      repeat: true,
-      useControls: true,
-      fixedControls: "fit",
-      overlayOptions: {
-        opacity: 0.75,
-        position: "bottom center",
-        hideOnMouseOut: true
+
+  <script  src="/js/lazyload.js" ></script>
+
+
+
+  
+  <script  src="https://cdn.staticfile.org/tocbot/4.10.0/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var navHeight = $('#navbar').height();
+      var post = $('#post');
+      var toc = $('#toc');
+      var tocLimMax = post.offset().top + post.height() - navHeight;
+
+      $(window).scroll(function () {
+        var tocLimMin = $('#toc-start').offset().top - navHeight;
+        var scroH = document.body.scrollTop + document.documentElement.scrollTop;
+
+        if (tocLimMin <= scroH && scroH <= tocLimMax) {
+          toc.css({
+            'display': 'block',
+            'position': 'fixed',
+            'top': navHeight,
+          });
+        } else if (scroH <= tocLimMin) {
+          toc.css({
+            'position': '',
+            'top': '',
+          });
+        } else if (scroH > tocLimMax) {
+          toc.css('display', 'none');
+        }
+      });
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        scrollSmooth: true,
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc > p').css('visibility', 'visible');
       }
-    })
-
-    // 初始化aos
-    AOS.init({
-      duration: 1000,
-      delay: 0,
-      easing: 'ease-out-back'
+      var offset = $('#board-ctn').css('margin-right')
+      $('#toc-ctn').css({
+        'right': offset
+      })
     });
+  </script>
 
-</script>
-<script>
-	POWERMODE.colorful = 'true';    // make power mode colorful
-	POWERMODE.shake = 'true';       // turn off shake
-	// TODO 这里根据具体情况修改
-	document.body.addEventListener('input', POWERMODE);
-</script>
-<script>
-    window.slideConfig = {
-      prefix: 'http://ypimage.oss-cn-shenzhen.aliyuncs.com/theme/slide/background',
-      ext: 'jpg',
-      maxCount: '9'
+
+
+
+
+
+
+
+
+
+<!-- Plugins -->
+
+
+
+  <script  src="https://cdn.staticfile.org/prettify/188.0.0/prettify.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      $('pre').addClass('prettyprint  linenums');
+      prettyPrint();
+    })
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "Docker安装应用&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
     }
-</script>
-<script src="/js/hs.js"></script>
-<script src="/js/blog.js"></script>
+    anchors.add(res.join(", "))
+  </script>
 
 
-<script>
-    window.hot_posts_count = '10'
-    // window.use_leancloud = 'true'
-</script>
-<script src="/js/comment/leancloud.js"></script>
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      getSearchFile(path);
+      this.onclick = null
+    }
+  </script>
 
 
-<script src="https://myau.moe/js/comment/gitment.browser.js"></script>
-<script>
-    if(window.commentConfig) {
-      window.commentConfig.id = 'Sun Jul 14 2019 18:41:12 GMT+0800'
-      window.commentConfig.owner = 'AndrewJiao'
-      window.commentConfig.repo = 'gitment'
-      window.commentConfig.client_id = '9c9b8afccbbabb9602e6'
-      window.commentConfig.client_secret = 'ea8f9c439387edcd5c533c58e7999cad7cd3efc0'
-      window.commentConfig.redirect_uri = ''
-    } else {
-      window.commentConfig = {
-      	id: 'Sun Jul 14 2019 18:41:12 GMT+0800',
-        owner: 'AndrewJiao',
-        repo: 'gitment',
-        client_id: '9c9b8afccbbabb9602e6',
-        client_secret: 'ea8f9c439387edcd5c533c58e7999cad7cd3efc0',
-        redirect_uri: ''
+
+  <script defer src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <script>
+    $("#post img:not(.no-zoom img, img[no-zoom])").each(
+      function () {
+        var element = document.createElement("a");
+        $(element).attr("data-fancybox", "images");
+        $(element).attr("href", $(this).attr("src"));
+        $(this).wrap(element);
       }
-    }
-</script>
-<script src="/js/comment/gitment.js"></script>
+    );
+  </script>
 
+
+
+
+
+
+
+
+
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/assets/shizuku.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"log":false});</script></body>
 </html>
