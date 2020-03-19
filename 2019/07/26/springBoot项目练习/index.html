@@ -206,7 +206,7 @@ logging:
          xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
     &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
 
-    &lt;groupId&gt;cn.tedu&lt;/groupId&gt;
+    &lt;groupId&gt;cn.ypjiao&lt;/groupId&gt;
     &lt;artifactId&gt;sc-mybatis&lt;/artifactId&gt;
     &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
     &lt;packaging&gt;jar&lt;/packaging&gt;
@@ -261,8 +261,10 @@ import java.util.Date;
 public class User {
     private Integer id;
     private String name;
-
+    //用于限定识别传入的字符串日期格式
     @DateTimeFormat(pattern=&quot;yyyy-MM-dd&quot;)
+      //用于格式化Date类型时间输出的格式
+      @JsonFormat(pattern = &quot;yyyy-MM-dd HH:mm:ss&quot;,timezone = &quot;GMT+8&quot;)
     private Date birthday;
     private String address;
 

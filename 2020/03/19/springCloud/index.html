@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content>
+  <meta name="author" content="Andrew_Jiao">
+  <meta name="keywords" content>
+  <title>springCloud - abandon</title>
+
+  <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/5.12.1/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/mdbootstrap/4.13.0/css/mdb.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/3.0.1/github-markdown.min.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1067060_qzomjdt8bmp.css">
+
+
+  <link rel="stylesheet" href="/lib/prettify/tomorrow-night-eighties.min.css">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+  <link defer rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css">
+
+
+<!-- 自定义样式保持在最底部 -->
+
+
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>abandon</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/">首页</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/archives/">归档</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/categories/">分类</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/tags/">标签</a>
+          </li>
+        
+          
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/about/">关于</a>
+          </li>
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask rgba-black-light flex-center">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+                <p class="mt-3 post-meta">
+                  <i class="fas fa-calendar-alt" aria-hidden="true"></i>
+                  星期四, 三月 19日 2020, 12:31 下午
+                </p>
+              
+
+              <p class="mt-1">
+                
+                  
+                  <span class="post-meta">
+                    <i class="far fa-chart-bar"></i>
+                    6.3k 字
+                  </span>
+                
+
+                
+                  
+                  <span class="post-meta">
+                      <i class="far fa-clock"></i>
+                      30 分钟
+                  </span>
+                
+
+                
+              </p>
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5 z-depth-3" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <div class="markdown-body">
+              <h1 id="SpringCloud概述"><a href="#SpringCloud概述" class="headerlink" title="SpringCloud概述"></a>SpringCloud概述</h1><h2 id="微服务架构概述"><a href="#微服务架构概述" class="headerlink" title="微服务架构概述"></a>微服务架构概述</h2><p>“微服务”源于MartinFowler的博文Microservices。</p>
+<p>Martin说：微服务是系统架构上的<strong>一种设计风格</strong>，它的主旨是将一个原本独立的系统<strong>拆成多个小型服务</strong>，这些小型服务都在各自<strong>独立的进程中运行</strong>，服务之间通过<strong>基于HTTP的RESTful API进行通信协作</strong>。被拆分成的每一个小型服务都围绕着系统中的某一项或者<strong>某些耦合度较高的业务功能</strong>进行构建，并且每个服务都维护着自身的数据存储、业务开发、自动化测试案例以及独立部署机制。由于有了轻量级的通信协作基础，所以这些微服务可以使用不同的语言来编写。</p>
+<h2 id="微服务架构"><a href="#微服务架构" class="headerlink" title="微服务架构"></a>微服务架构</h2><p><img src="D:%5CMyProject%5Cblock%5Cupload_image%5CspringBoot%5CspringCloud.png" srcset="/img/loading.gif" alt></p>
+<p>简而言之，微服务就是开发一组小型服务的方式来开发一个独立的应用系统，每个小型服务都运行在自己的进程中，并采用HTTP资源API轻量级的机制来互相通信。这些服务围绕业务功能进行构建，并能通过全自动的部署机制来进行独立部署。这些微服务可以使用不同的语言来编写，并且可以使用不同的数据库存储技术。</p>
+<h2 id="微服务优点"><a href="#微服务优点" class="headerlink" title="微服务优点"></a>微服务优点</h2><ol>
+<li>易于开发和维护</li>
+<li>单个微服务启动快</li>
+<li>故障隔离</li>
+<li>局部修改容易且部署快</li>
+<li>技术栈不受限制</li>
+</ol>
+<h2 id="SpringCloud官网"><a href="#SpringCloud官网" class="headerlink" title="SpringCloud官网"></a>SpringCloud官网</h2><p>官网：     <a href="http://projects.spring.io/spring-cloud/" target="_blank" rel="noopener">http://projects.spring.io/spring-cloud/</a></p>
+<p>手册：     <a href="http://cloud.spring.io/spring-cloud-static/Dalston.SR2/" target="_blank" rel="noopener">http://cloud.spring.io/spring-cloud-static/Dalston.SR2/</a></p>
+<p>中文：     <a href="https://springcloud.cc/" target="_blank" rel="noopener">https://springcloud.cc/</a></p>
+<h2 id="核心功能"><a href="#核心功能" class="headerlink" title="核心功能"></a>核心功能</h2><ul>
+<li>configuration management         配置中心</li>
+<li>service discovery               服务发现</li>
+<li>circuit breakers                断路器</li>
+<li>intelligent routing             智能路由</li>
+<li>micro-proxy                     微代理</li>
+<li>control bus                     控制总线</li>
+<li>one-time tokens                 一次性令牌</li>
+<li>global locks                    全局锁</li>
+<li>leadership election             选举算法</li>
+<li>distributed sessions            分布式会话</li>
+<li>cluster state                   集群状态</li>
+</ul>
+<h2 id="核心架构图"><a href="#核心架构图" class="headerlink" title="核心架构图"></a>核心架构图</h2><p><img src="D:%5CMyProject%5Cblock%5Cupload_image%5CspringBoot%5CspringCloudCore.png" srcset="/img/loading.gif" alt></p>
+<h2 id="规划内容和步骤"><a href="#规划内容和步骤" class="headerlink" title="规划内容和步骤"></a>规划内容和步骤</h2><ul>
+<li>注册中心Eureka        eureka+ provider-user + consumer-client</li>
+<li>前端负载均衡Ribbon    consumer-ribbon</li>
+<li>RESTFul简易封装       consumer-ribbon-feign</li>
+<li>断路器支持            consumer-ribbon-feign-hystrix</li>
+<li>API网关 Zuul         gateway-zuul</li>
+<li>异构开发语言Sidecar   sidecar+ nodejs</li>
+<li>配置中心config        configserver+consumer-ribbon-feign-hystrix</li>
+</ul>
+<h1 id="Eureka注册中心"><a href="#Eureka注册中心" class="headerlink" title="Eureka注册中心"></a>Eureka注册中心</h1><h2 id="eureka的注册中心原理"><a href="#eureka的注册中心原理" class="headerlink" title="eureka的注册中心原理"></a>eureka的注册中心原理</h2><p><img src="D:%5CMyProject%5Cblock%5Cupload_image%5CspringBoot%5CzhuceCenter.png" srcset="/img/loading.gif" alt="zhuceCenter"></p>
+<p>注意它的特点，结构类似于MessageQueue消息队列，服务（提供者、消费者）先都注册到注册中心。对于服务的消费者，<strong>它的特点在于，不会每次都去注册中心获取，而是有本地缓存，加快访问性能。内部含有心跳机制，当注册中心信息改变，自动快速获取新的信息到本地。</strong>心跳机制还保证分布式环境下，某个服务失败后，自动列表从注册中心移除。注册中心中保证所有可用的链接。</p>
+<h2 id="注册中心相关配置"><a href="#注册中心相关配置" class="headerlink" title="注册中心相关配置"></a>注册中心相关配置</h2><h3 id="自我保护模式"><a href="#自我保护模式" class="headerlink" title="自我保护模式"></a>自我保护模式</h3><p>什么是自我保护模式？默认配置下，如果Eureka Server每分钟收到心跳续约的数量低于一个阈值（instance的数量(60/每个instance的心跳间隔秒数)自我保护系数），并且持续15分钟，就会触发自我保护。在自我保护模式中，Eureka Server会保护服务注册表中的信息，不再注销任何服务实例。当它收到的心跳数重新恢复到阈值以上时，该Eureka Server节点就会自动退出自我保护模式。它的设计哲学前面提到过，那就是宁可保留错误的服务注册信息，也不盲目注销任何可能健康的服务实例。</p>
+<p>该模式可以通过eureka.server.enable-self-preservation = false来禁用，同时eureka.instance.lease-renewal-interval-in-seconds可以用来更改心跳间隔。</p>
+<h2 id="调用关系图"><a href="#调用关系图" class="headerlink" title="调用关系图"></a>调用关系图</h2><p>下图可见，对于负载均衡的Ribbon而言，它是基于消费者端的</p>
+<p><img src="D:%5CMyProject%5Cblock%5Cupload_image%5CspringBoot%5CeurekaService.png" srcset="/img/loading.gif" alt="eurekaService"></p>
+<h2 id="注册中心搭建"><a href="#注册中心搭建" class="headerlink" title="注册中心搭建"></a>注册中心搭建</h2><h3 id="pom-xml文件"><a href="#pom-xml文件" class="headerlink" title="pom.xml文件"></a>pom.xml文件</h3><pre><code class="xml">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;groupId&gt;eureka.server&lt;/groupId&gt;
+    &lt;artifactId&gt;eureka-server&lt;/artifactId&gt;
+    &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+
+    &lt;parent&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+        &lt;version&gt;1.5.4.RELEASE&lt;/version&gt;
+        &lt;relativePath /&gt;
+    &lt;/parent&gt;
+    &lt;properties&gt;
+        &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+        &lt;project.reporting.outputEncoding&gt;UTF-8&lt;/project.reporting.outputEncoding&gt;
+        &lt;java.version&gt;1.8&lt;/java.version&gt;
+    &lt;/properties&gt;
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-starter-eureka-server&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+    &lt;dependencyManagement&gt;
+        &lt;dependencies&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-cloud-dependencies&lt;/artifactId&gt;
+                &lt;version&gt;Dalston.SR1&lt;/version&gt;
+                &lt;type&gt;pom&lt;/type&gt;
+                &lt;scope&gt;import&lt;/scope&gt;
+            &lt;/dependency&gt;
+        &lt;/dependencies&gt;
+    &lt;/dependencyManagement&gt;
+&lt;/project&gt;</code></pre>
+<h3 id="application-yml"><a href="#application-yml" class="headerlink" title="application.yml"></a>application.yml</h3><pre><code class="yml">security:
+  basic:
+    enabled: true
+  user:
+    name: user
+    password: password123
+server:
+  port: 8761
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: http://user:password123@localhost:8761/eureka
+logging:
+  level:
+    root: INFO
+</code></pre>
+<h3 id="服务启动类"><a href="#服务启动类" class="headerlink" title="服务启动类"></a>服务启动类</h3><pre><code class="java">package com.ypjiao;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
+
+@EnableEurekaServer
+@SpringBootApplication
+public class RunServices {
+    public static void main(String[] args) {
+        SpringApplication.run(RunServices.class,args);
+    }
+}
+</code></pre>
+<p>地址：<a href="http://localhost:8761" target="_blank" rel="noopener">http://localhost:8761</a></p>
+<p>启动后可通过地址访问各种微服务实例</p>
+<h1 id="Eureka服务提供者"><a href="#Eureka服务提供者" class="headerlink" title="Eureka服务提供者"></a>Eureka服务提供者</h1><h2 id="服务提供者搭建"><a href="#服务提供者搭建" class="headerlink" title="服务提供者搭建"></a>服务提供者搭建</h2><h3 id="pom-xml"><a href="#pom-xml" class="headerlink" title="pom.xml"></a>pom.xml</h3><pre><code class="xml">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;groupId&gt;com.ypjiao&lt;/groupId&gt;
+    &lt;artifactId&gt;eureka-supplier&lt;/artifactId&gt;
+    &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+
+    &lt;parent&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+        &lt;version&gt;1.5.4.RELEASE&lt;/version&gt;
+        &lt;relativePath /&gt; &lt;!-- lookup parent from repository --&gt;
+    &lt;/parent&gt;
+    &lt;properties&gt;
+        &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+        &lt;project.reporting.outputEncoding&gt;UTF-8&lt;/project.reporting.outputEncoding&gt;
+        &lt;java.version&gt;1.8&lt;/java.version&gt;
+    &lt;/properties&gt;
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-starter-eureka&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+    &lt;dependencyManagement&gt;
+        &lt;dependencies&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-cloud-dependencies&lt;/artifactId&gt;
+                &lt;version&gt;Dalston.SR1&lt;/version&gt;
+                &lt;type&gt;pom&lt;/type&gt;
+                &lt;scope&gt;import&lt;/scope&gt;
+            &lt;/dependency&gt;
+        &lt;/dependencies&gt;
+    &lt;/dependencyManagement&gt;
+&lt;/project&gt;
+</code></pre>
+<h3 id="application-yml-1"><a href="#application-yml-1" class="headerlink" title="application.yml"></a>application.yml</h3><pre><code class="yml">server:
+  port: 7900
+spring:
+  application:
+    name: supplier-user # 服务的名称，名称可以相同用于标识是什么服务，且方便用于负载均衡识别对应的服务
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://user:password123@localhost:8761/eureka
+logging:
+  level:
+    root: INFO</code></pre>
+<h3 id="Controller-java"><a href="#Controller-java" class="headerlink" title="Controller.java"></a>Controller.java</h3><pre><code class="java">package com.ypjiao.controller;
+
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class SupplierController {
+    @RequestMapping(&quot;/supplier/{name}&quot;)
+    public String getName(@PathVariable String name){
+        return &quot;hello,&quot;+name;
+    }
+}
+</code></pre>
+<h3 id="服务启动类-1"><a href="#服务启动类-1" class="headerlink" title="服务启动类"></a>服务启动类</h3><pre><code class="java">package com.ypjiao;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.context.annotation.Bean;
+
+@SpringBootApplication
+//Eureka客户端
+@EnableEurekaClient
+public class RunSupplier1 {
+    public static void main(String[] args) {
+        SpringApplication.run(RunSupplier1.class,args);
+    }
+}
+</code></pre>
+<h1 id="Eureka服务消费者"><a href="#Eureka服务消费者" class="headerlink" title="Eureka服务消费者"></a>Eureka服务消费者</h1><h2 id="服务消费者搭建"><a href="#服务消费者搭建" class="headerlink" title="服务消费者搭建"></a>服务消费者搭建</h2><h3 id="pom-xml-1"><a href="#pom-xml-1" class="headerlink" title="pom.xml"></a>pom.xml</h3><pre><code class="xml">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;groupId&gt;com.ypjiao&lt;/groupId&gt;
+    &lt;artifactId&gt;ribbon-client&lt;/artifactId&gt;
+    &lt;packaging&gt;pom&lt;/packaging&gt;
+    &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+    &lt;modules&gt;
+        &lt;module&gt;Tomorow&lt;/module&gt;
+    &lt;/modules&gt;
+
+    &lt;parent&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+        &lt;version&gt;1.5.4.RELEASE&lt;/version&gt;
+        &lt;relativePath /&gt; &lt;!-- lookup parent from repository --&gt;
+    &lt;/parent&gt;
+    &lt;properties&gt;
+        &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+        &lt;project.reporting.outputEncoding&gt;UTF-8&lt;/project.reporting.outputEncoding&gt;
+        &lt;java.version&gt;1.8&lt;/java.version&gt;
+    &lt;/properties&gt;
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-starter-eureka&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+    &lt;dependencyManagement&gt;
+        &lt;dependencies&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-cloud-dependencies&lt;/artifactId&gt;
+                &lt;version&gt;Dalston.SR1&lt;/version&gt;
+                &lt;type&gt;pom&lt;/type&gt;
+                &lt;scope&gt;import&lt;/scope&gt;
+            &lt;/dependency&gt;
+        &lt;/dependencies&gt;
+    &lt;/dependencyManagement&gt;
+&lt;/project&gt;
+</code></pre>
+<h3 id="application-yml-2"><a href="#application-yml-2" class="headerlink" title="application.yml"></a>application.yml</h3><pre><code class="yml">server:
+  port: 7902
+spring:
+  application:
+    name: ribbon-client
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://user:password123@localhost:8761/eureka
+logging:
+  level:
+    root: INFO
+</code></pre>
+<h3 id="Controller-java-1"><a href="#Controller-java-1" class="headerlink" title="Controller.java"></a>Controller.java</h3><ul>
+<li>RestTemplate对象是在RunApp中声明并创建的，用它才可以实现负载均衡，同时注意url中的地址为VIP虚拟IP，为application.yml中配置的application-name。</li>
+</ul>
+<pre><code class="java">package com.ypjiao.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+
+@RestController
+public class RibbonController {
+    @Autowired
+    RestTemplate restTemplate;
+    @RequestMapping(&quot;/ribbon/{name}&quot;)
+    String getName(@PathVariable String name){
+        String url = &quot;http://SUPPLIER-USER/supplier/&quot;+name;
+        return restTemplate.getForObject(url,String.class);
+    }
+
+}
+</code></pre>
+<h3 id="服务启动类-2"><a href="#服务启动类-2" class="headerlink" title="服务启动类"></a>服务启动类</h3><ul>
+<li>@LoadBalanced注解：用于制定RestTemplate对象的负载均衡</li>
+</ul>
+<pre><code class="java">package com.ypjiao;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestTemplate;
+
+@SpringBootApplication
+@EnableEurekaClient
+public class RunRibbon {
+    @Bean
+    @LoadBalanced
+    public RestTemplate getRestTemplate(){
+        return new RestTemplate();
+    }
+    public static void main(String[] args) {
+        SpringApplication.run(RunRibbon.class,args);
+    }
+}
+</code></pre>
+<h1 id="Ribbon负载均衡"><a href="#Ribbon负载均衡" class="headerlink" title="Ribbon负载均衡"></a>Ribbon负载均衡</h1><h2 id="Ribbon概述"><a href="#Ribbon概述" class="headerlink" title="Ribbon概述"></a>Ribbon概述</h2><ul>
+<li>Ribbon是基于客户端的，因此需要在消费者客户端中进行配置</li>
+</ul>
+<p><img src="D:%5CMyProject%5Cblock%5Cupload_image%5CspringBoot%5CRibbon.png" srcset="/img/loading.gif" alt="Ribbon"></p>
+<h2 id="负载均衡策略"><a href="#负载均衡策略" class="headerlink" title="负载均衡策略"></a>负载均衡策略</h2><p>常见的负载均衡策略有三种</p>
+<ol>
+<li>第一种也是默认为轮询</li>
+<li>第二种为random随机</li>
+<li>第三种为WeightedResponseTimeRule，响应时间</li>
+</ol>
+<h2 id="负载均衡型消费者搭建"><a href="#负载均衡型消费者搭建" class="headerlink" title="负载均衡型消费者搭建"></a>负载均衡型消费者搭建</h2><p>ribbon其实无异于普通消费者，只需对代码中Template对象添加负载均衡注解@LoadBlance即可，此外还需切换调用虚拟IP的方法来实现负载均衡</p>
+<p>ribbon相关jar包已存在于eureka的jar包中，因此无需更改pom文件</p>
+<h3 id="Controller-java-2"><a href="#Controller-java-2" class="headerlink" title="Controller.java"></a>Controller.java</h3><pre><code class="java">package com.ypjiao.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+
+@RestController
+public class RibbonController {
+    @Autowired
+    RestTemplate restTemplate;
+    @RequestMapping(&quot;/ribbon/{name}&quot;)
+    String getName(@PathVariable String name){
+        String url = &quot;http://SUPPLIER-USER/supplier/&quot;+name;
+          //VIP虚拟IP，提供者的application-name:provider-user
+        return restTemplate.getForObject(url,String.class);
+    }
+
+}</code></pre>
+<h3 id="服务启动类-3"><a href="#服务启动类-3" class="headerlink" title="服务启动类"></a>服务启动类</h3><pre><code class="java">package com.ypjiao;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestTemplate;
+
+@SpringBootApplication
+@EnableEurekaClient
+public class RunRibbon {
+    @Bean
+    @LoadBalanced //Ribbon负载均衡
+    public RestTemplate getRestTemplate(){
+        return new RestTemplate();
+    }
+    public static void main(String[] args) {
+        SpringApplication.run(RunRibbon.class,args);
+    }
+}
+</code></pre>
+<h2 id="Ribbon随机负载算法配置"><a href="#Ribbon随机负载算法配置" class="headerlink" title="Ribbon随机负载算法配置"></a>Ribbon随机负载算法配置</h2><h3 id="Ribbon规则配置类"><a href="#Ribbon规则配置类" class="headerlink" title="Ribbon规则配置类"></a>Ribbon规则配置类</h3><p>需先自定义一个规则配置类</p>
+<pre><code class="java">package com.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import com.netflix.loadbalancer.IRule;
+import com.netflix.loadbalancer.RandomRule;
+
+/**
+ * 
+ * 自定义Ribbon配置
+ * 规定：这个类不能再@ComponentScan和@SpringBootApplication本包和子包下，否则引起@RibbonClients扫描冲突
+ * 注意：随机第一次打断点进入，之后多次刷新就不进入，可能由于本地缓存原因
+ */
+@Configuration
+public class RibbonRuleConfig {
+    @Bean
+    public IRule ribbonRule(){
+        return new RandomRule();
+    }
+}
+</code></pre>
+<h3 id="服务启动类-4"><a href="#服务启动类-4" class="headerlink" title="服务启动类"></a>服务启动类</h3><p>在原有的基础上新增@RibbonClient注解配置规则即可</p>
+<pre><code class="java">package com.ypjiao;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestTemplate;
+
+@SpringBootApplication
+@EnableEurekaClient
+@RibbonClient(name=&quot;provider-user&quot;, configuration=RibbonRuleConfig.class)
+public class RunRibbon {
+    @Bean
+    @LoadBalanced //Ribbon负载均衡
+    public RestTemplate getRestTemplate(){
+        return new RestTemplate();
+    }
+    public static void main(String[] args) {
+        SpringApplication.run(RunRibbon.class,args);
+    }
+}</code></pre>
+<h1 id="Feign服务消费者（申明式客户端）"><a href="#Feign服务消费者（申明式客户端）" class="headerlink" title="Feign服务消费者（申明式客户端）"></a>Feign服务消费者（申明式客户端）</h1><h2 id="Feign概述"><a href="#Feign概述" class="headerlink" title="Feign概述"></a>Feign概述</h2><p>Feigh是一个声明式web服务客户端。它能让开发web服务变得容易。使用Feign需要创建一个接口并注解它。它拥有包括Feign注解和JAX-RS注解的可插拔支持。它还支持可插拔的编码器和解码器。Spring Cloud拥有Spring MVC支持，并使用Spring Web中默认同样的HttpMessageConverters。在使用Feign时，SpringCloud集成了Ribbon和Eureka来提供负载均衡的HTTP客户端。</p>
+<p>总结：Feign简化HttpClient开发，封装了JAX-RS和SprinMVC的注解，学习成本很低。</p>
+<h2 id="Feign原理"><a href="#Feign原理" class="headerlink" title="Feign原理"></a>Feign原理</h2><ol>
+<li>首先通过@EnableFeignCleints注解开启FeignCleint</li>
+<li>根据Feign的规则实现接口，并加@FeignCleint注解</li>
+<li>程序启动后，会进行包扫描，扫描所有的@ FeignCleint的注解的类，并将这些信息注入到ioc容器中。</li>
+<li>当接口的方法被调用，通过jdk的代理，来生成具体的RequesTemplate</li>
+<li>RequesTemplate在生成Request</li>
+<li>Request交给Client去处理，其中Client可以是HttpUrlConnection、HttpClient也可以是Okhttp</li>
+<li>最后Client被封装到LoadBalanceClient类，这个类结合类Ribbon做到了负载均衡。</li>
+</ol>
+<p>原文链接：<a href="https://blog.csdn.net/forezp/article/details/73480304" target="_blank" rel="noopener">https://blog.csdn.net/forezp/article/details/73480304</a></p>
+<h2 id="服务提供者搭建-1"><a href="#服务提供者搭建-1" class="headerlink" title="服务提供者搭建"></a>服务提供者搭建</h2><h3 id="pom-xml-2"><a href="#pom-xml-2" class="headerlink" title="pom.xml"></a>pom.xml</h3><ul>
+<li>注意，Feign是基于Hystrix的</li>
+</ul>
+<pre><code class="xml">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;groupId&gt;com.ypjiao&lt;/groupId&gt;
+    &lt;artifactId&gt;feign=client&lt;/artifactId&gt;
+    &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+
+    &lt;parent&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+        &lt;version&gt;1.5.4.RELEASE&lt;/version&gt;
+        &lt;relativePath /&gt; &lt;!-- lookup parent from repository --&gt;
+    &lt;/parent&gt;
+    &lt;properties&gt;
+        &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+        &lt;project.reporting.outputEncoding&gt;UTF-8&lt;/project.reporting.outputEncoding&gt;
+        &lt;java.version&gt;1.8&lt;/java.version&gt;
+    &lt;/properties&gt;
+    &lt;dependencies&gt;
+        &lt;!-- Hystrix，Feign是基于Hystrix的 --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-starter-hystrix&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;!-- Feign依赖，声明式开发 --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-starter-feign&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;!-- Eureka依赖，连接注册中心的都需要有这个依赖 --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-starter-eureka&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+    &lt;dependencyManagement&gt;
+        &lt;dependencies&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-cloud-dependencies&lt;/artifactId&gt;
+                &lt;version&gt;Dalston.SR1&lt;/version&gt;
+                &lt;type&gt;pom&lt;/type&gt;
+                &lt;scope&gt;import&lt;/scope&gt;
+            &lt;/dependency&gt;
+        &lt;/dependencies&gt;
+    &lt;/dependencyManagement&gt;
+&lt;/project&gt;
+</code></pre>
+<h3 id="application-yml-3"><a href="#application-yml-3" class="headerlink" title="application.yml"></a>application.yml</h3><pre><code class=".yml">server:
+  port: 7903
+spring:
+  application:
+    name: feign-client
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://user:password123@localhost:8761/eureka
+</code></pre>
+<h3 id="FeignService-java"><a href="#FeignService-java" class="headerlink" title="FeignService.java"></a>FeignService.java</h3><p>以接口对外暴露，从而封装底层操作。</p>
+<ul>
+<li>注解：<ul>
+<li>@FeignClient：申明该接口为Feign管理<ul>
+<li>value值中指定对应的服务提供者</li>
+<li>config：指定具体的配置类</li>
+<li>fallback：Feign的降级</li>
+</ul>
+</li>
+<li>@RequestMapping：将来作为请求模板的一员指定请求路径</li>
+<li>@PathVariable：指定请求参数</li>
+</ul>
+</li>
+</ul>
+<pre><code class="java">package com.ypjiao.controller;
+
+import org.springframework.cloud.netflix.feign.FeignClient;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+// 这个接口相当于把原来的服务提供者项目当成一个Service类
+@FeignClient(value = &quot;supplier-user&quot;)
+public interface FeignService {
+      /*
+     * Feign中没有原生的@GetMapping/@PostMapping/@DeleteMapping/@PutMapping，要指定需要用method进行
+     */
+    @RequestMapping(&quot;/supplier/{name}&quot;)
+    String getName(@PathVariable(&quot;name&quot;) String value);
+}
+</code></pre>
+<h3 id="FeignConfig-java"><a href="#FeignConfig-java" class="headerlink" title="FeignConfig.java"></a>FeignConfig.java</h3><p>Feign相关配置设置</p>
+<pre><code class="java">@Configuration
+public class FeignConfig {
+    @Bean
+    public Retryer feignRetryer() {
+        return new Retryer.Default(100, SECONDS.toMillis(1), 5);
+    }
+
+}</code></pre>
+<h3 id="Controller-java-3"><a href="#Controller-java-3" class="headerlink" title="Controller.java"></a>Controller.java</h3><pre><code class="java">package com.ypjiao.controller;
+
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class FeignController {
+    @Autowired
+    FeignService feignService;
+    @RequestMapping(&quot;/ypFeign/{name}&quot;)
+    String getName(@PathVariable String name){
+        return feignService.getName(name);
+    }
+}
+</code></pre>
+<h3 id="服务启动类-5"><a href="#服务启动类-5" class="headerlink" title="服务启动类"></a>服务启动类</h3><ul>
+<li>注解说明<ul>
+<li>@EnableFeignClients：开启Feign功能，这样容器才回去扫描带有@FeignClient注解的接口</li>
+</ul>
+</li>
+</ul>
+<pre><code class="java">package com.ypjiao;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.cloud.client.SpringCloudApplication;
+import org.springframework.cloud.netflix.feign.EnableFeignClients;
+
+@SpringCloudApplication
+@EnableFeignClients
+public class RunFeign {
+    public static void main(String[] args) {
+        SpringApplication.run(RunFeign.class,args);
+    }
+}
+</code></pre>
+<h2 id="Feign实现降级"><a href="#Feign实现降级" class="headerlink" title="Feign实现降级"></a>Feign实现降级</h2><h3 id="Fallback-java"><a href="#Fallback-java" class="headerlink" title="Fallback.java"></a>Fallback.java</h3><p>直接实现消费者的CartFeign接口，给每个方法设置异常时的处理</p>
+<pre><code class="java">package com.ypjiao.feign;
+
+import org.springframework.stereotype.Component;
+
+@Component    //微服务访问异常则启用降级
+public class FeignServiceFallback implements FeignService{
+    @Override
+    public SysResult mycart(Long userId) {
+        return SysResult.build(400, &quot;mycart error.&quot;);
+    }
+    @Override
+    public SysResult save(Cart cart) {
+        return SysResult.build(400, &quot;save error.&quot;);
+    }
+    @Override
+    public SysResult update(Cart cart) {
+        return SysResult.build(400, &quot;update error.&quot;);
+    }
+    @Override
+    public SysResult delete(Cart cart) {
+        return SysResult.build(400, &quot;delete error.&quot;);
+    }
+}
+</code></pre>
+<h3 id="修改FeignService-java"><a href="#修改FeignService-java" class="headerlink" title="修改FeignService.java"></a>修改FeignService.java</h3><p>需指定降级配置</p>
+<pre><code class="java">package com.ypjiao.feign;
+
+import org.springframework.cloud.netflix.feign.FeignClient;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@FeignClient(value = &quot;supplier-user&quot;, fallback = CartFeignFallback.class)
+public interface FeignService {
+    @RequestMapping(&quot;/supplier/{name}&quot;)
+    String getName(@PathVariable(&quot;name&quot;) String value);
+}
+</code></pre>
+<h3 id="修改Application-yml"><a href="#修改Application-yml" class="headerlink" title="修改Application.yml"></a>修改Application.yml</h3><pre><code class="yml">server:
+  port: 9001
+
+spring:
+  application:
+    name: jt-cart
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://user:password123@localhost:8761/eureka
+
+#feign集成hystrix必须开启
+feign:
+  hystrix:
+    enabled: true
+
+logging:
+  level:
+    root: INFO
+</code></pre>
+<h2 id="Feign调用过程"><a href="#Feign调用过程" class="headerlink" title="Feign调用过程"></a>Feign调用过程</h2><p><img src="D:%5CMyProject%5Cblock%5Cupload_image%5CspringBoot%5CprocessFeign.png" srcset="/img/loading.gif" alt="processFeign"></p>
+<p>首先，提供者provider-user和消费者custorm-feign都注册到Eureka中。用户请求feign中的controller，feign中的controller调用feign定义的接口方法。接口的方法根据注解去找到eureka注册中心中的provider-user地址，然后请求远程provider-user所在服务器的地址，然后调用远程的provider-user提供者的具体服务。提供者响应返回json，json被feign封装传输给“接口”的返回值，“接口”在返回给feign的controller，最终响应给用户。</p>
+<h1 id="Hystrix断路器"><a href="#Hystrix断路器" class="headerlink" title="Hystrix断路器"></a>Hystrix断路器</h1><h2 id="Hystrx断路器概述"><a href="#Hystrx断路器概述" class="headerlink" title="Hystrx断路器概述"></a>Hystrx断路器概述</h2><ul>
+<li>微服务架构存在的问题</li>
+</ul>
+<p>微服务的设计，服务分散在多个服务器上，服务之间互相调用，要调用的服务由于跨网络跨服务器调用，响应速度明显比传统项目单机调用慢很多，甚至由于网络涌动的不稳定的现象发生导致调用超时；还有类似级联失败、雪崩效应（依赖的基础服务宕机，关联的服务导致失败甚至宕机，就像滚雪球一样层层失败。）</p>
+<p>如何解决这类新的问题呢？传统的机制就是<strong>超时机制</strong>。</p>
+<ul>
+<li>超时机制</li>
+</ul>
+<p>良好的设计，在通过网络请求其他服务时，都必须设置超时时间。正常情况下，一个远程调用几十毫秒内返回。当要调用的服务不可用时或者网络问题，响应时间要等超时，如HttpClient几十秒才超时返回。通常，<strong>一次远程调用对应一个线程/进程，如果大量的线程/进程得不到释放，并且越积越多，服务资源就会被耗尽，从而导致资深服务不可用。</strong>所以必须为每个请求设置超时时间</p>
+<p>特别像微服务这样基于多个服务，服务之间都是远程调用，如果一个服务长时间等待，用户体验会极差的，那怎么办呢？断路器模式应运而生。</p>
+<ul>
+<li>熔断机制</li>
+</ul>
+<p><strong>断路器可以实现快速失败，如果它在一段时间内检测到许多失败，如超时，就会强迫其以后的多个调用快速失败，</strong>不再请求所依赖的服务，从而防止应用程序不断地尝试执行可能会失败的操作，这样应用程序可以继续执行而不用等待修正错误，或者浪费CPU时间去等待长时间的超时。<strong>断路器也可以使应用程序能够诊断错误是否已经修正</strong>，如果已经修正，应用程序会再次尝试调用操作。</p>
+<h2 id="断路器几个状态"><a href="#断路器几个状态" class="headerlink" title="断路器几个状态"></a>断路器几个状态</h2><p><img src="D:%5CMyProject%5Cblock%5Cupload_image%5CspringBoot%5ChystrixProcess.png" srcset="/img/loading.gif" alt="hystrixProcess"></p>
+<ul>
+<li>关闭：当访问没有问题时，断路器处于关闭未使用。</li>
+<li>打开：当访问开始出现异常，错误次数增多，达到阀值时就会打开断路器，这样服务直接访问断路器，进行快速失败返回。</li>
+<li>半开：那服务一直走断路器，系统就没法用了，万一被调用的服务已经稳定了呢。断路器的优势就来了，过一定时间窗口后（若干秒）它就会自动分流一部分服务再去尝试访问之前失败的服务。如果继续失败，那就不再转发，如果成功了，成功率高了，那会关闭断路器。</li>
+</ul>
+<h2 id="断路器搭建"><a href="#断路器搭建" class="headerlink" title="断路器搭建"></a>断路器搭建</h2><ul>
+<li>由于Feign是基于Hystrix因此pom文件和Feign一致</li>
+<li>SpringClouldApplication注解内置开启hystrix</li>
+</ul>
+<h3 id="application-yml-4"><a href="#application-yml-4" class="headerlink" title="application.yml"></a>application.yml</h3><pre><code class="yml">server:
+  port: 9001
+spring:
+  application:
+    name: consumer-feign-hystrix
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://user:password123@localhost:8761/eureka
+</code></pre>
+<h3 id="修改FeignController"><a href="#修改FeignController" class="headerlink" title="修改FeignController"></a>修改FeignController</h3><ul>
+<li>注解说明<ul>
+<li>@HystrixCommand：为注解的方法指定断路方法</li>
+</ul>
+</li>
+</ul>
+<pre><code class="java">package com.ypjiao.controller;
+
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class FeignController {
+    @Autowired
+    FeignService feignService;
+    @RequestMapping(&quot;/ypFeign/{name}&quot;)
+    @HystrixCommand(fallbackMethod = &quot;fallbackfeign&quot;)
+    String getName(@PathVariable String name){
+        return feignService.getName(name);
+    }
+  //对应上面的方法，参数必须一致，当访问失败时，hystrix直接回调用此方法
+    String fallbackfeign(String name){
+        return &quot;我是断路器,你好,&quot;+name;
+    }
+}
+</code></pre>
+<h1 id="Zuul网关"><a href="#Zuul网关" class="headerlink" title="Zuul网关"></a>Zuul网关</h1><h2 id="API网关概述"><a href="#API网关概述" class="headerlink" title="API网关概述"></a>API网关概述</h2><p>通常来说，使用<br>API 网关是更好的解决方式。API 网关是一个服务器，也可以说是进入系统的唯一节点。API 网关封装内部系统的架构，并且提供 API 给各个客户端。它还可能还具备授权、监控、负载均衡、缓存、请求分片和管理、静态响应处理等功能。下图展示了一个适应当前架构的 API 网关</p>
+<h2 id="Zuul搭建"><a href="#Zuul搭建" class="headerlink" title="Zuul搭建"></a>Zuul搭建</h2><p>Zuul的核心还yml配置文件，用映射关系来匹配请求和访问的服务</p>
+<h3 id="pom-xml-3"><a href="#pom-xml-3" class="headerlink" title="pom.xml"></a>pom.xml</h3><pre><code class="xml">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;groupId&gt;com.ypjiao&lt;/groupId&gt;
+    &lt;artifactId&gt;eureka-zull&lt;/artifactId&gt;
+    &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+
+    &lt;parent&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+        &lt;version&gt;1.5.4.RELEASE&lt;/version&gt;
+        &lt;relativePath /&gt; &lt;!-- lookup parent from repository --&gt;
+    &lt;/parent&gt;
+    &lt;properties&gt;
+        &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+        &lt;project.reporting.outputEncoding&gt;UTF-8&lt;/project.reporting.outputEncoding&gt;
+        &lt;java.version&gt;1.8&lt;/java.version&gt;
+    &lt;/properties&gt;
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-starter-zuul&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-starter-eureka&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+    &lt;dependencyManagement&gt;
+        &lt;dependencies&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-cloud-dependencies&lt;/artifactId&gt;
+                &lt;version&gt;Dalston.SR1&lt;/version&gt;
+                &lt;type&gt;pom&lt;/type&gt;
+                &lt;scope&gt;import&lt;/scope&gt;
+            &lt;/dependency&gt;
+        &lt;/dependencies&gt;
+    &lt;/dependencyManagement&gt;
+&lt;/project&gt;
+</code></pre>
+<h3 id="application-yml-5"><a href="#application-yml-5" class="headerlink" title="application.yml"></a>application.yml</h3><pre><code class="yml">server:
+  port: 7904
+
+spring:
+  application:
+    name: zull-service
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://user:password123@localhost:8761/eureka
+
+logging:
+  level:
+    root: INFO
+
+zuul:
+  routes:
+    app-a:
+      path: /user/**
+      serviceId: feign-client
+    app-b:
+      path: /sidecar/**
+      serviceId: eureka-sidecar
+</code></pre>
+<h3 id="服务启动类-6"><a href="#服务启动类-6" class="headerlink" title="服务启动类"></a>服务启动类</h3><ul>
+<li>注解说明<ul>
+<li>@EnableZuulProxy：开启zuul配置</li>
+</ul>
+</li>
+</ul>
+<pre><code class="java">package com.ypjiao;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
+
+@EnableZuulProxy
+@SpringBootApplication
+public class RunZull {
+    public static void main(String[] args) {
+        SpringApplication.run(RunZull.class,args);
+    }
+}
+</code></pre>
+<h3 id="基于Zuul的断路器"><a href="#基于Zuul的断路器" class="headerlink" title="基于Zuul的断路器"></a>基于Zuul的断路器</h3><p>如果继续使用基于消费者端的Hystrix断路器，则断路器会失效，因此只能在zuul中配置断路器</p>
+<pre><code class="java">package com.ypjiao.fallback;
+
+import org.springframework.cloud.netflix.zuul.filters.route.ZuulFallbackProvider;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.stereotype.Component;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+@Component //Zuul实现熔断机制
+public class ZullFallback implements ZuulFallbackProvider {
+    @Override
+    public String getRoute() {
+        return &quot;*&quot;;
+    }
+
+    @Override
+    public ClientHttpResponse fallbackResponse() {
+        return new ClientHttpResponse() {
+            @Override
+            public HttpStatus getStatusCode() throws IOException {
+                return HttpStatus.BAD_REQUEST;
+            }
+
+            @Override
+            public int getRawStatusCode() throws IOException {
+                return HttpStatus.BAD_REQUEST.value();
+            }
+
+            @Override
+            public String getStatusText() throws IOException {
+                return HttpStatus.BAD_REQUEST.getReasonPhrase();
+            }
+
+            @Override
+            public void close() {
+
+            }
+            //具体返回
+            @Override
+            public InputStream getBody() throws IOException {
+                return new ByteArrayInputStream((&quot;fallbackzull&quot;+ZullFallback.this.getRoute()).getBytes());
+            }
+
+            @Override
+            public HttpHeaders getHeaders() {
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+                return headers;
+            }
+        };
+    }
+}
+</code></pre>
+<h1 id="sidecar异构系统"><a href="#sidecar异构系统" class="headerlink" title="sidecar异构系统"></a>sidecar异构系统</h1><h2 id="sidecar概述"><a href="#sidecar概述" class="headerlink" title="sidecar概述"></a>sidecar概述</h2><p>如果有非jvm的开发语言开发的项目，想使用Eureka注册中心、Ribbon负载均衡、ConfigServer配置中心，就可以使用Sidecar。Sidecar可以通过Http api的方式访问。异构语言项目应该实现一个心跳检查，这样Eureka就能知道程序的死活。</p>
+<p>注意：运行Sidecar必须在断路器、Eureka客户端、Zuul之上。</p>
+<h2 id="异构系统搭建"><a href="#异构系统搭建" class="headerlink" title="异构系统搭建"></a>异构系统搭建</h2><h3 id="pom-xml-4"><a href="#pom-xml-4" class="headerlink" title="pom.xml"></a>pom.xml</h3><pre><code class="xml">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;groupId&gt;com.ypjiao&lt;/groupId&gt;
+    &lt;artifactId&gt;eureka-sidecar&lt;/artifactId&gt;
+    &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+
+    &lt;parent&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+        &lt;version&gt;1.5.4.RELEASE&lt;/version&gt;
+        &lt;relativePath /&gt; &lt;!-- lookup parent from repository --&gt;
+    &lt;/parent&gt;
+    &lt;properties&gt;
+        &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+        &lt;project.reporting.outputEncoding&gt;UTF-8&lt;/project.reporting.outputEncoding&gt;
+        &lt;java.version&gt;1.8&lt;/java.version&gt;
+    &lt;/properties&gt;
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-netflix-sidecar&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-starter-eureka&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+    &lt;dependencyManagement&gt;
+        &lt;dependencies&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-cloud-dependencies&lt;/artifactId&gt;
+                &lt;version&gt;Dalston.SR1&lt;/version&gt;
+                &lt;type&gt;pom&lt;/type&gt;
+                &lt;scope&gt;import&lt;/scope&gt;
+            &lt;/dependency&gt;
+        &lt;/dependencies&gt;
+    &lt;/dependencyManagement&gt;
+&lt;/project&gt;
+</code></pre>
+<h3 id="applicaton-yml"><a href="#applicaton-yml" class="headerlink" title="applicaton.yml"></a>applicaton.yml</h3><pre><code class="yml">server:
+  port: 7905
+spring:
+  application:
+    name: eureka-sidecar
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://user:password123@localhost:8761/eureka
+# 通过health-uri检测异构系统是否有效 
+sidecar:
+  port: 8060
+  health-uri: http://localhost:8060/health.json
+</code></pre>
+<h3 id="服务启动类-7"><a href="#服务启动类-7" class="headerlink" title="服务启动类"></a>服务启动类</h3><pre><code class="java">package com.ypjiao;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.sidecar.EnableSidecar;
+
+@EnableSidecar
+@SpringBootApplication
+public class RunSideCar {
+    public static void main(String[] args) {
+        SpringApplication.run(RunSideCar.class,args);
+    }
+}
+</code></pre>
+
+            </div>
+            <hr>
+            <div>
+              <p>
+                
+                  <span>
+                <i class="iconfont icon-inbox"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/spring/">spring</a>
+                      &nbsp;
+                    
+                  </span>&nbsp;&nbsp;
+                
+                
+                  <span>
+                <i class="iconfont icon-tag"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/spring/">spring</a>
+                    
+                  </span>
+                
+              </p>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+            </div>
+
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc-start"></div>
+<div id="toc">
+  <p class="h5"><i class="far fa-list-alt"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a class="z-depth-1" id="scroll-top-button" href="#" role="button">
+      <i class="fa fa-chevron-up scroll-top-arrow" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><b>Hexo</b></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"> <b>Fluid</b></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/popper.js/1.16.1/umd/popper.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="https://cdn.staticfile.org/mdbootstrap/4.13.0/js/mdb.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+  <script  src="/js/lazyload.js" ></script>
+
+
+
+  
+  <script  src="https://cdn.staticfile.org/tocbot/4.10.0/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var navHeight = $('#navbar').height();
+      var post = $('#post');
+      var toc = $('#toc');
+      var tocLimMax = post.offset().top + post.height() - navHeight;
+
+      $(window).scroll(function () {
+        var tocLimMin = $('#toc-start').offset().top - navHeight;
+        var scroH = document.body.scrollTop + document.documentElement.scrollTop;
+
+        if (tocLimMin <= scroH && scroH <= tocLimMax) {
+          toc.css({
+            'display': 'block',
+            'position': 'fixed',
+            'top': navHeight,
+          });
+        } else if (scroH <= tocLimMin) {
+          toc.css({
+            'position': '',
+            'top': '',
+          });
+        } else if (scroH > tocLimMax) {
+          toc.css('display', 'none');
+        }
+      });
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        scrollSmooth: true,
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc > p').css('visibility', 'visible');
+      }
+      var offset = $('#board-ctn').css('margin-right')
+      $('#toc-ctn').css({
+        'right': offset
+      })
+    });
+  </script>
+
+
+
+
+
+
+
+
+
+
+<!-- Plugins -->
+
+
+
+  <script  src="https://cdn.staticfile.org/prettify/188.0.0/prettify.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      $('pre').addClass('prettyprint  linenums');
+      prettyPrint();
+    })
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "springCloud&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      getSearchFile(path);
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <script>
+    $("#post img:not(.no-zoom img, img[no-zoom])").each(
+      function () {
+        var element = document.createElement("a");
+        $(element).attr("data-fancybox", "images");
+        $(element).attr("href", $(this).attr("src"));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/assets/shizuku.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"log":false});</script></body>
+</html>
