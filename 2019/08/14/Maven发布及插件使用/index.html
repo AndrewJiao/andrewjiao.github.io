@@ -130,7 +130,7 @@
                   
                   <span class="post-meta">
                     <i class="far fa-chart-bar"></i>
-                    0 字
+                    5.5k 字
                   </span>
                 
 
@@ -138,7 +138,7 @@
                   
                   <span class="post-meta">
                       <i class="far fa-clock"></i>
-                      1 分钟
+                      27 分钟
                   </span>
                 
 
@@ -166,7 +166,753 @@
           <div class="post-content mx-auto" id="post">
             
             <div class="markdown-body">
-              
+              <h1 id="Maven插件简述"><a href="#Maven插件简述" class="headerlink" title="Maven插件简述"></a>Maven插件简述</h1><p>Maven中有两种类型的插件</p>
+<ul>
+<li><strong>Build plugins</strong> 是在项目创建时执行的插件，位于<code>&lt;build/&gt;</code>标签内</li>
+<li><strong>Reporting plugins</strong>是在网站发布时执行的插件，位于<code>&lt;reporting/&gt;</code>标签内</li>
+</ul>
+<h1 id="插件原理"><a href="#插件原理" class="headerlink" title="插件原理"></a>插件原理</h1><p>所有的Maven插件的配置都来自于<code>&lt;configuration&gt;</code>标签，每个<code>&lt;configuration&gt;</code>都会映射到Mojo类(Mojo类有插件具体执行工作的类)中你所指定的变量或set方法，具体案例如下</p>
+<p>创建一个插件用于访问特定的url，并需要配置url和超时时间等配置，创建步骤如下</p>
+<ol>
+<li><p>创建Maven工程，可使用quickstar快速创建</p>
+</li>
+<li><p>修改pom文件</p>
+<pre><code class="xml">    &lt;!-- 以往我们这里都是控制打包类型如，jar或者war，这里我们要生成插件因此需要修改为如下配置 --&gt;
+    &lt;packaging&gt;maven-plugin&lt;/packaging&gt;
+    &lt;!-- 添加插件依赖以便我们实现AbstractMojo抽象类来开发我们自己的插件 --&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.apache.maven&lt;/groupId&gt;
+      &lt;artifactId&gt;maven-plugin-api&lt;/artifactId&gt;
+      &lt;version&gt;3.5.0&lt;/version&gt;
+    &lt;/dependency&gt;</code></pre>
+</li>
+<li><p>实现AbstractMojo接口</p>
+<pre><code class="java">/**
+ * @goal query
+ */
+public class MyQueryMojo
+    extends AbstractMojo
+{
+    //配置获取
+    @Parameter(property = &quot;query.url&quot;, required = true)
+    private String url;
+
+    @Parameter(property = &quot;timeout&quot;, required = false, defaultValue = &quot;50&quot;)
+    private int timeout;
+
+    @Parameter(property = &quot;options&quot;)
+    private String[] options;
+     //具体插件执行的方法
+    public void execute()
+        throws MojoExecutionException
+    {
+        ...
+    }
+}</code></pre>
+</li>
+<li><p>执行<code>mvn clean install</code>将会在本地.m2库中生成你的插件</p>
+</li>
+<li><p>具体如何使用插件如下，可对应步骤3了解插件配置如何映射</p>
+<pre><code class="xml">oject&gt;
+  ...
+  &lt;build&gt;
+    &lt;plugins&gt;
+      &lt;plugin&gt;
+        &lt;artifactId&gt;maven-myquery-plugin&lt;/artifactId&gt;
+        &lt;version&gt;1.0&lt;/version&gt;
+        &lt;configuration&gt;
+          &lt;url&gt;http://www.foobar.com/query&lt;/url&gt;
+          &lt;timeout&gt;10&lt;/timeout&gt;
+          &lt;options&gt;
+            &lt;option&gt;one&lt;/option&gt;
+            &lt;option&gt;two&lt;/option&gt;
+            &lt;option&gt;three&lt;/option&gt;
+          &lt;/options&gt;
+        &lt;/configuration&gt;
+      &lt;/plugin&gt;
+    &lt;/plugins&gt;
+  &lt;/build&gt;
+  ...
+&lt;/project&gt;</code></pre>
+<p>有时，我们想通过命令行界面来控制url参数以便我们不去修改pom.xml的<code>configuration</code>配置</p>
+<ul>
+<li>pom配置中的url修改为<code>${query.url}</code></li>
+<li>执行命令<code>mvn myquery:query -Dquery.url=http://maven.apache.org</code></li>
+</ul>
+<p>6.当有复杂参数时，需要定义实体类封装参数</p>
+<pre><code class="xml">&lt;configuration&gt;
+  &lt;person implementation=&quot;com.mycompany.mojo.query.SuperPerson&quot;&gt;
+    &lt;firstName&gt;Jason&lt;/firstName&gt;
+    &lt;lastName&gt;van Zyl&lt;/lastName&gt;
+  &lt;/person&gt;
+&lt;/configuration&gt;</code></pre>
+</li>
+</ol>
+<h1 id="常用插件"><a href="#常用插件" class="headerlink" title="常用插件"></a>常用插件</h1><p>关于Maven插件的原理参考</p>
+<p><a href="https://blog.csdn.net/jerry010101/article/details/93601563" target="_blank" rel="noopener">https://blog.csdn.net/jerry010101/article/details/93601563</a></p>
+<p>插件文档：</p>
+<ol>
+<li><a href="http://maven.apache.org/plugins/index.html" target="_blank" rel="noopener">http://maven.apache.org/plugins/index.html</a></li>
+<li><a href="http://mojo.codehaus.org/plugins.html" target="_blank" rel="noopener">http://mojo.codehaus.org/plugins.html</a></li>
+</ol>
+<h2 id="maven内置配置"><a href="#maven内置配置" class="headerlink" title="maven内置配置"></a>maven内置配置</h2><pre><code class="xml">${basedir}表示项目根目录,即包含pom.xml文件的目录;
+
+${version}表示项目版本;
+
+${project.basedir}同${basedir};
+
+${project.baseUri}表示项目文件地址;
+
+${maven.build.timestamp}表示项目构件开始时间;
+
+${maven.build.timestamp.format}表示属性${maven.build.timestamp}的展示格式,默认值为yyyyMMdd-HHmm,可自定义其格式,其类型可参考java.text.SimpleDateFormat。
+　${project.build.directory}表示主源码路径;
+
+　${project.build.sourceEncoding}表示主源码的编码格式;
+
+　${project.build.sourceDirectory}表示主源码路径;
+
+　${project.build.finalName}表示输出文件名称;
+
+  ${project.version}表示项目版本,与${version}相同;
+
+${project.xxx} 当前pom文件的任意节点的内容
+${env.xxx} 获取系统环境变量。
+${settings.xxx} 指代了settings.xml中对应元素的值。</code></pre>
+<h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><h3 id="maven-compiler-plugin"><a href="#maven-compiler-plugin" class="headerlink" title="maven-compiler-plugin"></a>maven-compiler-plugin</h3><p>设置maven编译的jdk版本，maven3默认用jdk1.5，maven2默认用jdk1.3</p>
+<pre><code class="xml">&lt;plugin&gt;     
+    &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;            
+    &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;                         
+    &lt;version&gt;3.1&lt;/version&gt;                             
+    &lt;configuration&gt;                                      
+        &lt;source&gt;1.8&lt;/source&gt; &lt;!-- 源代码使用的JDK版本 --&gt;                              
+        &lt;target&gt;1.8&lt;/target&gt; &lt;!-- 需要生成的目标class文件的编译版本 --&gt;  
+        &lt;encoding&gt;UTF-8&lt;/encoding&gt;&lt;!-- 字符集编码 --&gt;
+        &lt;skipTests&gt;true&lt;/skipTests&gt;&lt;!-- 跳过测试 --&gt;
+    &lt;/configuration&gt;                                         
+&lt;/plugin&gt;</code></pre>
+<h2 id="打包"><a href="#打包" class="headerlink" title="打包"></a>打包</h2><h3 id="Maven-Archiver"><a href="#Maven-Archiver" class="headerlink" title="Maven Archiver"></a>Maven Archiver</h3><p>Maven Archiver是主要的控制打包功能的配置</p>
+<ul>
+<li>打包配置</li>
+</ul>
+<pre><code class="xml"> &lt;archive&gt;
+                        &lt;!-- 是否包含pom.xml和pom.properties文件：默认是true --&gt;
+                        &lt;addMavenDescriptor&gt;false&lt;/addMavenDescriptor&gt;
+                        &lt;!-- 是否激活压缩：默认是true --&gt;
+                        &lt;compress&gt;true&lt;/compress&gt;
+                        &lt;!-- 是否强制创建存档（会对比新旧时间戳，若新建存档时间较晚则更新jar包，反之亦然）：默认为true --&gt;
+                        &lt;forced/&gt;
+                        &lt;!-- 是否包含INDEX.LIST文件：默认为true --&gt;
+                        &lt;index/&gt;
+                        &lt;!-- 将定义的pom.properties文件用于覆盖自动生成的pom.properties文件（只有在addMavenDescriptor 设置为true时有效） --&gt;
+                        &lt;!--
+                            自动生成的pom。properties默认包含以下属性
+                            artifactId=${project.artifactId}
+                            groupId=${project.groupId}
+                            version=${project.version}
+                         --&gt;
+                        &lt;pomPropertiesFile/&gt;
+                        &lt;!-- 设置MANIFEST.MF文件路径 --&gt;
+                        &lt;manifestFile&gt;${project.build.outputDirectory}/META-INF/MANIFEST.MF&lt;/manifestFile&gt;
+                        &lt;manifest&gt;
+                            &lt;!-- 是否要把第三方jar放到manifest的classpath中：默认false --&gt;
+                            &lt;addClasspath&gt;true&lt;/addClasspath&gt;
+                            &lt;!--
+                                用于为mainfest添加如下信息
+                                Created-By: Maven Archiver ${maven-archiver.version}
+                                Build-Jdk-Spec: ${java.specification.version}
+                            --&gt;
+                            &lt;addDefaultEntries/&gt;
+                            &lt;!--
+                                用于为mainfest添加如下信息
+                                Implementation-Title: ${project.name}
+                                Implementation-Version: ${project.version}
+                                Implementation-Vendor: ${project.organization.name}
+                            --&gt;
+                            &lt;addDefaultImplementationEntries/&gt;
+                            &lt;!--
+                                Specification-Title: ${project.name}
+                                Specification-Version: ${project.artifact.selectedVersion.majorVersion}.${project.artifact.selectedVersion.minorVersion}
+                                Specification-Vendor: ${project.organization.name}
+                            --&gt;
+                            &lt;addDefaultSpecificationEntries/&gt;
+                            &lt;!--
+                                Build-Tool: ${maven.build.version}
+                                Build-Jdk: ${java.version} (${java.vendor})
+                                Build-Os:  ${os.name} (${os.version}; (${os.arch})
+                            --&gt;
+                            &lt;addBuildEnvironmentEntries/&gt;
+&lt;!--                            是否开启扩展清单--&gt;
+                            &lt;addExtensions/&gt;
+                                &lt;!--
+                                    设置classPath的布局类型
+                                    simple：（默认）
+                                    repository：与maven的classPath一致
+                                    custom：与customClasspathLayout配置有关
+                                --&gt;
+                            &lt;classpathLayoutType/&gt;
+                            &lt;!-- 生成的manifest中classpath的前缀，
+                                 因为要把第三方jar放到lib目录下，
+                                 所以classpath的前缀是lib/，默认为空 --&gt;
+                            &lt;classpathPrefix&gt;lib/.&lt;/classpathPrefix&gt;
+                            &lt;!-- 所传的表达式会被classPath关联的对象清单所识别 --&gt;
+                            &lt;customClasspathLayout/&gt;
+                            &lt;!-- 设置主类 --&gt;
+                            &lt;mainClass/&gt;
+                            &lt;!-- 包的入口 --&gt;
+                            &lt;packageName/&gt;
+                            &lt;!--是否使用唯一时间戳快照版本，而不是-快照版本：默认为true--&gt;
+                            &lt;useUniqueVersions/&gt;
+                        &lt;/manifest&gt;
+                        &lt;manifestEntries&gt;
+                            &lt;key&gt;value&lt;/key&gt;
+                        &lt;/manifestEntries&gt;
+                        &lt;manifestSections&gt;
+                            &lt;manifestSection&gt;
+                                &lt;name/&gt;
+                                &lt;manifestEntries&gt;
+                                    &lt;key&gt;value&lt;/key&gt;
+                                &lt;/manifestEntries&gt;
+                            &lt;/manifestSection&gt;
+                        &lt;/manifestSections&gt;
+                    &lt;/archive&gt;</code></pre>
+<h3 id="maven-jar-plugin"><a href="#maven-jar-plugin" class="headerlink" title="maven-jar-plugin"></a>maven-jar-plugin</h3><ul>
+<li>普通jar包</li>
+</ul>
+<pre><code class="xml">&lt;plugin&gt;
+                &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+                &lt;artifactId&gt;maven-jar-plugin&lt;/artifactId&gt;
+                &lt;configuration&gt;
+                    &lt;archive&gt;
+                        &lt;!-- 是否包含pom.xml和pom.properties文件：默认是true --&gt;
+                        &lt;addMavenDescriptor&gt;false&lt;/addMavenDescriptor&gt;
+                        &lt;manifest&gt;
+                            &lt;!-- 是否要把第三方jar放到manifest的classpath中：默认false --&gt;
+                            &lt;addClasspath&gt;true&lt;/addClasspath&gt;
+                            &lt;!-- 生成的manifest中classpath的前缀，
+                                 因为要把第三方jar放到lib目录下，
+                                 所以classpath的前缀是lib/，默认为空 --&gt;
+                            &lt;classpathPrefix&gt;lib/.&lt;/classpathPrefix&gt;
+                        &lt;/manifest&gt;
+                    &lt;/archive&gt;
+                    &lt;excludes&gt;
+                        &lt;exclude&gt;**/bookFlight/&lt;/exclude&gt;
+                        &lt;exclude&gt;**/database/&lt;/exclude&gt;
+                        &lt;exclude&gt;**/debug/&lt;/exclude&gt;
+                        &lt;exclude&gt;**/IBE/&lt;/exclude&gt;
+                        &lt;exclude&gt;*.xml&lt;/exclude&gt;
+                    &lt;/excludes&gt;
+                &lt;/configuration&gt;
+            &lt;/plugin&gt;</code></pre>
+<h3 id="maven-assembly-plugin"><a href="#maven-assembly-plugin" class="headerlink" title="maven-assembly-plugin"></a>maven-assembly-plugin</h3><ul>
+<li>maven-assembly-plugin的用途是制作项目分发包，该分发包可能包含了项目的可执行文件、源代码、readme、平台脚本等等。 maven-assembly-plugin支持各种主流的格式如zip、tar.gz、jar和war等，具体打包哪些文件是高度可控的，例如用户可以 按文件级别的粒度、文件集级别的粒度、模块级别的粒度、以及依赖级别的粒度控制打包，此外，包含和排除配置也是支持的。maven-assembly- plugin要求用户使用一个名为assembly.xml的元数据文件来表述打包，它的single目标可以直接在命令行调用，也可以被绑定至生命周期。</li>
+<li>assembly插件打压缩包（jar）</li>
+</ul>
+<pre><code class="xml">&lt;plugin&gt;
+                &lt;artifactId&gt;maven-assembly-plugin&lt;/artifactId&gt;
+                &lt;configuration&gt;
+                    &lt;!--使用默认assembly组件--&gt;
+                    &lt;descriptorRefs&gt;
+                        &lt;descriptorRef&gt;jar-with-dependencies&lt;/descriptorRef&gt;
+                    &lt;/descriptorRefs&gt;
+                    &lt;!--使用自定义assembly组件--&gt;
+                    &lt;!--
+                    &lt;descriptors&gt;
+                        &lt;descriptor&gt;src/main/resources/assembly/*.xml&lt;/descriptor&gt;
+                    &lt;/descriptors&gt;
+                    --&gt;
+                    &lt;!--assembly插件可支持archive配置用于指定可执行jar包的主类--&gt;
+                    &lt;archive&gt;
+                        &lt;manifest&gt;
+                            &lt;mainClass&gt;org.sample.App&lt;/mainClass&gt;
+                        &lt;/manifest&gt;
+                    &lt;/archive&gt;
+                &lt;/configuration&gt;
+                &lt;executions&gt;
+                    &lt;execution&gt;
+                        &lt;id&gt;make-assembly&lt;/id&gt; &lt;!-- this is used for inheritance merges --&gt;
+                        &lt;!-- 将组装绑定到maven生命周期的哪一阶段 --&gt;
+                        &lt;phase&gt;package&lt;/phase&gt; &lt;!-- bind to the packaging phase --&gt;
+                        &lt;goals&gt;
+                            &lt;!-- 指定assembly插件的打包方式--&gt;
+                            &lt;goal&gt;single&lt;/goal&gt;
+                        &lt;/goals&gt;
+                    &lt;/execution&gt;
+                &lt;/executions&gt;
+            &lt;/plugin&gt;</code></pre>
+<ul>
+<li>当有个性化配置时可参考Assembly，，改方案需要该插件支持<code>&lt;descriptor/&gt;</code></li>
+</ul>
+<h3 id="Assembly配置"><a href="#Assembly配置" class="headerlink" title="Assembly配置"></a>Assembly配置</h3><ul>
+<li>assembly文件是插件的配置，通过配置的变更来实现不同的自定义打包方式和类型等</li>
+</ul>
+<pre><code class="xml">&lt;assembly xmlns=&quot;http://maven.apache.org/ASSEMBLY/2.1.0&quot;
+          xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+          xsi:schemaLocation=&quot;http://maven.apache.org/ASSEMBLY/2.1.0
+          http://maven.apache.org/xsd/assembly-2.0.0.xsd&quot;&gt;
+    &lt;!--用于表示打包后的包名，且还可以在发布时座位组件的标识--&gt;
+    &lt;id/&gt;
+    &lt;!--打包类型
+        &quot;zip&quot; - Creates a ZIP file format
+        &quot;tar&quot; - Creates a TAR format
+        &quot;tar.gz&quot; or &quot;tgz&quot; - Creates a gzip&#39;d TAR format
+        &quot;tar.bz2&quot; or &quot;tbz2&quot; - Creates a bzip&#39;d TAR format
+        &quot;tar.snappy&quot; - Creates a snappy&#39;d TAR format
+        &quot;tar.xz&quot; or &quot;txz&quot; - Creates a xz&#39;d TAR format
+        &quot;jar&quot; - Creates a JAR format
+        &quot;dir&quot; - Creates an exploded directory format
+        &quot;war&quot; - Creates a WAR format
+    --&gt;
+    &lt;formats/&gt;
+    &lt;!--是否将包含根目录，若设为false则压缩包中只包含目录中的内容，而不是从根目录开始：默认true--&gt;
+    &lt;includeBaseDirectory/&gt;
+    &lt;!--当includeBaseDirectory标签设为true时，需要为根目录命名，若未命名则默认用项目名称为之命名${project.build.finalName} --&gt;
+    &lt;baseDirectory/&gt;
+    &lt;!----&gt;
+    &lt;includeSiteDirectory/&gt;
+    &lt;!--用于将多个文件内容定义在同一个标识下，例如将几个文件的内容合并到一个文件中去或为特殊的文件自定义内容--&gt;
+    &lt;!--有以下几种配置可参考：http://maven.apache.org/plugins/maven-assembly-plugin/examples/single/using-container-descriptor-handlers.html--&gt;
+    &lt;containerDescriptorHandlers&gt;
+        &lt;containerDescriptorHandler&gt;
+            &lt;handlerName/&gt;
+            &lt;configuration/&gt;
+        &lt;/containerDescriptorHandler&gt;
+    &lt;/containerDescriptorHandlers&gt;
+    &lt;!--允许将多个Module和项目加入到一个pom.xml中--&gt;
+    &lt;moduleSets&gt;
+        &lt;moduleSet&gt;
+            &lt;!--如果设置为true插件将会集中处理包含在内的所有项目工程--&gt;
+            &lt;useAllReactorProjects/&gt;
+            &lt;!--是否包含子工程--&gt;
+            &lt;includeSubModules/&gt;
+            &lt;!--项目坐标--&gt;
+            &lt;includes/&gt;
+            &lt;!--除外的项目坐标--&gt;
+            &lt;excludes/&gt;
+            &lt;!--包含的source文件--&gt;
+            &lt;sources&gt;
+                &lt;useDefaultExcludes/&gt;
+                &lt;outputDirectory/&gt;
+                &lt;includes/&gt;
+                &lt;excludes/&gt;
+                &lt;fileMode/&gt;
+                &lt;directoryMode/&gt;
+                &lt;fileSets&gt;
+                    &lt;fileSet&gt;
+                        &lt;useDefaultExcludes/&gt;
+                        &lt;outputDirectory/&gt;
+                        &lt;includes/&gt;
+                        &lt;excludes/&gt;
+                        &lt;fileMode/&gt;
+                        &lt;directoryMode/&gt;
+                        &lt;directory/&gt;
+                        &lt;lineEnding/&gt;
+                        &lt;filtered/&gt;
+                        &lt;nonFilteredFileExtensions/&gt;
+                    &lt;/fileSet&gt;
+                &lt;/fileSets&gt;
+                &lt;includeModuleDirectory/&gt;
+                &lt;excludeSubModuleDirectories/&gt;
+                &lt;outputDirectoryMapping/&gt;
+            &lt;/sources&gt;
+            &lt;!--包含的二进制文件--&gt;
+            &lt;binaries&gt;
+                &lt;outputDirectory/&gt;
+                &lt;includes/&gt;
+                &lt;excludes/&gt;
+                &lt;fileMode/&gt;
+                &lt;directoryMode/&gt;
+                &lt;attachmentClassifier/&gt;
+                &lt;includeDependencies/&gt;
+                &lt;dependencySets&gt;
+                    &lt;dependencySet&gt;
+                        &lt;outputDirectory/&gt;
+                        &lt;includes/&gt;
+                        &lt;excludes/&gt;
+                        &lt;fileMode/&gt;
+                        &lt;directoryMode/&gt;
+                        &lt;useStrictFiltering/&gt;
+                        &lt;outputFileNameMapping/&gt;
+                        &lt;unpack/&gt;
+                        &lt;unpackOptions&gt;
+                            &lt;includes/&gt;
+                            &lt;excludes/&gt;
+                            &lt;filtered/&gt;
+                            &lt;nonFilteredFileExtensions/&gt;
+                            &lt;lineEnding/&gt;
+                            &lt;useDefaultExcludes/&gt;
+                            &lt;encoding/&gt;
+                        &lt;/unpackOptions&gt;
+                        &lt;scope/&gt;
+                        &lt;useProjectArtifact/&gt;
+                        &lt;useProjectAttachments/&gt;
+                        &lt;useTransitiveDependencies/&gt;
+                        &lt;useTransitiveFiltering/&gt;
+                    &lt;/dependencySet&gt;
+                &lt;/dependencySets&gt;
+                &lt;unpack/&gt;
+                &lt;unpackOptions&gt;
+                    &lt;includes/&gt;
+                    &lt;excludes/&gt;
+                    &lt;filtered/&gt;
+                    &lt;nonFilteredFileExtensions/&gt;
+                    &lt;lineEnding/&gt;
+                    &lt;useDefaultExcludes/&gt;
+                    &lt;encoding/&gt;
+                &lt;/unpackOptions&gt;
+                &lt;outputFileNameMapping/&gt;
+            &lt;/binaries&gt;
+        &lt;/moduleSet&gt;
+    &lt;/moduleSets&gt;
+    &lt;!--文件设置，将制定的文件或集合写入压缩包内--&gt;
+    &lt;fileSets&gt;
+        &lt;fileSet&gt;
+            &lt;!--是否使用默认排查设置，如匹配CVS或Subversion元数据文件时排除：默认为true--&gt;
+            &lt;useDefaultExcludes/&gt;
+            &lt;!--输出路径，这个路径从压缩包的根目录开始--&gt;
+            &lt;outputDirectory/&gt;
+            &lt;!--设置匹配的包含文件--&gt;
+            &lt;includes/&gt;
+            &lt;!--设置排除文件--&gt;
+            &lt;excludes/&gt;
+            &lt;!--类似linux系统的权限设置，如：Read = 4, Write = 2, and Execute = 1；默认为0644--&gt;
+            &lt;!--更多权限可查看http://www.onlamp.com/pub/a/bsd/2000/09/06/FreeBSD_Basics.html--&gt;
+            &lt;fileMode/&gt;
+            &lt;!--和fileMode类似--&gt;
+            &lt;directoryMode/&gt;
+            &lt;!--限定要选取的目录，可填绝对路径或相对路径--&gt;
+            &lt;directory/&gt;
+            &lt;!--设置换行符类型--&gt;
+            &lt;!--
+                &quot;keep&quot; - Preserve all line endings
+                &quot;unix&quot; - Use Unix-style line endings (i.e. &quot;\n&quot;)
+                &quot;lf&quot; - Use a single line-feed line endings (i.e. &quot;\n&quot;)
+                &quot;dos&quot; - Use DOS-/Windows-style line endings (i.e. &quot;\r\n&quot;)
+                &quot;windows&quot; - Use DOS-/Windows-style line endings (i.e. &quot;\r\n&quot;)
+                &quot;crlf&quot; - Use carriage-return, line-feed line endings (i.e. &quot;\r\n&quot;)
+            --&gt;
+            &lt;lineEnding/&gt;
+            &lt;!--是否用配置中的属性来过滤选中的文件，默认为：false--&gt;
+            &lt;filtered/&gt;
+            &lt;!--附加文件扩展名不应用过滤--&gt;
+            &lt;nonFilteredFileExtensions/&gt;
+        &lt;/fileSet&gt;
+    &lt;/fileSets&gt;
+    &lt;!--允许操作fileset除外的一些单个文件--&gt;
+    &lt;files&gt;
+        &lt;file&gt;
+            &lt;source/&gt;
+            &lt;sources/&gt;
+            &lt;outputDirectory/&gt;
+            &lt;destName/&gt;
+            &lt;fileMode/&gt;
+            &lt;lineEnding/&gt;
+            &lt;filtered/&gt;
+        &lt;/file&gt;
+    &lt;/files&gt;
+    &lt;!--可将项目之外的依赖文件加入到assembly插件压缩包中--&gt;
+    &lt;dependencySets&gt;
+        &lt;dependencySet&gt;
+            &lt;!--输出保存路径--&gt;
+            &lt;outputDirectory/&gt;
+            &lt;includes/&gt;
+            &lt;excludes/&gt;
+            &lt;fileMode/&gt;
+            &lt;directoryMode/&gt;
+            &lt;useStrictFiltering/&gt;
+            &lt;!--为所有依赖设置映射符号，默认为：${artifact.artifactId}-${artifact.version}${dashClassifier?}.${artifact.extension}--&gt;
+            &lt;outputFileNameMapping/&gt;
+            &lt;!--若设为true则可以解压压缩包中的内容到新的压缩包中，目前支持解压jar, zip, tar.gz, 和 tar.bz 默认：false--&gt;
+            &lt;unpack/&gt;
+            &lt;unpackOptions&gt;
+                &lt;includes/&gt;
+                &lt;excludes/&gt;
+                &lt;filtered/&gt;
+                &lt;nonFilteredFileExtensions/&gt;
+                &lt;lineEnding/&gt;
+                &lt;useDefaultExcludes/&gt;
+                &lt;encoding/&gt;
+            &lt;/unpackOptions&gt;
+            &lt;!--依赖的范围 默认：runtime--&gt;
+            &lt;scope/&gt;
+            &lt;!--定义这个依赖项目构建过程中生产的组件是否要包含在此依赖集中 默认：true--&gt;
+            &lt;useProjectArtifact/&gt;
+            &lt;!--同上，定义一些附加组件的设置 默认：false--&gt;
+            &lt;useProjectAttachments/&gt;
+            &lt;!--当有依赖传递时，是否将传递的依赖也接入到压缩包中；--&gt;
+            &lt;useTransitiveDependencies/&gt;
+            &lt;!--依赖传递过滤设置 默认：false--&gt;
+            &lt;useTransitiveFiltering/&gt;
+        &lt;/dependencySet&gt;
+    &lt;/dependencySets&gt;
+    &lt;!--为assembly插件配置maven仓库组件--&gt;
+    &lt;repositories&gt;
+        &lt;repository&gt;
+            &lt;outputDirectory/&gt;
+            &lt;includes/&gt;
+            &lt;excludes/&gt;
+            &lt;fileMode/&gt;
+            &lt;directoryMode/&gt;
+            &lt;includeMetadata/&gt;
+            &lt;groupVersionAlignments&gt;
+                &lt;groupVersionAlignment&gt;
+                    &lt;id/&gt;
+                    &lt;version/&gt;
+                    &lt;excludes/&gt;
+                &lt;/groupVersionAlignment&gt;
+            &lt;/groupVersionAlignments&gt;
+            &lt;scope/&gt;
+        &lt;/repository&gt;
+    &lt;/repositories&gt;
+    &lt;componentDescriptors/&gt;
+&lt;/assembly&gt;</code></pre>
+<h4 id="container–file-aggregator"><a href="#container–file-aggregator" class="headerlink" title="container–file-aggregator"></a>container–file-aggregator</h4><ul>
+<li>该组件负责将读取<code>&lt;filePattern/&gt;</code>中的表达式对应的文件，将其内容合并，最终输出到<code>&lt;outputPath/&gt;</code>中</li>
+</ul>
+<pre><code class="xml">&lt;assembly xmlns=&quot;http://maven.apache.org/ASSEMBLY/2.1.0&quot;
+    xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+    xsi:schemaLocation=&quot;http://maven.apache.org/ASSEMBLY/2.1.0 http://maven.apache.org/xsd/assembly-2.1.0.xsd&quot;&gt;
+  ....
+  &lt;containerDescriptorHandlers&gt;
+    &lt;containerDescriptorHandler&gt;
+      &lt;handlerName&gt;file-aggregator&lt;/handlerName&gt;
+      &lt;configuration&gt;
+        &lt;filePattern&gt;.*/file.txt&lt;/filePattern&gt;
+        &lt;outputPath&gt;file.txt&lt;/outputPath&gt;
+      &lt;/configuration&gt;
+    &lt;/containerDescriptorHandler&gt;
+  &lt;/containerDescriptorHandlers&gt;
+&lt;/assembly&gt;</code></pre>
+<h4 id="container–metaInf-services"><a href="#container–metaInf-services" class="headerlink" title="container–metaInf-services"></a>container–metaInf-services</h4><ul>
+<li>这个组件会匹配所有的<code>META-INF/services</code>目录中的文件并将它们合并到一个<code>META-INF/services</code>目录下的文件中</li>
+</ul>
+<pre><code class="xml">&lt;assembly xmlns=&quot;http://maven.apache.org/ASSEMBLY/2.1.0&quot;
+    xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+    xsi:schemaLocation=&quot;http://maven.apache.org/ASSEMBLY/2.1.0 http://maven.apache.org/xsd/assembly-2.1.0.xsd&quot;&gt;
+  ....
+  &lt;containerDescriptorHandlers&gt;
+    &lt;containerDescriptorHandler&gt;
+      &lt;handlerName&gt;metaInf-services&lt;/handlerName&gt;
+    &lt;/containerDescriptorHandler&gt;
+  &lt;/containerDescriptorHandlers&gt;
+&lt;/assembly&gt;</code></pre>
+<h4 id="container–metaInf-spring"><a href="#container–metaInf-spring" class="headerlink" title="container–metaInf-spring"></a>container–metaInf-spring</h4><ul>
+<li>该组件类似metaInf-services会将文件名为<code>META-INF/spring.</code>开头的文件合并</li>
+</ul>
+<pre><code class="xml">&lt;assembly xmlns=&quot;http://maven.apache.org/ASSEMBLY/2.1.0&quot;
+    xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+    xsi:schemaLocation=&quot;http://maven.apache.org/ASSEMBLY/2.1.0 http://maven.apache.org/xsd/assembly-2.1.0.xsd&quot;&gt;
+  ....
+  &lt;containerDescriptorHandlers&gt;
+    &lt;containerDescriptorHandler&gt;
+      &lt;handlerName&gt;metaInf-spring&lt;/handlerName&gt;
+    &lt;/containerDescriptorHandler&gt;
+  &lt;/containerDescriptorHandlers&gt;
+&lt;/assembly&gt;</code></pre>
+<h4 id="container–plexus"><a href="#container–plexus" class="headerlink" title="container–plexus"></a>container–plexus</h4><ul>
+<li>该组件会同上，将所有<code>META-INF/plexus/components.xml</code>文件内容合并，并输出到一个有效的<code>META-INF/plexus/components.xml</code>文件中</li>
+</ul>
+<pre><code class="xml">&lt;assembly xmlns=&quot;http://maven.apache.org/ASSEMBLY/2.1.0&quot;
+    xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+    xsi:schemaLocation=&quot;http://maven.apache.org/ASSEMBLY/2.1.0 http://maven.apache.org/xsd/assembly-2.1.0.xsd&quot;&gt;
+  ....
+  &lt;containerDescriptorHandlers&gt;
+    &lt;containerDescriptorHandler&gt;
+      &lt;handlerName&gt;plexus&lt;/handlerName&gt;
+    &lt;/containerDescriptorHandler&gt;
+  &lt;/containerDescriptorHandlers&gt;
+&lt;/assembly&gt;</code></pre>
+<h3 id="Assembly样例"><a href="#Assembly样例" class="headerlink" title="Assembly样例"></a>Assembly样例</h3><pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;assembly&gt;
+    &lt;id&gt;full&lt;/id&gt;
+    &lt;!-- 最终打包成一个用于发布的zip文件 --&gt;
+    &lt;formats&gt;
+        &lt;format&gt;zip&lt;/format&gt;
+    &lt;/formats&gt;
+
+    &lt;!-- 把依赖jar包打包进Zip压缩文件的lib目录下 --&gt;
+    &lt;dependencySets&gt;
+        &lt;dependencySet&gt;
+            &lt;!--不使用项目的artifact，第三方jar不要解压，打包进zip文件的lib目录--&gt;
+            &lt;useProjectArtifact&gt;false&lt;/useProjectArtifact&gt;
+
+            &lt;!-- 第三方jar打包进Zip文件的lib目录下， --&gt;
+            &lt;!-- 注意此目录要与maven-jar-plugin中classpathPrefix指定的目录相同, --&gt;
+            &lt;!-- 不然这些依赖的jar包加载到ClassPath的时候会找不到--&gt;
+            &lt;outputDirectory&gt;lib&lt;/outputDirectory&gt;
+
+            &lt;!-- 第三方jar不要解压--&gt;
+            &lt;!--&lt;unpack&gt;false&lt;/unpack&gt;--&gt;
+        &lt;/dependencySet&gt;
+    &lt;/dependencySets&gt;
+
+    &lt;!-- 文件设置，你想把哪些文件包含进去，或者把某些文件排除掉，都是在这里配置--&gt;
+    &lt;fileSets&gt;
+        &lt;!-- 把项目自己编译出来的可执行jar，打包进zip文件的根目录 --&gt;
+        &lt;fileSet&gt;
+            &lt;directory&gt;${project.build.directory}&lt;/directory&gt;
+            &lt;outputDirectory&gt;&lt;/outputDirectory&gt;
+            &lt;includes&gt;
+                &lt;include&gt;*.jar&lt;/include&gt;
+            &lt;/includes&gt;
+        &lt;/fileSet&gt;
+
+        &lt;!--
+        把项目readme说明文档，打包进zip文件根目录下
+        (这里针对目录document/readme.txt文件)
+        ${projet.document.directory}是pom.xml中自己配置的
+         --&gt;
+        &lt;fileSet&gt;
+            &lt;directoryl&gt;${projet.document.directory}&lt;/directoryl&gt;
+            &lt;outputDirectory&gt;&lt;/outputDirectory&gt;
+            &lt;includes&gt;
+                &lt;include&gt;readme.*&lt;/include&gt;
+            &lt;/includes&gt;
+        &lt;/fileSet&gt;
+
+        &lt;!--
+        把项目相关的说明文档(除了readme文档)，
+        打包进zip文件根目录下的document目录
+        (这里针对document/exclode.txt文件)
+        ${project.document.directory}是在pom.xml中自己配置的
+        --&gt;
+        &lt;fileSet&gt;
+            &lt;directory&gt;${project.document.directory}&lt;/directory&gt;
+            &lt;outputDirectory&gt;document&lt;/outputDirectory&gt;
+            &lt;excludes&gt;
+                &lt;exclude&gt;readme.*&lt;/exclude&gt;
+            &lt;/excludes&gt;
+        &lt;/fileSet&gt;
+
+        &lt;!--
+        把项目的脚本文件目录(src/main/scripts )中的启动脚本文件，
+        打包进zip文件的根目录
+        (这里针对的是src/scripts/execute/include-file.sh文件)
+        ${project.script.execute.directory}
+        --&gt;
+        &lt;fileSet&gt;
+            &lt;directory&gt;${project.script.execute.directory}&lt;/directory&gt;
+            &lt;outputDirectory&gt;&lt;/outputDirectory&gt;
+            &lt;includes&gt;
+                &lt;include&gt;*&lt;/include&gt;
+            &lt;/includes&gt;
+        &lt;/fileSet&gt;
+
+    &lt;/fileSets&gt;
+&lt;/assembly&gt;</code></pre>
+<h3 id="maven-shade-plugin"><a href="#maven-shade-plugin" class="headerlink" title="maven-shade-plugin"></a>maven-shade-plugin</h3><p>使用maven-assembly-plugin容易产生一个错误，就是在多个依赖冲突的时候无法解决。不过使用 maven-shade-plugin 生成一个 uber-jar，可以解决依赖间的冲突,适用于Spring Framework。</p>
+<pre><code class="xml">&lt;project&gt;
+  ...
+  &lt;build&gt;
+    &lt;plugins&gt;
+      &lt;plugin&gt;
+        &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+        &lt;artifactId&gt;maven-shade-plugin&lt;/artifactId&gt;
+        &lt;version&gt;3.2.4&lt;/version&gt;
+        &lt;configuration&gt;
+          &lt;!-- put your configurations here --&gt;
+        &lt;/configuration&gt;
+        &lt;executions&gt;
+          &lt;execution&gt;
+            &lt;phase&gt;package&lt;/phase&gt;
+            &lt;goals&gt;
+              &lt;goal&gt;shade&lt;/goal&gt;
+            &lt;/goals&gt;
+          &lt;/execution&gt;
+        &lt;/executions&gt;
+      &lt;/plugin&gt;
+    &lt;/plugins&gt;
+  &lt;/build&gt;
+  ...
+&lt;/project&gt;</code></pre>
+<ul>
+<li>该插件有以下几个默认的配置功能可供选择,命名空间都为<code>org.apache.maven.plugins.shade.resource</code></li>
+</ul>
+<h4 id="ApacheLicenseResourceTransformer"><a href="#ApacheLicenseResourceTransformer" class="headerlink" title="ApacheLicenseResourceTransformer"></a>ApacheLicenseResourceTransformer</h4><p>一些服务提供者或jar包产商在提供的jar包中都会提供他们的权限在<code>META-IN</code>文件夹中，它们都会被习惯性的被命名为<code>LICENSE</code>或<code>LICENSE.txt</code>，当合并这些依赖时，添加这些资源时就会产生冲突而报错;<code>ApacheLicenseResourceTransformer</code>配置则可以忽视掉这些名字的证书</p>
+<pre><code class="xml">&lt;project&gt;
+  ...
+  &lt;build&gt;
+    &lt;plugins&gt;
+      &lt;plugin&gt;
+        &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+        &lt;artifactId&gt;maven-shade-plugin&lt;/artifactId&gt;
+        &lt;version&gt;3.2.4&lt;/version&gt;
+        &lt;executions&gt;
+          &lt;execution&gt;
+            &lt;goals&gt;
+              &lt;goal&gt;shade&lt;/goal&gt;
+            &lt;/goals&gt;
+            &lt;configuration&gt;
+              &lt;transformers&gt;
+                &lt;transformer implementation=&quot;org.apache.maven.plugins.shade.resource.ApacheLicenseResourceTransformer&quot;&gt;
+                &lt;/transformer&gt;
+              &lt;/transformers&gt;
+            &lt;/configuration&gt;
+          &lt;/execution&gt;
+        &lt;/executions&gt;
+      &lt;/plugin&gt;
+    &lt;/plugins&gt;
+  &lt;/build&gt;
+  ...
+&lt;/project&gt;</code></pre>
+<h4 id="AppendingTransformer"><a href="#AppendingTransformer" class="headerlink" title="AppendingTransformer"></a>AppendingTransformer</h4><p>一些jar包包含一些同名资源文件例如（propertes文件），你可以合并输出它以避免冲突</p>
+<ul>
+<li>如下案例将<code>spring-context</code>和<code>plexus-spring</code> 这两个jar包的<code>META-INF/spring.handlers</code>文件，该文件是用于处理XML schema的命名空间的</li>
+</ul>
+<pre><code class="xml">&lt;project&gt;
+  ...
+  &lt;build&gt;
+    &lt;plugins&gt;
+      &lt;plugin&gt;
+        &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+        &lt;artifactId&gt;maven-shade-plugin&lt;/artifactId&gt;
+        &lt;version&gt;3.2.4&lt;/version&gt;
+        &lt;executions&gt;
+          &lt;execution&gt;
+            &lt;goals&gt;
+              &lt;goal&gt;shade&lt;/goal&gt;
+            &lt;/goals&gt;
+            &lt;configuration&gt;
+              &lt;transformers&gt;
+                &lt;transformer implementation=&quot;org.apache.maven.plugins.shade.resource.AppendingTransformer&quot;&gt;
+                  &lt;resource&gt;META-INF/spring.handlers&lt;/resource&gt;
+                &lt;/transformer&gt;
+                &lt;transformer implementation=&quot;org.apache.maven.plugins.shade.resource.AppendingTransformer&quot;&gt;
+                  &lt;resource&gt;META-INF/spring.schemas&lt;/resource&gt;
+                &lt;/transformer&gt;
+              &lt;/transformers&gt;
+            &lt;/configuration&gt;
+          &lt;/execution&gt;
+        &lt;/executions&gt;
+      &lt;/plugin&gt;
+    &lt;/plugins&gt;
+  &lt;/build&gt;
+  ...
+&lt;/project&gt;</code></pre>
+<h1 id="其它插件"><a href="#其它插件" class="headerlink" title="其它插件"></a>其它插件</h1><h3 id="maven-archetype-plugin"><a href="#maven-archetype-plugin" class="headerlink" title="maven-archetype-plugin"></a>maven-archetype-plugin</h3><p><a href="http://maven.apache.org/archetype/maven-archetype-plugin/" target="_blank" rel="noopener">http://maven.apache.org/archetype/maven-archetype-plugin/</a></p>
+<p>Archtype指项目的骨架，Maven初学者最开始执行的Maven命令可能就是mvn archetype:generate，这实际上就是让maven-archetype-plugin生成一个很简单的项目骨架，帮助开发者快速上手。可能也有人看到一些文档写了mvn archetype:create， 但实际上create目标已经被弃用了，取而代之的是generate目标，该目标使用交互式的方式提示用户输入必要的信息以创建项目，体验更好。 maven-archetype-plugin还有一些其他目标帮助用户自己定义项目原型，例如你由一个产品需要交付给很多客户进行二次开发，你就可以为 他们提供一个Archtype，帮助他们快速上手。</p>
+<pre><code class="xml">&lt;plugin&gt;
+          &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+          &lt;artifactId&gt;maven-archetype-plugin&lt;/artifactId&gt;
+          &lt;version&gt;3.0.0&lt;/version&gt;
+&lt;/plugin&gt;</code></pre>
+<h3 id="maven-resource-plugin"><a href="#maven-resource-plugin" class="headerlink" title="maven-resource-plugin"></a>maven-resource-plugin</h3><p>该插件处理项目的资源文件拷贝到输出目录。可以分别处理main resources 和 test resources。</p>
+<pre><code class="xml">&lt;plugin&gt;
+    &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+    &lt;artifactId&gt;maven-resources-plugin&lt;/artifactId&gt;
+    &lt;version&gt;3.0.1&lt;/version&gt;
+    &lt;configuration&gt;
+          &lt;encoding&gt;UTF-8&lt;/encoding&gt;
+     &lt;/configuration&gt;
+ &lt;/plugin&gt;</code></pre>
+<p>参考文档：</p>
+<ol>
+<li><a href="https://blog.csdn.net/daerzei/java/article/details/82883472" target="_blank" rel="noopener">https://blog.csdn.net/daerzei/java/article/details/82883472</a></li>
+<li><a href="https://blog.csdn.net/jerry010101/java/article/details/93601563" target="_blank" rel="noopener">https://blog.csdn.net/jerry010101/java/article/details/93601563</a></li>
+<li><a href="https://blog.csdn.net/liuzhuojava/article/details/86691218" target="_blank" rel="noopener">https://blog.csdn.net/liuzhuojava/article/details/86691218</a></li>
+<li><a href="https://maven.apache.org/plugins" target="_blank" rel="noopener">https://maven.apache.org/plugins</a></li>
+</ol>
+
             </div>
             <hr>
             <div>

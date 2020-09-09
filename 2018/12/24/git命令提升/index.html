@@ -218,7 +218,6 @@ git log --graph --oneline --decorate</code></pre>
 <pre><code class="sh">git config --global alias.lg
 
 git config --global alias.lg &quot;log --color --graph --pretty=format:&#39;%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)&lt;%an&gt;%Creset&#39; --abbrev-commit&quot; </code></pre>
-<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5Cgit%5CgitCommitLog.png" srcset="/img/loading.gif" alt></p>
 <h2 id="提交log的过滤"><a href="#提交log的过滤" class="headerlink" title="提交log的过滤"></a>提交log的过滤</h2><ul>
 <li><p>根据数量过滤</p>
 <ul>
@@ -245,7 +244,7 @@ git config --global alias.lg &quot;log --color --graph --pretty=format:&#39;%Cre
 <li><p>根据提交者过滤</p>
 <ul>
 <li>–auther参数，传入一个正则表达式 可找到正则匹配的所有人，也可直接指定人名<ul>
-<li><code>git log --author=&quot;John\|Mary&quot;</code></li>
+<li><code>git log --author=&quot;John/|Mary&quot;</code></li>
 </ul>
 </li>
 </ul>
@@ -305,11 +304,11 @@ git config --global alias.lg &quot;log --color --graph --pretty=format:&#39;%Cre
 <ul>
 <li><code>git merge</code> 指令是直接将<strong>目标分支</strong>中的提交合并到<strong>本地分支</strong>中，当有冲突时，会把额外生成一次合并冲突的提交记录</li>
 </ul>
-<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5Cgit%5CgitMergeProcess.png" srcset="/img/loading.gif" alt></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/gitMergeProcess.png" srcset="/img/loading.gif" alt></p>
 <ul>
 <li><code>git rebase</code>则是将<strong>本地分支</strong>中的提交记录保存为补丁（存储在.git/rebase目录），随后将<strong>目标分支</strong>的代码合并到<strong>本地分支</strong>中，最后再将暂存的分支重新添加提交到<strong>本地分支</strong>中</li>
 </ul>
-<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5Cgit%5CgitRebaseProcess.png" srcset="/img/loading.gif" alt></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/gitRebaseProcess.png" srcset="/img/loading.gif" alt></p>
 <h2 id="关于冲突"><a href="#关于冲突" class="headerlink" title="关于冲突"></a>关于冲突</h2><p>在rebase的过程中，也许会出现冲突(conflict). 在这种情况，Git会停止rebase并会让你去解决 冲突；在解决完冲突后，用”git-add”命令去更新这些内容的索引(index), 然后，无需执行 git-commit,只要执行: </p>
 <ul>
 <li><code>$ git rebase --continue</code></li>

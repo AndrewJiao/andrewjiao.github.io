@@ -168,7 +168,7 @@
             <div class="markdown-body">
               <h1 id="SpringCloud概述"><a href="#SpringCloud概述" class="headerlink" title="SpringCloud概述"></a>SpringCloud概述</h1><h2 id="微服务架构概述"><a href="#微服务架构概述" class="headerlink" title="微服务架构概述"></a>微服务架构概述</h2><p>“微服务”源于MartinFowler的博文Microservices。</p>
 <p>Martin说：微服务是系统架构上的<strong>一种设计风格</strong>，它的主旨是将一个原本独立的系统<strong>拆成多个小型服务</strong>，这些小型服务都在各自<strong>独立的进程中运行</strong>，服务之间通过<strong>基于HTTP的RESTful API进行通信协作</strong>。被拆分成的每一个小型服务都围绕着系统中的某一项或者<strong>某些耦合度较高的业务功能</strong>进行构建，并且每个服务都维护着自身的数据存储、业务开发、自动化测试案例以及独立部署机制。由于有了轻量级的通信协作基础，所以这些微服务可以使用不同的语言来编写。</p>
-<h2 id="微服务架构"><a href="#微服务架构" class="headerlink" title="微服务架构"></a>微服务架构</h2><p><img src="D:%5CMyProject%5Cblock%5Cupload_image%5CspringBoot%5CspringCloud.png" srcset="/img/loading.gif" alt></p>
+<h2 id="微服务架构"><a href="#微服务架构" class="headerlink" title="微服务架构"></a>微服务架构</h2><p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/springBoot/springCloud.png" srcset="/img/loading.gif" alt></p>
 <p>简而言之，微服务就是开发一组小型服务的方式来开发一个独立的应用系统，每个小型服务都运行在自己的进程中，并采用HTTP资源API轻量级的机制来互相通信。这些服务围绕业务功能进行构建，并能通过全自动的部署机制来进行独立部署。这些微服务可以使用不同的语言来编写，并且可以使用不同的数据库存储技术。</p>
 <h2 id="微服务优点"><a href="#微服务优点" class="headerlink" title="微服务优点"></a>微服务优点</h2><ol>
 <li>易于开发和维护</li>
@@ -203,12 +203,12 @@
 <li>异构开发语言Sidecar   sidecar+ nodejs</li>
 <li>配置中心config        configserver+consumer-ribbon-feign-hystrix</li>
 </ul>
-<h1 id="Eureka注册中心"><a href="#Eureka注册中心" class="headerlink" title="Eureka注册中心"></a>Eureka注册中心</h1><h2 id="eureka的注册中心原理"><a href="#eureka的注册中心原理" class="headerlink" title="eureka的注册中心原理"></a>eureka的注册中心原理</h2><p><img src="D:%5CMyProject%5Cblock%5Cupload_image%5CspringBoot%5CzhuceCenter.png" srcset="/img/loading.gif" alt="zhuceCenter"></p>
+<h1 id="Eureka注册中心"><a href="#Eureka注册中心" class="headerlink" title="Eureka注册中心"></a>Eureka注册中心</h1><h2 id="eureka的注册中心原理"><a href="#eureka的注册中心原理" class="headerlink" title="eureka的注册中心原理"></a>eureka的注册中心原理</h2><p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/springBoot/zhuceCenter.png" srcset="/img/loading.gif" alt="zhuceCenter"></p>
 <p>注意它的特点，结构类似于MessageQueue消息队列，服务（提供者、消费者）先都注册到注册中心。对于服务的消费者，<strong>它的特点在于，不会每次都去注册中心获取，而是有本地缓存，加快访问性能。内部含有心跳机制，当注册中心信息改变，自动快速获取新的信息到本地。</strong>心跳机制还保证分布式环境下，某个服务失败后，自动列表从注册中心移除。注册中心中保证所有可用的链接。</p>
 <h2 id="注册中心相关配置"><a href="#注册中心相关配置" class="headerlink" title="注册中心相关配置"></a>注册中心相关配置</h2><h3 id="自我保护模式"><a href="#自我保护模式" class="headerlink" title="自我保护模式"></a>自我保护模式</h3><p>什么是自我保护模式？默认配置下，如果Eureka Server每分钟收到心跳续约的数量低于一个阈值（instance的数量(60/每个instance的心跳间隔秒数)自我保护系数），并且持续15分钟，就会触发自我保护。在自我保护模式中，Eureka Server会保护服务注册表中的信息，不再注销任何服务实例。当它收到的心跳数重新恢复到阈值以上时，该Eureka Server节点就会自动退出自我保护模式。它的设计哲学前面提到过，那就是宁可保留错误的服务注册信息，也不盲目注销任何可能健康的服务实例。</p>
 <p>该模式可以通过eureka.server.enable-self-preservation = false来禁用，同时eureka.instance.lease-renewal-interval-in-seconds可以用来更改心跳间隔。</p>
 <h2 id="调用关系图"><a href="#调用关系图" class="headerlink" title="调用关系图"></a>调用关系图</h2><p>下图可见，对于负载均衡的Ribbon而言，它是基于消费者端的</p>
-<p><img src="D:%5CMyProject%5Cblock%5Cupload_image%5CspringBoot%5CeurekaService.png" srcset="/img/loading.gif" alt="eurekaService"></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/springBoot/eurekaService.png" srcset="/img/loading.gif" alt="eurekaService"></p>
 <h2 id="注册中心搭建"><a href="#注册中心搭建" class="headerlink" title="注册中心搭建"></a>注册中心搭建</h2><h3 id="pom-xml文件"><a href="#pom-xml文件" class="headerlink" title="pom.xml文件"></a>pom.xml文件</h3><pre><code class="xml">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
          xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
     &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
@@ -471,7 +471,7 @@ public class RunRibbon {
 <h1 id="Ribbon负载均衡"><a href="#Ribbon负载均衡" class="headerlink" title="Ribbon负载均衡"></a>Ribbon负载均衡</h1><h2 id="Ribbon概述"><a href="#Ribbon概述" class="headerlink" title="Ribbon概述"></a>Ribbon概述</h2><ul>
 <li>Ribbon是基于客户端的，因此需要在消费者客户端中进行配置</li>
 </ul>
-<p><img src="D:%5CMyProject%5Cblock%5Cupload_image%5CspringBoot%5CRibbon.png" srcset="/img/loading.gif" alt="Ribbon"></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/springBoot/Ribbon.png" srcset="/img/loading.gif" alt="Ribbon"></p>
 <h2 id="负载均衡策略"><a href="#负载均衡策略" class="headerlink" title="负载均衡策略"></a>负载均衡策略</h2><p>常见的负载均衡策略有三种</p>
 <ol>
 <li>第一种也是默认为轮询</li>
@@ -780,7 +780,7 @@ logging:
   level:
     root: INFO
 </code></pre>
-<h2 id="Feign调用过程"><a href="#Feign调用过程" class="headerlink" title="Feign调用过程"></a>Feign调用过程</h2><p><img src="D:%5CMyProject%5Cblock%5Cupload_image%5CspringBoot%5CprocessFeign.png" srcset="/img/loading.gif" alt="processFeign"></p>
+<h2 id="Feign调用过程"><a href="#Feign调用过程" class="headerlink" title="Feign调用过程"></a>Feign调用过程</h2><p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/springBoot/processFeign.png" srcset="/img/loading.gif" alt="processFeign"></p>
 <p>首先，提供者provider-user和消费者custorm-feign都注册到Eureka中。用户请求feign中的controller，feign中的controller调用feign定义的接口方法。接口的方法根据注解去找到eureka注册中心中的provider-user地址，然后请求远程provider-user所在服务器的地址，然后调用远程的provider-user提供者的具体服务。提供者响应返回json，json被feign封装传输给“接口”的返回值，“接口”在返回给feign的controller，最终响应给用户。</p>
 <h1 id="Hystrix断路器"><a href="#Hystrix断路器" class="headerlink" title="Hystrix断路器"></a>Hystrix断路器</h1><h2 id="Hystrx断路器概述"><a href="#Hystrx断路器概述" class="headerlink" title="Hystrx断路器概述"></a>Hystrx断路器概述</h2><ul>
 <li>微服务架构存在的问题</li>
@@ -796,7 +796,7 @@ logging:
 <li>熔断机制</li>
 </ul>
 <p><strong>断路器可以实现快速失败，如果它在一段时间内检测到许多失败，如超时，就会强迫其以后的多个调用快速失败，</strong>不再请求所依赖的服务，从而防止应用程序不断地尝试执行可能会失败的操作，这样应用程序可以继续执行而不用等待修正错误，或者浪费CPU时间去等待长时间的超时。<strong>断路器也可以使应用程序能够诊断错误是否已经修正</strong>，如果已经修正，应用程序会再次尝试调用操作。</p>
-<h2 id="断路器几个状态"><a href="#断路器几个状态" class="headerlink" title="断路器几个状态"></a>断路器几个状态</h2><p><img src="D:%5CMyProject%5Cblock%5Cupload_image%5CspringBoot%5ChystrixProcess.png" srcset="/img/loading.gif" alt="hystrixProcess"></p>
+<h2 id="断路器几个状态"><a href="#断路器几个状态" class="headerlink" title="断路器几个状态"></a>断路器几个状态</h2><p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/springBoot/hystrixProcess.png" srcset="/img/loading.gif" alt="hystrixProcess"></p>
 <ul>
 <li>关闭：当访问没有问题时，断路器处于关闭未使用。</li>
 <li>打开：当访问开始出现异常，错误次数增多，达到阀值时就会打开断路器，这样服务直接访问断路器，进行快速失败返回。</li>

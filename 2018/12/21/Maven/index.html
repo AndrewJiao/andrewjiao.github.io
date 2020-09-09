@@ -180,7 +180,7 @@
 </ul>
 <p>最后使用<code>java -version</code>命令来检查是否安装jdk成功以及验证版本是否正确</p>
 <h2 id="Maven的下载"><a href="#Maven的下载" class="headerlink" title="Maven的下载"></a>Maven的下载</h2><p>可在Maven官网进行下载：<a href="http://maven.apache.org/download.cgi" target="_blank" rel="noopener">下载地址</a></p>
-<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5CMaven%5CdownloadMaven.png" srcset="/img/loading.gif" alt></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/Maven/downloadMaven.png" srcset="/img/loading.gif" alt></p>
 <table>
 <thead>
 <tr>
@@ -215,9 +215,9 @@
 </tr>
 </tbody></table>
 <h2 id="Maven的配置文件基本设置"><a href="#Maven的配置文件基本设置" class="headerlink" title="Maven的配置文件基本设置"></a>Maven的配置文件基本设置</h2><p>配置文件路径一般在Maven项目路径的conf目录中</p>
-<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5CMaven%5CMavenPath.png" srcset="/img/loading.gif" alt></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/Maven/MavenPath.png" srcset="/img/loading.gif" alt></p>
 <h3 id="本地仓库设置"><a href="#本地仓库设置" class="headerlink" title="本地仓库设置"></a>本地仓库设置</h3><ul>
-<li>maven指定的本地仓库的默认位置是在c盘，默认在：C:\Users{当前用户}.m2\repository,也可通过修改<code>&lt;localRepository/&gt;</code>标签来修改仓库路径</li>
+<li>maven指定的本地仓库的默认位置是在c盘，默认在：C:/Users/{当前用户}/.m2/repository,也可通过修改<code>&lt;localRepository/&gt;</code>标签来修改仓库路径</li>
 </ul>
 <h3 id="代理服务器设置"><a href="#代理服务器设置" class="headerlink" title="代理服务器设置"></a>代理服务器设置</h3><p>一些公司和部门有专有的防火墙设置，使用http代理服务器来阻止用户直接访问互联网，因此还需要为maven设置代理才能使maven正常下载依赖包</p>
 <ul>
@@ -439,24 +439,24 @@ ttp://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
   &lt;artifactId&gt;project&lt;/artifactId&gt;
   &lt;version&gt;1.0&lt;/version&gt;
   &lt;build&gt;
-    &lt;sourceDirectory&gt;C:\MVN\project\src\main\java&lt;/sourceDirectory&gt;
+    &lt;sourceDirectory&gt;C:/MVN/project/src/main/java&lt;/sourceDirectory&gt;
     &lt;scriptSourceDirectory&gt;src/main/scripts&lt;/scriptSourceDirectory&gt;
-    &lt;testSourceDirectory&gt;C:\MVN\project\src\test\java&lt;/testSourceDirectory&gt;
-    &lt;outputDirectory&gt;C:\MVN\project\target\classes&lt;/outputDirectory&gt;
-    &lt;testOutputDirectory&gt;C:\MVN\project\target\test-classes&lt;/testOutputDirectory&gt;
+    &lt;testSourceDirectory&gt;C:/MVN/project/src/test/java&lt;/testSourceDirectory&gt;
+    &lt;outputDirectory&gt;C:/MVN/project/target/classes&lt;/outputDirectory&gt;
+    &lt;testOutputDirectory&gt;C:/MVN/project/target/test-classes&lt;/testOutputDirectory&gt;
     &lt;resources&gt;
       &lt;resource&gt;
         &lt;mergeId&gt;resource-0&lt;/mergeId&gt;
-        &lt;directory&gt;C:\MVN\project\src\main\resources&lt;/directory&gt;
+        &lt;directory&gt;C:/MVN/project/src/main/resources&lt;/directory&gt;
       &lt;/resource&gt;
     &lt;/resources&gt;
     &lt;testResources&gt;
       &lt;testResource&gt;
         &lt;mergeId&gt;resource-1&lt;/mergeId&gt;
-        &lt;directory&gt;C:\MVN\project\src\test\resources&lt;/directory&gt;
+        &lt;directory&gt;C:/MVN/project/src/test/resources&lt;/directory&gt;
       &lt;/testResource&gt;
     &lt;/testResources&gt;
-    &lt;directory&gt;C:\MVN\project\target&lt;/directory&gt;
+    &lt;directory&gt;C:/MVN/project/target&lt;/directory&gt;
     &lt;finalName&gt;project-1.0&lt;/finalName&gt;
     &lt;pluginManagement&gt;
       &lt;plugins&gt;
@@ -569,7 +569,7 @@ ttp://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
     &lt;/pluginRepository&gt;
   &lt;/pluginRepositories&gt;
   &lt;reporting&gt;
-    &lt;outputDirectory&gt;C:\MVN\project\target/site&lt;/outputDirectory&gt;
+    &lt;outputDirectory&gt;C:/MVN/project/target/site&lt;/outputDirectory&gt;
   &lt;/reporting&gt;
 &lt;/project&gt;</code></pre>
 <p>在上面的 pom.xml 中，你可以看到 Maven 在执行目标时需要用到的默认工程源码目录结构、输出目录、需要的插件、仓库和报表目录。</p>

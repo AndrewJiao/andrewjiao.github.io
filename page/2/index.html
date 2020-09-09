@@ -146,6 +146,90 @@
     
     
     <div class="col-12 col-md-12 mx-auto index-info">
+      <a href="/2019/07/13/dockerInstall/">
+        <p class="h4 index-header">Docker安装配置</p>
+      </a>
+
+      <a href="/2019/07/13/dockerInstall/">
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">系统环境配置docker官方文档要求必须运行在Linux kernel 3.8以上，所以需要安装在Centos7或者Ubantu系统上。
+安装必要linux组件yum install lrzsz             #安装上传下载组件
+uname –a                    #检查当前Linux内核版本
+sudo yum makecache fast             #更新yum软件包索引
+关闭防火墙systemctl stop firewalld.service        #关闭防火墙服务
+systemctl disable firewalld.service</div>
+        </div>
+      </a>
+
+      <div class="index-btm">
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2019-07-13&nbsp;&nbsp;
+        
+        
+          <i class="iconfont icon-inbox"></i>
+          
+            <a href="/categories/Docker/">Docker</a>&nbsp;
+          &nbsp;
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/Docker/">Docker</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
+      <a href="/2019/07/12/Docker/">
+        <p class="h4 index-header">Docker容器技术</p>
+      </a>
+
+      <a href="/2019/07/12/Docker/">
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">Docker容器阿里2016年的双十一，数万台服务器支持，所有的交易系统全部都跑在了Docker容器中，撑起来每秒钟17.5万笔的交易峰值。4小时26分31秒交易362亿，超过2013年双十一全体交易，最终双十一交易额1207亿，全球之最。
+
+要支持这么的大的访问量，就需要提升系统的并发量，要提升系统的并发量，最直接的办法就是提升服务器的数量。阿里为支持双十一，提前准备万台服务器，万兆带宽。直播也是如此事先要准备大量服务器，百万级粉丝需要准备上千台服务器。
+但准备多少够呢？预计多了，成本就白支出了，预计少了，洪峰来了，系统倒了，现场砸了，饭碗丢了。能否动态感知快速响应呢？这就是云所做的，而云背</div>
+        </div>
+      </a>
+
+      <div class="index-btm">
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2019-07-12&nbsp;&nbsp;
+        
+        
+          <i class="iconfont icon-inbox"></i>
+          
+            <a href="/categories/Docker/">Docker</a>&nbsp;
+          &nbsp;
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/Docker/">Docker</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
       <a href="/2019/07/01/Redis/">
         <p class="h4 index-header">Redis</p>
       </a>
@@ -292,6 +376,48 @@ Remote Repository主要有3种：
     
     
     <div class="col-12 col-md-12 mx-auto index-info">
+      <a href="/2018/12/24/GIT之远程仓库/">
+        <p class="h4 index-header">git远程仓库</p>
+      </a>
+
+      <a href="/2018/12/24/GIT之远程仓库/">
+        
+        
+          
+        
+        <div class="index-excerpt" >
+          <div class="index-text mb-1">Git 远程仓库(Github)Git 并不像 SVN 那样有个中心服务器。
+目前我们使用到的 Git 命令都是在本地执行，如果你想通过 Git 分享你的代码或者与其他开发人员合作。 你就需要将数据放到一台其他开发人员能够连接的服务器上。此时就需要远程仓库服务器来存放大家的代码，主要流行的远程仓库有github，gitlab等等。
+添加远程仓库添加秘钥SSHKey操作实际上我们不需要SSHKey也可以提交代码或从远程仓库拉取代码，但是每次提交都会提示我们输入你的gitHub账号密码。因此配置SSHKey可以帮助我们实现gitHub的免登录解决很多烦恼。其原理主要是通过git指令生成一对秘钥（公</div>
+        </div>
+      </a>
+
+      <div class="index-btm">
+        
+          <i class="iconfont icon-riqi2"></i>&nbsp;2018-12-24&nbsp;&nbsp;
+        
+        
+          <i class="iconfont icon-inbox"></i>
+          
+            <a href="/categories/git/">git</a>&nbsp;
+          &nbsp;
+        
+        
+          <i class="iconfont icon-tag"></i>
+          
+            <a href="/tags/git/">git</a>&nbsp;
+          
+            <a href="/tags/repository/">repository</a>&nbsp;
+          
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
       <a href="/2018/12/24/git命令提升/">
         <p class="h4 index-header">git特殊命令</p>
       </a>
@@ -326,48 +452,6 @@ Remote Repository主要有3种：
           <i class="iconfont icon-tag"></i>
           
             <a href="/tags/git/">git</a>&nbsp;
-          
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
-      <a href="/2018/12/24/GIT之远程仓库/">
-        <p class="h4 index-header">git远程仓库</p>
-      </a>
-
-      <a href="/2018/12/24/GIT之远程仓库/">
-        
-        
-          
-        
-        <div class="index-excerpt" >
-          <div class="index-text mb-1">Git 远程仓库(Github)Git 并不像 SVN 那样有个中心服务器。
-目前我们使用到的 Git 命令都是在本地执行，如果你想通过 Git 分享你的代码或者与其他开发人员合作。 你就需要将数据放到一台其他开发人员能够连接的服务器上。此时就需要远程仓库服务器来存放大家的代码，主要流行的远程仓库有github，gitlab等等。
-添加远程仓库添加秘钥SSHKey操作实际上我们不需要SSHKey也可以提交代码或从远程仓库拉取代码，但是每次提交都会提示我们输入你的gitHub账号密码。因此配置SSHKey可以帮助我们实现gitHub的免登录解决很多烦恼。其原理主要是通过git指令生成一对秘钥（公</div>
-        </div>
-      </a>
-
-      <div class="index-btm">
-        
-          <i class="iconfont icon-riqi2"></i>&nbsp;2018-12-24&nbsp;&nbsp;
-        
-        
-          <i class="iconfont icon-inbox"></i>
-          
-            <a href="/categories/git/">git</a>&nbsp;
-          &nbsp;
-        
-        
-          <i class="iconfont icon-tag"></i>
-          
-            <a href="/tags/git/">git</a>&nbsp;
-          
-            <a href="/tags/repository/">repository</a>&nbsp;
           
         
       </div>
@@ -540,98 +624,11 @@ mysql  -uroot</div>
     </div>
   </div>
 
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
-      <a href="/2013/12/24/Maven私库/">
-        <p class="h4 index-header">Maven私库搭建</p>
-      </a>
-
-      <a href="/2013/12/24/Maven私库/">
-        
-        
-          
-        
-        <div class="index-excerpt" >
-          <div class="index-text mb-1">概述当我们参与多人开发时，为提高效率，一般会创建一个私库，以方便依赖包的获取。当项目组中的某员工在pom.xml文件中添加了某依赖的配置时，往往会访问默认或已配置的远程中央仓库获取相关依赖。然而有时候公共仓库不是那么稳定且下载速度很慢，这时创建一个私有仓库就极大缩减了依赖包的拉取时间。
-
-当A员工需要某依赖时，会先访问私库
-私库没有依赖是则会访问配置的公共仓库
-公共仓库也没有时则会打印报错到控制台
-
-
-搭建
-搭建nuxus maven 私库前还需确保搭建好jdk和maven环境
-
-解压安装jdk
-找到要安装到的目录执行tar -zxvf jdk-8u91-linux-x64.tar.gz命令解</div>
-        </div>
-      </a>
-
-      <div class="index-btm">
-        
-          <i class="iconfont icon-riqi2"></i>&nbsp;2013-12-24&nbsp;&nbsp;
-        
-        
-          <i class="iconfont icon-inbox"></i>
-          
-            <a href="/categories/Project/">Project</a>&nbsp;
-          &nbsp;
-        
-        
-          <i class="iconfont icon-tag"></i>
-          
-            <a href="/tags/Maven/">Maven</a>&nbsp;
-          
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
-      <a href="/2013/12/24/模板/">
-        <p class="h4 index-header">中文測試</p>
-      </a>
-
-      <a href="/2013/12/24/模板/">
-        
-        
-          
-        
-        <div class="index-excerpt" >
-          <div class="index-text mb-1"></div>
-        </div>
-      </a>
-
-      <div class="index-btm">
-        
-          <i class="iconfont icon-riqi2"></i>&nbsp;2013-12-24&nbsp;&nbsp;
-        
-        
-          <i class="iconfont icon-inbox"></i>
-          
-            <a href="/categories/Test/">Test</a>&nbsp;
-          &nbsp;
-        
-        
-          <i class="iconfont icon-tag"></i>
-          
-            <a href="/tags/just-Test/">just Test</a>&nbsp;
-          
-        
-      </div>
-    </div>
-  </div>
-
 
 
   <nav aria-label="index posts navigation">
     <span class="pagination pg-blue justify-content-center mt-5" id="pagination">
-      <a class="extend prev" rel="prev" href="/"><i class="fas fa-angle-double-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+      <a class="extend prev" rel="prev" href="/"><i class="fas fa-angle-double-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/"><i class="fas fa-angle-double-right"></i></a>
     </span>
   </nav>
   

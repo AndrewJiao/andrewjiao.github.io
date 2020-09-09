@@ -171,9 +171,9 @@
 <pre><code class="sh">docker search redis            #镜像库提供的多个镜像
 docker pull redis            #拉取最新版本的docker-redis镜像
 docker pull redis:3.2.8        #拉取指定版本的redis镜像</code></pre>
-<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5CDocker%5CdockerPull.png" srcset="/img/loading.gif" alt="s"></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/Docker/dockerPull.png" srcset="/img/loading.gif" alt="s"></p>
 <p>上图表示拉取成功并完成，可用<code>docker images</code>查看本地是否有镜像</p>
-<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5CDocker%5CdockerImages.png" srcset="/img/loading.gif" alt></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/Docker/dockerImages.png" srcset="/img/loading.gif" alt></p>
 <p>注意：拉取速度会很慢，因为docker中央仓库在国外，中国虽然有镜像仓库，如阿里、网易蜂巢等，但速度也不理想。好在，docker文件可以反复拉取，拉取失败，重新拉取即可。</p>
 <h2 id="使用Redis镜像启动实例"><a href="#使用Redis镜像启动实例" class="headerlink" title="使用Redis镜像启动实例"></a>使用Redis镜像启动实例</h2><p>启动docker容器以及内部的redis服务</p>
 <pre><code class="sh">docker run -d --name redis7000 -p 7000:6379 redis            #最高版本
@@ -197,7 +197,7 @@ docker exec -it 0cfc4932b9a0(容器ID) bash
 apt-get update &amp;&amp; apt-get install procps</code></pre>
 <p>进入redis客户端<code>redis-cli</code></p>
 <p>退出docker中的redis环境<code>exit</code></p>
-<h2 id="端口映射关系"><a href="#端口映射关系" class="headerlink" title="端口映射关系"></a>端口映射关系</h2><p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5CDocker%5CportMapping.png" srcset="/img/loading.gif" alt></p>
+<h2 id="端口映射关系"><a href="#端口映射关系" class="headerlink" title="端口映射关系"></a>端口映射关系</h2><p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/Docker/portMapping.png" srcset="/img/loading.gif" alt></p>
 <h2 id="防火墙设置"><a href="#防火墙设置" class="headerlink" title="防火墙设置"></a>防火墙设置</h2><p><code>systemctlstop firewalld.service</code>    关闭防火墙服务</p>
 <p><code>systemctldisable firewalld.service</code>  禁止防火墙开启启动</p>
 <p><code>systemctlrestart iptables.service</code>  重启防火墙使配置生效</p>
@@ -222,10 +222,10 @@ docker exet -it 容器ID bash
 redis-cli
 # 查看值
 get name</code></pre>
-<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5CDocker%5CdockerSingleTest.png" srcset="/img/loading.gif" alt="s"></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/Docker/dockerSingleTest.png" srcset="/img/loading.gif" alt="s"></p>
 <h2 id="测试分片的Redis"><a href="#测试分片的Redis" class="headerlink" title="测试分片的Redis"></a>测试分片的Redis</h2><p>启动多个redis，这里基于上一步的单个redis继续启动两个容器</p>
 <p>以类似的方式启动，注意修改暴露的端口</p>
-<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5CDocker%5CdockerShardTest.png" srcset="/img/loading.gif" alt="s"></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/Docker/dockerShardTest.png" srcset="/img/loading.gif" alt="s"></p>
 <pre><code class="java">@Test
     public void testShard(){
         JedisPoolConfig config = new JedisPoolConfig();
@@ -246,7 +246,7 @@ get name</code></pre>
         pool.close();
     }</code></pre>
 <p>上述java类是一个循环20次写值的过程，理论上分片后所有容器均会分担存储部分键值，查看结果如下</p>
-<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5CDocker%5CshardRedisCheck.png" srcset="/img/loading.gif" alt></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/Docker/shardRedisCheck.png" srcset="/img/loading.gif" alt></p>
 <h1 id="创建自定义镜像"><a href="#创建自定义镜像" class="headerlink" title="创建自定义镜像"></a>创建自定义镜像</h1><h2 id="Dockerfile"><a href="#Dockerfile" class="headerlink" title="Dockerfile"></a>Dockerfile</h2><ul>
 <li><p>Dockerfile通过逐层layer叠加，使资源得到重复利用，同时变化无穷。</p>
 <p>注意：FROM指定的镜像，本地如果有直接使用，无需网上下载。</p>
@@ -368,7 +368,7 @@ ENV CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar</code></pre>
 <ul>
 <li><code>docker build --no-cache -t 镜像名称 Dockerfile目录</code></li>
 </ul>
-<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5CDocker%5CbuildImageJDK.png" srcset="/img/loading.gif" alt></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/Docker/buildImageJDK.png" srcset="/img/loading.gif" alt></p>
 </li>
 <li><p>运行镜像</p>
 <ul>
@@ -383,8 +383,7 @@ ENV CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar</code></pre>
 <li><code>java -version</code></li>
 </ul>
 </li>
-<li><p>​</p>
-<ul>
+<li><ul>
 <li><code>exit</code>：退出容器</li>
 </ul>
 </li>
@@ -419,7 +418,7 @@ CMD [&quot;/usr/local/src/apache-tomcat-7.0.55/bin/catalina.sh&quot;,&quot;run&q
 </ul>
 </li>
 <li><p>访问tomcat</p>
-<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5CDocker%5CbuildSuccessTomcat.png" srcset="/img/loading.gif" alt></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/Docker/buildSuccessTomcat.png" srcset="/img/loading.gif" alt></p>
 </li>
 </ol>
 <h2 id="部署war包"><a href="#部署war包" class="headerlink" title="部署war包"></a>部署war包</h2><ol>
@@ -466,7 +465,7 @@ mv EasyMall.war ROOT.war</code></pre>
 <li><p>访问这个项目</p>
 </li>
 </ol>
-<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5CDocker%5CdockerWebSuccess.png" srcset="/img/loading.gif" alt></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/Docker/dockerWebSuccess.png" srcset="/img/loading.gif" alt></p>
 <h1 id="Docker数据卷"><a href="#Docker数据卷" class="headerlink" title="Docker数据卷"></a>Docker数据卷</h1><p>有状态容器都有数据持久化需求。Docker 采用 AFUS 分层文件系统时，文件系统的改动都是发生在最上面的容器层。在容器的生命周期内，它是持续的，包括容器在被停止后。但是，当容器被删除后，该数据层也随之被删除了。因此，Docker 采用 volume （卷）的形式来向容器提供持久化存储。</p>
 <p><code>docker run -p 53306:3306 -v $PWD/msyql:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=root --name mysql5719 -d bf1219a0a00d</code></p>
 <p>一个 data volume是容器中绕过文件系统的一个特定的目录。它被设计用来保存数据，而不管容器的生命周期。因此，当你删除一个容器时，Docker 肯定不会自动地删除一个volume。</p>
@@ -526,7 +525,6 @@ docker exec -it 71621b64efc8 bash            #进入容器
 mysql -uroot –proot                            #登录
 mysql&gt; use test_db;                                #打开数据库
 mysql&gt; select * from user;                    #查看user表</code></pre>
-<p>​</p>
 </li>
 </ol>
 

@@ -130,7 +130,7 @@
                   
                   <span class="post-meta">
                     <i class="far fa-chart-bar"></i>
-                    2.1k 字
+                    2.2k 字
                   </span>
                 
 
@@ -175,7 +175,7 @@
 <li>其中参数中的email需要改为你在github官网注册的邮箱同时也是你的github账号</li>
 </ul>
 <hr>
-<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5Cgit%5CgenerateKey.png" srcset="/img/loading.gif" alt></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/generateKey.png" srcset="/img/loading.gif" alt></p>
 <ul>
 <li>由于我已有一个key因此会提示是否覆盖，之后会要求确认路径和输入密码（可忽略）</li>
 <li>上图中会看到SSHkey生成的默认路径为用户目录下的.ssh目录（是一个隐藏目录）</li>
@@ -184,27 +184,31 @@
 <p><code>eval &quot;$(ssh-agent -s)&quot;</code></p>
 <p>添加生成的 SSH key 到 ssh-agent。 </p>
 <p><code>$ ssh-add ~/.ssh/id_rsa</code></p>
-<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5Cgit%5Cssh-add.png" srcset="/img/loading.gif" alt></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/ssh-add.png" srcset="/img/loading.gif" alt></p>
 <h3 id="将公钥告诉给远程仓库"><a href="#将公钥告诉给远程仓库" class="headerlink" title="将公钥告诉给远程仓库"></a>将公钥告诉给远程仓库</h3><ol>
 <li>复制.ssh目录下的id_rsa.pub文件内的key</li>
 <li>进入你的github仓库</li>
 <li>点击用户-setting-SSH and GPG keys在图中3位置粘贴你的key</li>
 </ol>
-<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5Cgit%5CbindSSHkey.png" srcset="/img/loading.gif" alt></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/bindSSHkey.png" srcset="/img/loading.gif" alt></p>
 <ol start="4">
 <li>最后点击Add SSH key后会将key生成成功，系统还会给你发送邮件提示</li>
 </ol>
 <p>为了验证是否成功，输入以下命令：</p>
 <p><code>$ ssh -T git@github.com</code></p>
-<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5Cgit%5CconnectSuccess.png" srcset="/img/loading.gif" alt></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/connectSuccess.png" srcset="/img/loading.gif" alt></p>
 <p>此时，你的秘钥就已经配置成功了</p>
+<ol start="5">
+<li>此外，还需要输入一下指令存储账号密码，且第一次需要输入账号密码</li>
+</ol>
+<p><code>git config --global credential.helper store</code></p>
 <h2 id="创建远程仓库"><a href="#创建远程仓库" class="headerlink" title="创建远程仓库"></a>创建远程仓库</h2><p>本例以gitHub为例</p>
 <p>git远程仓库创建很简单，当你利用github账号登录后</p>
 <ol>
 <li>点击图标处确保返回主页</li>
 <li>点击绿色new按钮，新建一个远程仓库，后续按说明提示新建一个仓库即可</li>
 </ol>
-<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5Cgit%5CnewRepository.png" srcset="/img/loading.gif" alt></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/newRepository.png" srcset="/img/loading.gif" alt></p>
 <p>其实这里我们只需要填一个版本仓库的名字，点击Create repository就OK了。 </p>
 <h2 id="关联远程仓库"><a href="#关联远程仓库" class="headerlink" title="关联远程仓库"></a>关联远程仓库</h2><h3 id="关联仓库路径"><a href="#关联仓库路径" class="headerlink" title="关联仓库路径"></a>关联仓库路径</h3><p>首先需要添加远程仓库,<u>shortname</u>可认为是远程仓库的别名，方便以后建立分支后指定远程仓库等操作，通常我们用origin(实际上本操作相当于给远程仓库的url取别名)</p>
 <p><code>git remote add [shortname] [url]</code></p>
@@ -214,9 +218,9 @@
 </ul>
 <hr>
 <p>url可从创建成功后的远程仓库中获取到，如下图</p>
-<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5Cgit%5CnewRepositoryUrl.png" srcset="/img/loading.gif" alt></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/newRepositoryUrl.png" srcset="/img/loading.gif" alt></p>
 <p>也可以在仓库主页上点击绿色按钮”Clone of download”获取到</p>
-<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image%5Cgit%5CgitRepositoryUrl.png" srcset="/img/loading.gif" alt></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/gitRepositoryUrl.png" srcset="/img/loading.gif" alt></p>
 <p><strong>具体操作</strong></p>
 <p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/gitConnectRepository.png" srcset="/img/loading.gif" alt></p>
 <ul>
@@ -230,7 +234,7 @@
 <li><strong>关于其他分支</strong></li>
 </ul>
 <p>如果需要提交其他分支也是需要先将其他分支切换为当前分支然后push如下</p>
-<p><code>$ git checkout fa</code><!-- 切换分支 --></p>
+<p><code>$ git checkout fa</code><!-- 切换分支 --> </p>
 <p><code>$ git push -u origin fa</code></p>
 <h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><p>在创建一个新的远程仓库后，也可以参考github给的提示操作</p>
 <p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/gitHubTips.png" srcset="/img/loading.gif" alt></p>
