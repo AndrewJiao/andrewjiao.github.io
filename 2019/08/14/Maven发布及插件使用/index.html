@@ -1,0 +1,766 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="https://andrewblogs.oss-cn-heyuan.aliyuncs.com/base/toptag.png">
+  <link rel="icon" href="https://andrewblogs.oss-cn-heyuan.aliyuncs.com/base/toptag.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Andrew_Jiao">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Maven插件简述Maven中有两种类型的插件  Build plugins 是在项目创建时执行的插件，位于&lt;build&#x2F;&gt;标签内 Reporting plugins是在网站发布时执行的插件，位于&lt;reporting&#x2F;&gt;标签内  插件原理所有的Maven插件的配置都来自于&lt;configuration&gt;标签，每个&lt;configuration&gt;都会映射到">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Maven使用">
+<meta property="og:url" content="https://andrewjiao.github.io/2019/08/14/Maven%E5%8F%91%E5%B8%83%E5%8F%8A%E6%8F%92%E4%BB%B6%E4%BD%BF%E7%94%A8/index.html">
+<meta property="og:site_name" content="good day">
+<meta property="og:description" content="Maven插件简述Maven中有两种类型的插件  Build plugins 是在项目创建时执行的插件，位于&lt;build&#x2F;&gt;标签内 Reporting plugins是在网站发布时执行的插件，位于&lt;reporting&#x2F;&gt;标签内  插件原理所有的Maven插件的配置都来自于&lt;configuration&gt;标签，每个&lt;configuration&gt;都会映射到">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-08-14T06:27:20.000Z">
+<meta property="article:modified_time" content="2020-07-14T07:13:59.175Z">
+<meta property="article:author" content="Andrew_Jiao">
+<meta property="article:tag" content="project">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Maven使用 - good day</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"andrewjiao.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>hello there</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Maven使用"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-08-14 14:27" pubdate>
+          2019年8月14日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          46 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Maven使用</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="Maven插件简述"><a href="#Maven插件简述" class="headerlink" title="Maven插件简述"></a>Maven插件简述</h1><p>Maven中有两种类型的插件</p>
+<ul>
+<li><strong>Build plugins</strong> 是在项目创建时执行的插件，位于<code>&lt;build/&gt;</code>标签内</li>
+<li><strong>Reporting plugins</strong>是在网站发布时执行的插件，位于<code>&lt;reporting/&gt;</code>标签内</li>
+</ul>
+<h1 id="插件原理"><a href="#插件原理" class="headerlink" title="插件原理"></a>插件原理</h1><p>所有的Maven插件的配置都来自于<code>&lt;configuration&gt;</code>标签，每个<code>&lt;configuration&gt;</code>都会映射到Mojo类(Mojo类有插件具体执行工作的类)中你所指定的变量或set方法，具体案例如下</p>
+<p>创建一个插件用于访问特定的url，并需要配置url和超时时间等配置，创建步骤如下</p>
+<ol>
+<li><p>创建Maven工程，可使用quickstar快速创建</p>
+</li>
+<li><p>修改pom文件</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-comment">&lt;!-- 以往我们这里都是控制打包类型如，jar或者war，这里我们要生成插件因此需要修改为如下配置 --&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">packaging</span>&gt;</span>maven-plugin<span class="hljs-tag">&lt;/<span class="hljs-name">packaging</span>&gt;</span><br><span class="hljs-comment">&lt;!-- 添加插件依赖以便我们实现AbstractMojo抽象类来开发我们自己的插件 --&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>     <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.apache.maven<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>     <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>maven-plugin-api<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>     <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>3.5.0<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>   <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p>实现AbstractMojo接口</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@goal</span> query</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyQueryMojo</span><br>    <span class="hljs-keyword">extends</span> <span class="hljs-title class_">AbstractMojo</span><br>&#123;<br>    <span class="hljs-comment">//配置获取</span><br>    <span class="hljs-meta">@Parameter(property = &quot;query.url&quot;, required = true)</span><br>    <span class="hljs-keyword">private</span> String url;<br> <br>    <span class="hljs-meta">@Parameter(property = &quot;timeout&quot;, required = false, defaultValue = &quot;50&quot;)</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> timeout;<br> <br>    <span class="hljs-meta">@Parameter(property = &quot;options&quot;)</span><br>    <span class="hljs-keyword">private</span> String[] options;<br> 	<span class="hljs-comment">//具体插件执行的方法</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">execute</span><span class="hljs-params">()</span><br>        <span class="hljs-keyword">throws</span> MojoExecutionException<br>    &#123;<br>        ...<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>执行<code>mvn clean install</code>将会在本地.m2库中生成你的插件</p>
+</li>
+<li><p>具体如何使用插件如下，可对应步骤3了解插件配置如何映射</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs xml">oject&gt;<br>  ...<br>  <span class="hljs-tag">&lt;<span class="hljs-name">build</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">plugins</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">plugin</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>maven-myquery-plugin<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>1.0<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">configuration</span>&gt;</span><br>          <span class="hljs-tag">&lt;<span class="hljs-name">url</span>&gt;</span>http://www.foobar.com/query<span class="hljs-tag">&lt;/<span class="hljs-name">url</span>&gt;</span><br>          <span class="hljs-tag">&lt;<span class="hljs-name">timeout</span>&gt;</span>10<span class="hljs-tag">&lt;/<span class="hljs-name">timeout</span>&gt;</span><br>          <span class="hljs-tag">&lt;<span class="hljs-name">options</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">option</span>&gt;</span>one<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">option</span>&gt;</span>two<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">option</span>&gt;</span>three<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span><br>          <span class="hljs-tag">&lt;/<span class="hljs-name">options</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">configuration</span>&gt;</span><br>      <span class="hljs-tag">&lt;/<span class="hljs-name">plugin</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">plugins</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">build</span>&gt;</span><br>  ...<br><span class="hljs-tag">&lt;/<span class="hljs-name">project</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>有时，我们想通过命令行界面来控制url参数以便我们不去修改pom.xml的<code>configuration</code>配置</p>
+<ul>
+<li>pom配置中的url修改为<code>$&#123;query.url&#125;</code></li>
+<li>执行命令<code>mvn myquery:query -Dquery.url=http://maven.apache.org</code></li>
+</ul>
+<p>6.当有复杂参数时，需要定义实体类封装参数</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">configuration</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">person</span> <span class="hljs-attr">implementation</span>=<span class="hljs-string">&quot;com.mycompany.mojo.query.SuperPerson&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">firstName</span>&gt;</span>Jason<span class="hljs-tag">&lt;/<span class="hljs-name">firstName</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">lastName</span>&gt;</span>van Zyl<span class="hljs-tag">&lt;/<span class="hljs-name">lastName</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">person</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">configuration</span>&gt;</span><br></code></pre></td></tr></table></figure></li>
+</ol>
+<h1 id="常用插件"><a href="#常用插件" class="headerlink" title="常用插件"></a>常用插件</h1><p>关于Maven插件的原理参考</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/jerry010101/article/details/93601563">https://blog.csdn.net/jerry010101/article/details/93601563</a></p>
+<p>插件文档：</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="http://maven.apache.org/plugins/index.html">http://maven.apache.org/plugins/index.html</a></li>
+<li><a target="_blank" rel="noopener" href="http://mojo.codehaus.org/plugins.html">http://mojo.codehaus.org/plugins.html</a></li>
+</ol>
+<h2 id="maven内置配置"><a href="#maven内置配置" class="headerlink" title="maven内置配置"></a>maven内置配置</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs xml">$&#123;basedir&#125;表示项目根目录,即包含pom.xml文件的目录;<br><br>$&#123;version&#125;表示项目版本;<br><br>$&#123;project.basedir&#125;同$&#123;basedir&#125;;<br><br>$&#123;project.baseUri&#125;表示项目文件地址;<br><br>$&#123;maven.build.timestamp&#125;表示项目构件开始时间;<br><br>$&#123;maven.build.timestamp.format&#125;表示属性$&#123;maven.build.timestamp&#125;的展示格式,默认值为yyyyMMdd-HHmm,可自定义其格式,其类型可参考java.text.SimpleDateFormat。<br>　$&#123;project.build.directory&#125;表示主源码路径;<br><br>　$&#123;project.build.sourceEncoding&#125;表示主源码的编码格式;<br><br>　$&#123;project.build.sourceDirectory&#125;表示主源码路径;<br><br>　$&#123;project.build.finalName&#125;表示输出文件名称;<br><br>  $&#123;project.version&#125;表示项目版本,与$&#123;version&#125;相同;<br><br>$&#123;project.xxx&#125; 当前pom文件的任意节点的内容<br>$&#123;env.xxx&#125; 获取系统环境变量。<br>$&#123;settings.xxx&#125; 指代了settings.xml中对应元素的值。<br></code></pre></td></tr></table></figure>
+
+<h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><h3 id="maven-compiler-plugin"><a href="#maven-compiler-plugin" class="headerlink" title="maven-compiler-plugin"></a>maven-compiler-plugin</h3><p>设置maven编译的jdk版本，maven3默认用jdk1.5，maven2默认用jdk1.3</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">plugin</span>&gt;</span>     <br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>            <br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>maven-compiler-plugin<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>                         <br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>3.1<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>                             <br>    <span class="hljs-tag">&lt;<span class="hljs-name">configuration</span>&gt;</span>                                      <br>        <span class="hljs-tag">&lt;<span class="hljs-name">source</span>&gt;</span>1.8<span class="hljs-tag">&lt;/<span class="hljs-name">source</span>&gt;</span> <span class="hljs-comment">&lt;!-- 源代码使用的JDK版本 --&gt;</span>                              <br>        <span class="hljs-tag">&lt;<span class="hljs-name">target</span>&gt;</span>1.8<span class="hljs-tag">&lt;/<span class="hljs-name">target</span>&gt;</span> <span class="hljs-comment">&lt;!-- 需要生成的目标class文件的编译版本 --&gt;</span>  <br>        <span class="hljs-tag">&lt;<span class="hljs-name">encoding</span>&gt;</span>UTF-8<span class="hljs-tag">&lt;/<span class="hljs-name">encoding</span>&gt;</span><span class="hljs-comment">&lt;!-- 字符集编码 --&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">skipTests</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">skipTests</span>&gt;</span><span class="hljs-comment">&lt;!-- 跳过测试 --&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">configuration</span>&gt;</span>                                         <br><span class="hljs-tag">&lt;/<span class="hljs-name">plugin</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="打包"><a href="#打包" class="headerlink" title="打包"></a>打包</h2><h3 id="Maven-Archiver"><a href="#Maven-Archiver" class="headerlink" title="Maven Archiver"></a>Maven Archiver</h3><p>Maven Archiver是主要的控制打包功能的配置</p>
+<ul>
+<li>打包配置</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><code class="hljs xml"> <span class="hljs-tag">&lt;<span class="hljs-name">archive</span>&gt;</span><br>                        <span class="hljs-comment">&lt;!-- 是否包含pom.xml和pom.properties文件：默认是true --&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">addMavenDescriptor</span>&gt;</span>false<span class="hljs-tag">&lt;/<span class="hljs-name">addMavenDescriptor</span>&gt;</span><br>                        <span class="hljs-comment">&lt;!-- 是否激活压缩：默认是true --&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">compress</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">compress</span>&gt;</span><br>                        <span class="hljs-comment">&lt;!-- 是否强制创建存档（会对比新旧时间戳，若新建存档时间较晚则更新jar包，反之亦然）：默认为true --&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">forced</span>/&gt;</span><br>                        <span class="hljs-comment">&lt;!-- 是否包含INDEX.LIST文件：默认为true --&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">index</span>/&gt;</span><br>                        <span class="hljs-comment">&lt;!-- 将定义的pom.properties文件用于覆盖自动生成的pom.properties文件（只有在addMavenDescriptor 设置为true时有效） --&gt;</span><br>                        <span class="hljs-comment">&lt;!--</span><br><span class="hljs-comment">                            自动生成的pom。properties默认包含以下属性</span><br><span class="hljs-comment">                            artifactId=$&#123;project.artifactId&#125;</span><br><span class="hljs-comment">                            groupId=$&#123;project.groupId&#125;</span><br><span class="hljs-comment">                            version=$&#123;project.version&#125;</span><br><span class="hljs-comment">                         --&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">pomPropertiesFile</span>/&gt;</span><br>                        <span class="hljs-comment">&lt;!-- 设置MANIFEST.MF文件路径 --&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">manifestFile</span>&gt;</span>$&#123;project.build.outputDirectory&#125;/META-INF/MANIFEST.MF<span class="hljs-tag">&lt;/<span class="hljs-name">manifestFile</span>&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">manifest</span>&gt;</span><br>                            <span class="hljs-comment">&lt;!-- 是否要把第三方jar放到manifest的classpath中：默认false --&gt;</span><br>                            <span class="hljs-tag">&lt;<span class="hljs-name">addClasspath</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">addClasspath</span>&gt;</span><br>                            <span class="hljs-comment">&lt;!--</span><br><span class="hljs-comment">                                用于为mainfest添加如下信息</span><br><span class="hljs-comment">                                Created-By: Maven Archiver $&#123;maven-archiver.version&#125;</span><br><span class="hljs-comment">                                Build-Jdk-Spec: $&#123;java.specification.version&#125;</span><br><span class="hljs-comment">                            --&gt;</span><br>                            <span class="hljs-tag">&lt;<span class="hljs-name">addDefaultEntries</span>/&gt;</span><br>                            <span class="hljs-comment">&lt;!--</span><br><span class="hljs-comment">                                用于为mainfest添加如下信息</span><br><span class="hljs-comment">                                Implementation-Title: $&#123;project.name&#125;</span><br><span class="hljs-comment">                                Implementation-Version: $&#123;project.version&#125;</span><br><span class="hljs-comment">                                Implementation-Vendor: $&#123;project.organization.name&#125;</span><br><span class="hljs-comment">                            --&gt;</span><br>                            <span class="hljs-tag">&lt;<span class="hljs-name">addDefaultImplementationEntries</span>/&gt;</span><br>                            <span class="hljs-comment">&lt;!--</span><br><span class="hljs-comment">                                Specification-Title: $&#123;project.name&#125;</span><br><span class="hljs-comment">                                Specification-Version: $&#123;project.artifact.selectedVersion.majorVersion&#125;.$&#123;project.artifact.selectedVersion.minorVersion&#125;</span><br><span class="hljs-comment">                                Specification-Vendor: $&#123;project.organization.name&#125;</span><br><span class="hljs-comment">                            --&gt;</span><br>                            <span class="hljs-tag">&lt;<span class="hljs-name">addDefaultSpecificationEntries</span>/&gt;</span><br>                            <span class="hljs-comment">&lt;!--</span><br><span class="hljs-comment">                                Build-Tool: $&#123;maven.build.version&#125;</span><br><span class="hljs-comment">                                Build-Jdk: $&#123;java.version&#125; ($&#123;java.vendor&#125;)</span><br><span class="hljs-comment">                                Build-Os:  $&#123;os.name&#125; ($&#123;os.version&#125;; ($&#123;os.arch&#125;)</span><br><span class="hljs-comment">                            --&gt;</span><br>                            <span class="hljs-tag">&lt;<span class="hljs-name">addBuildEnvironmentEntries</span>/&gt;</span><br><span class="hljs-comment">&lt;!--                            是否开启扩展清单--&gt;</span><br>                            <span class="hljs-tag">&lt;<span class="hljs-name">addExtensions</span>/&gt;</span><br>                                <span class="hljs-comment">&lt;!--</span><br><span class="hljs-comment">                                    设置classPath的布局类型</span><br><span class="hljs-comment">                                    simple：（默认）</span><br><span class="hljs-comment">                                    repository：与maven的classPath一致</span><br><span class="hljs-comment">                                    custom：与customClasspathLayout配置有关</span><br><span class="hljs-comment">                                --&gt;</span><br>                            <span class="hljs-tag">&lt;<span class="hljs-name">classpathLayoutType</span>/&gt;</span><br>                            <span class="hljs-comment">&lt;!-- 生成的manifest中classpath的前缀，</span><br><span class="hljs-comment">                                 因为要把第三方jar放到lib目录下，</span><br><span class="hljs-comment">                                 所以classpath的前缀是lib/，默认为空 --&gt;</span><br>                            <span class="hljs-tag">&lt;<span class="hljs-name">classpathPrefix</span>&gt;</span>lib/.<span class="hljs-tag">&lt;/<span class="hljs-name">classpathPrefix</span>&gt;</span><br>                            <span class="hljs-comment">&lt;!-- 所传的表达式会被classPath关联的对象清单所识别 --&gt;</span><br>                            <span class="hljs-tag">&lt;<span class="hljs-name">customClasspathLayout</span>/&gt;</span><br>                            <span class="hljs-comment">&lt;!-- 设置主类 --&gt;</span><br>                            <span class="hljs-tag">&lt;<span class="hljs-name">mainClass</span>/&gt;</span><br>                            <span class="hljs-comment">&lt;!-- 包的入口 --&gt;</span><br>                            <span class="hljs-tag">&lt;<span class="hljs-name">packageName</span>/&gt;</span><br>                            <span class="hljs-comment">&lt;!--是否使用唯一时间戳快照版本，而不是-快照版本：默认为true--&gt;</span><br>                            <span class="hljs-tag">&lt;<span class="hljs-name">useUniqueVersions</span>/&gt;</span><br>                        <span class="hljs-tag">&lt;/<span class="hljs-name">manifest</span>&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">manifestEntries</span>&gt;</span><br>                            <span class="hljs-tag">&lt;<span class="hljs-name">key</span>&gt;</span>value<span class="hljs-tag">&lt;/<span class="hljs-name">key</span>&gt;</span><br>                        <span class="hljs-tag">&lt;/<span class="hljs-name">manifestEntries</span>&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">manifestSections</span>&gt;</span><br>                            <span class="hljs-tag">&lt;<span class="hljs-name">manifestSection</span>&gt;</span><br>                                <span class="hljs-tag">&lt;<span class="hljs-name">name</span>/&gt;</span><br>                                <span class="hljs-tag">&lt;<span class="hljs-name">manifestEntries</span>&gt;</span><br>                                    <span class="hljs-tag">&lt;<span class="hljs-name">key</span>&gt;</span>value<span class="hljs-tag">&lt;/<span class="hljs-name">key</span>&gt;</span><br>                                <span class="hljs-tag">&lt;/<span class="hljs-name">manifestEntries</span>&gt;</span><br>                            <span class="hljs-tag">&lt;/<span class="hljs-name">manifestSection</span>&gt;</span><br>                        <span class="hljs-tag">&lt;/<span class="hljs-name">manifestSections</span>&gt;</span><br>                    <span class="hljs-tag">&lt;/<span class="hljs-name">archive</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="maven-jar-plugin"><a href="#maven-jar-plugin" class="headerlink" title="maven-jar-plugin"></a>maven-jar-plugin</h3><ul>
+<li>普通jar包</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">plugin</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>maven-jar-plugin<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">configuration</span>&gt;</span><br>                    <span class="hljs-tag">&lt;<span class="hljs-name">archive</span>&gt;</span><br>                        <span class="hljs-comment">&lt;!-- 是否包含pom.xml和pom.properties文件：默认是true --&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">addMavenDescriptor</span>&gt;</span>false<span class="hljs-tag">&lt;/<span class="hljs-name">addMavenDescriptor</span>&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">manifest</span>&gt;</span><br>                            <span class="hljs-comment">&lt;!-- 是否要把第三方jar放到manifest的classpath中：默认false --&gt;</span><br>                            <span class="hljs-tag">&lt;<span class="hljs-name">addClasspath</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">addClasspath</span>&gt;</span><br>                            <span class="hljs-comment">&lt;!-- 生成的manifest中classpath的前缀，</span><br><span class="hljs-comment">                                 因为要把第三方jar放到lib目录下，</span><br><span class="hljs-comment">                                 所以classpath的前缀是lib/，默认为空 --&gt;</span><br>                            <span class="hljs-tag">&lt;<span class="hljs-name">classpathPrefix</span>&gt;</span>lib/.<span class="hljs-tag">&lt;/<span class="hljs-name">classpathPrefix</span>&gt;</span><br>                        <span class="hljs-tag">&lt;/<span class="hljs-name">manifest</span>&gt;</span><br>                    <span class="hljs-tag">&lt;/<span class="hljs-name">archive</span>&gt;</span><br>                    <span class="hljs-tag">&lt;<span class="hljs-name">excludes</span>&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">exclude</span>&gt;</span>**/bookFlight/<span class="hljs-tag">&lt;/<span class="hljs-name">exclude</span>&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">exclude</span>&gt;</span>**/database/<span class="hljs-tag">&lt;/<span class="hljs-name">exclude</span>&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">exclude</span>&gt;</span>**/debug/<span class="hljs-tag">&lt;/<span class="hljs-name">exclude</span>&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">exclude</span>&gt;</span>**/IBE/<span class="hljs-tag">&lt;/<span class="hljs-name">exclude</span>&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">exclude</span>&gt;</span>*.xml<span class="hljs-tag">&lt;/<span class="hljs-name">exclude</span>&gt;</span><br>                    <span class="hljs-tag">&lt;/<span class="hljs-name">excludes</span>&gt;</span><br>                <span class="hljs-tag">&lt;/<span class="hljs-name">configuration</span>&gt;</span><br>            <span class="hljs-tag">&lt;/<span class="hljs-name">plugin</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="maven-assembly-plugin"><a href="#maven-assembly-plugin" class="headerlink" title="maven-assembly-plugin"></a>maven-assembly-plugin</h3><ul>
+<li>maven-assembly-plugin的用途是制作项目分发包，该分发包可能包含了项目的可执行文件、源代码、readme、平台脚本等等。 maven-assembly-plugin支持各种主流的格式如zip、tar.gz、jar和war等，具体打包哪些文件是高度可控的，例如用户可以 按文件级别的粒度、文件集级别的粒度、模块级别的粒度、以及依赖级别的粒度控制打包，此外，包含和排除配置也是支持的。maven-assembly- plugin要求用户使用一个名为assembly.xml的元数据文件来表述打包，它的single目标可以直接在命令行调用，也可以被绑定至生命周期。</li>
+<li>assembly插件打压缩包（jar）</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">plugin</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>maven-assembly-plugin<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">configuration</span>&gt;</span><br>                    <span class="hljs-comment">&lt;!--使用默认assembly组件--&gt;</span><br>                    <span class="hljs-tag">&lt;<span class="hljs-name">descriptorRefs</span>&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">descriptorRef</span>&gt;</span>jar-with-dependencies<span class="hljs-tag">&lt;/<span class="hljs-name">descriptorRef</span>&gt;</span><br>                    <span class="hljs-tag">&lt;/<span class="hljs-name">descriptorRefs</span>&gt;</span><br>                    <span class="hljs-comment">&lt;!--使用自定义assembly组件--&gt;</span><br>                    <span class="hljs-comment">&lt;!--</span><br><span class="hljs-comment">                    &lt;descriptors&gt;</span><br><span class="hljs-comment">                        &lt;descriptor&gt;src/main/resources/assembly/*.xml&lt;/descriptor&gt;</span><br><span class="hljs-comment">                    &lt;/descriptors&gt;</span><br><span class="hljs-comment">                    --&gt;</span><br>                    <span class="hljs-comment">&lt;!--assembly插件可支持archive配置用于指定可执行jar包的主类--&gt;</span><br>                    <span class="hljs-tag">&lt;<span class="hljs-name">archive</span>&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">manifest</span>&gt;</span><br>                            <span class="hljs-tag">&lt;<span class="hljs-name">mainClass</span>&gt;</span>org.sample.App<span class="hljs-tag">&lt;/<span class="hljs-name">mainClass</span>&gt;</span><br>                        <span class="hljs-tag">&lt;/<span class="hljs-name">manifest</span>&gt;</span><br>                    <span class="hljs-tag">&lt;/<span class="hljs-name">archive</span>&gt;</span><br>                <span class="hljs-tag">&lt;/<span class="hljs-name">configuration</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">executions</span>&gt;</span><br>                    <span class="hljs-tag">&lt;<span class="hljs-name">execution</span>&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">id</span>&gt;</span>make-assembly<span class="hljs-tag">&lt;/<span class="hljs-name">id</span>&gt;</span> <span class="hljs-comment">&lt;!-- this is used for inheritance merges --&gt;</span><br>                        <span class="hljs-comment">&lt;!-- 将组装绑定到maven生命周期的哪一阶段 --&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">phase</span>&gt;</span>package<span class="hljs-tag">&lt;/<span class="hljs-name">phase</span>&gt;</span> <span class="hljs-comment">&lt;!-- bind to the packaging phase --&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">goals</span>&gt;</span><br>                            <span class="hljs-comment">&lt;!-- 指定assembly插件的打包方式--&gt;</span><br>                            <span class="hljs-tag">&lt;<span class="hljs-name">goal</span>&gt;</span>single<span class="hljs-tag">&lt;/<span class="hljs-name">goal</span>&gt;</span><br>                        <span class="hljs-tag">&lt;/<span class="hljs-name">goals</span>&gt;</span><br>                    <span class="hljs-tag">&lt;/<span class="hljs-name">execution</span>&gt;</span><br>                <span class="hljs-tag">&lt;/<span class="hljs-name">executions</span>&gt;</span><br>            <span class="hljs-tag">&lt;/<span class="hljs-name">plugin</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>当有个性化配置时可参考Assembly，，改方案需要该插件支持<code>&lt;descriptor/&gt;</code></li>
+</ul>
+<h3 id="Assembly配置"><a href="#Assembly配置" class="headerlink" title="Assembly配置"></a>Assembly配置</h3><ul>
+<li>assembly文件是插件的配置，通过配置的变更来实现不同的自定义打包方式和类型等</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">assembly</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">&quot;http://maven.apache.org/ASSEMBLY/2.1.0&quot;</span></span><br><span class="hljs-tag">          <span class="hljs-attr">xmlns:xsi</span>=<span class="hljs-string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span><br><span class="hljs-tag">          <span class="hljs-attr">xsi:schemaLocation</span>=<span class="hljs-string">&quot;http://maven.apache.org/ASSEMBLY/2.1.0</span></span><br><span class="hljs-string"><span class="hljs-tag">          http://maven.apache.org/xsd/assembly-2.0.0.xsd&quot;</span>&gt;</span><br>    <span class="hljs-comment">&lt;!--用于表示打包后的包名，且还可以在发布时座位组件的标识--&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">id</span>/&gt;</span><br>    <span class="hljs-comment">&lt;!--打包类型</span><br><span class="hljs-comment">        &quot;zip&quot; - Creates a ZIP file format</span><br><span class="hljs-comment">        &quot;tar&quot; - Creates a TAR format</span><br><span class="hljs-comment">        &quot;tar.gz&quot; or &quot;tgz&quot; - Creates a gzip&#x27;d TAR format</span><br><span class="hljs-comment">        &quot;tar.bz2&quot; or &quot;tbz2&quot; - Creates a bzip&#x27;d TAR format</span><br><span class="hljs-comment">        &quot;tar.snappy&quot; - Creates a snappy&#x27;d TAR format</span><br><span class="hljs-comment">        &quot;tar.xz&quot; or &quot;txz&quot; - Creates a xz&#x27;d TAR format</span><br><span class="hljs-comment">        &quot;jar&quot; - Creates a JAR format</span><br><span class="hljs-comment">        &quot;dir&quot; - Creates an exploded directory format</span><br><span class="hljs-comment">        &quot;war&quot; - Creates a WAR format</span><br><span class="hljs-comment">    --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">formats</span>/&gt;</span><br>    <span class="hljs-comment">&lt;!--是否将包含根目录，若设为false则压缩包中只包含目录中的内容，而不是从根目录开始：默认true--&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">includeBaseDirectory</span>/&gt;</span><br>    <span class="hljs-comment">&lt;!--当includeBaseDirectory标签设为true时，需要为根目录命名，若未命名则默认用项目名称为之命名$&#123;project.build.finalName&#125; --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">baseDirectory</span>/&gt;</span><br>    <span class="hljs-comment">&lt;!----&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">includeSiteDirectory</span>/&gt;</span><br>    <span class="hljs-comment">&lt;!--用于将多个文件内容定义在同一个标识下，例如将几个文件的内容合并到一个文件中去或为特殊的文件自定义内容--&gt;</span><br>    <span class="hljs-comment">&lt;!--有以下几种配置可参考：http://maven.apache.org/plugins/maven-assembly-plugin/examples/single/using-container-descriptor-handlers.html--&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">containerDescriptorHandlers</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">containerDescriptorHandler</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">handlerName</span>/&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">configuration</span>/&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">containerDescriptorHandler</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">containerDescriptorHandlers</span>&gt;</span><br>    <span class="hljs-comment">&lt;!--允许将多个Module和项目加入到一个pom.xml中--&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">moduleSets</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">moduleSet</span>&gt;</span><br>            <span class="hljs-comment">&lt;!--如果设置为true插件将会集中处理包含在内的所有项目工程--&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">useAllReactorProjects</span>/&gt;</span><br>            <span class="hljs-comment">&lt;!--是否包含子工程--&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">includeSubModules</span>/&gt;</span><br>            <span class="hljs-comment">&lt;!--项目坐标--&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">includes</span>/&gt;</span><br>            <span class="hljs-comment">&lt;!--除外的项目坐标--&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">excludes</span>/&gt;</span><br>            <span class="hljs-comment">&lt;!--包含的source文件--&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">sources</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">useDefaultExcludes</span>/&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">outputDirectory</span>/&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">includes</span>/&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">excludes</span>/&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">fileMode</span>/&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">directoryMode</span>/&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">fileSets</span>&gt;</span><br>                    <span class="hljs-tag">&lt;<span class="hljs-name">fileSet</span>&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">useDefaultExcludes</span>/&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">outputDirectory</span>/&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">includes</span>/&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">excludes</span>/&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">fileMode</span>/&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">directoryMode</span>/&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">directory</span>/&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">lineEnding</span>/&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">filtered</span>/&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">nonFilteredFileExtensions</span>/&gt;</span><br>                    <span class="hljs-tag">&lt;/<span class="hljs-name">fileSet</span>&gt;</span><br>                <span class="hljs-tag">&lt;/<span class="hljs-name">fileSets</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">includeModuleDirectory</span>/&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">excludeSubModuleDirectories</span>/&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">outputDirectoryMapping</span>/&gt;</span><br>            <span class="hljs-tag">&lt;/<span class="hljs-name">sources</span>&gt;</span><br>            <span class="hljs-comment">&lt;!--包含的二进制文件--&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">binaries</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">outputDirectory</span>/&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">includes</span>/&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">excludes</span>/&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">fileMode</span>/&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">directoryMode</span>/&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">attachmentClassifier</span>/&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">includeDependencies</span>/&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">dependencySets</span>&gt;</span><br>                    <span class="hljs-tag">&lt;<span class="hljs-name">dependencySet</span>&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">outputDirectory</span>/&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">includes</span>/&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">excludes</span>/&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">fileMode</span>/&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">directoryMode</span>/&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">useStrictFiltering</span>/&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">outputFileNameMapping</span>/&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">unpack</span>/&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">unpackOptions</span>&gt;</span><br>                            <span class="hljs-tag">&lt;<span class="hljs-name">includes</span>/&gt;</span><br>                            <span class="hljs-tag">&lt;<span class="hljs-name">excludes</span>/&gt;</span><br>                            <span class="hljs-tag">&lt;<span class="hljs-name">filtered</span>/&gt;</span><br>                            <span class="hljs-tag">&lt;<span class="hljs-name">nonFilteredFileExtensions</span>/&gt;</span><br>                            <span class="hljs-tag">&lt;<span class="hljs-name">lineEnding</span>/&gt;</span><br>                            <span class="hljs-tag">&lt;<span class="hljs-name">useDefaultExcludes</span>/&gt;</span><br>                            <span class="hljs-tag">&lt;<span class="hljs-name">encoding</span>/&gt;</span><br>                        <span class="hljs-tag">&lt;/<span class="hljs-name">unpackOptions</span>&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">scope</span>/&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">useProjectArtifact</span>/&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">useProjectAttachments</span>/&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">useTransitiveDependencies</span>/&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">useTransitiveFiltering</span>/&gt;</span><br>                    <span class="hljs-tag">&lt;/<span class="hljs-name">dependencySet</span>&gt;</span><br>                <span class="hljs-tag">&lt;/<span class="hljs-name">dependencySets</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">unpack</span>/&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">unpackOptions</span>&gt;</span><br>                    <span class="hljs-tag">&lt;<span class="hljs-name">includes</span>/&gt;</span><br>                    <span class="hljs-tag">&lt;<span class="hljs-name">excludes</span>/&gt;</span><br>                    <span class="hljs-tag">&lt;<span class="hljs-name">filtered</span>/&gt;</span><br>                    <span class="hljs-tag">&lt;<span class="hljs-name">nonFilteredFileExtensions</span>/&gt;</span><br>                    <span class="hljs-tag">&lt;<span class="hljs-name">lineEnding</span>/&gt;</span><br>                    <span class="hljs-tag">&lt;<span class="hljs-name">useDefaultExcludes</span>/&gt;</span><br>                    <span class="hljs-tag">&lt;<span class="hljs-name">encoding</span>/&gt;</span><br>                <span class="hljs-tag">&lt;/<span class="hljs-name">unpackOptions</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">outputFileNameMapping</span>/&gt;</span><br>            <span class="hljs-tag">&lt;/<span class="hljs-name">binaries</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">moduleSet</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">moduleSets</span>&gt;</span><br>    <span class="hljs-comment">&lt;!--文件设置，将制定的文件或集合写入压缩包内--&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">fileSets</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">fileSet</span>&gt;</span><br>            <span class="hljs-comment">&lt;!--是否使用默认排查设置，如匹配CVS或Subversion元数据文件时排除：默认为true--&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">useDefaultExcludes</span>/&gt;</span><br>            <span class="hljs-comment">&lt;!--输出路径，这个路径从压缩包的根目录开始--&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">outputDirectory</span>/&gt;</span><br>            <span class="hljs-comment">&lt;!--设置匹配的包含文件--&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">includes</span>/&gt;</span><br>            <span class="hljs-comment">&lt;!--设置排除文件--&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">excludes</span>/&gt;</span><br>            <span class="hljs-comment">&lt;!--类似linux系统的权限设置，如：Read = 4, Write = 2, and Execute = 1；默认为0644--&gt;</span><br>            <span class="hljs-comment">&lt;!--更多权限可查看http://www.onlamp.com/pub/a/bsd/2000/09/06/FreeBSD_Basics.html--&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">fileMode</span>/&gt;</span><br>            <span class="hljs-comment">&lt;!--和fileMode类似--&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">directoryMode</span>/&gt;</span><br>            <span class="hljs-comment">&lt;!--限定要选取的目录，可填绝对路径或相对路径--&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">directory</span>/&gt;</span><br>            <span class="hljs-comment">&lt;!--设置换行符类型--&gt;</span><br>            <span class="hljs-comment">&lt;!--</span><br><span class="hljs-comment">                &quot;keep&quot; - Preserve all line endings</span><br><span class="hljs-comment">                &quot;unix&quot; - Use Unix-style line endings (i.e. &quot;\n&quot;)</span><br><span class="hljs-comment">                &quot;lf&quot; - Use a single line-feed line endings (i.e. &quot;\n&quot;)</span><br><span class="hljs-comment">                &quot;dos&quot; - Use DOS-/Windows-style line endings (i.e. &quot;\r\n&quot;)</span><br><span class="hljs-comment">                &quot;windows&quot; - Use DOS-/Windows-style line endings (i.e. &quot;\r\n&quot;)</span><br><span class="hljs-comment">                &quot;crlf&quot; - Use carriage-return, line-feed line endings (i.e. &quot;\r\n&quot;)</span><br><span class="hljs-comment">            --&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">lineEnding</span>/&gt;</span><br>            <span class="hljs-comment">&lt;!--是否用配置中的属性来过滤选中的文件，默认为：false--&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">filtered</span>/&gt;</span><br>            <span class="hljs-comment">&lt;!--附加文件扩展名不应用过滤--&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">nonFilteredFileExtensions</span>/&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">fileSet</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">fileSets</span>&gt;</span><br>    <span class="hljs-comment">&lt;!--允许操作fileset除外的一些单个文件--&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">files</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">file</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">source</span>/&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">sources</span>/&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">outputDirectory</span>/&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">destName</span>/&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">fileMode</span>/&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">lineEnding</span>/&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">filtered</span>/&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">file</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">files</span>&gt;</span><br>    <span class="hljs-comment">&lt;!--可将项目之外的依赖文件加入到assembly插件压缩包中--&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">dependencySets</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">dependencySet</span>&gt;</span><br>            <span class="hljs-comment">&lt;!--输出保存路径--&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">outputDirectory</span>/&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">includes</span>/&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">excludes</span>/&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">fileMode</span>/&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">directoryMode</span>/&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">useStrictFiltering</span>/&gt;</span><br>            <span class="hljs-comment">&lt;!--为所有依赖设置映射符号，默认为：$&#123;artifact.artifactId&#125;-$&#123;artifact.version&#125;$&#123;dashClassifier?&#125;.$&#123;artifact.extension&#125;--&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">outputFileNameMapping</span>/&gt;</span><br>            <span class="hljs-comment">&lt;!--若设为true则可以解压压缩包中的内容到新的压缩包中，目前支持解压jar, zip, tar.gz, 和 tar.bz 默认：false--&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">unpack</span>/&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">unpackOptions</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">includes</span>/&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">excludes</span>/&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">filtered</span>/&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">nonFilteredFileExtensions</span>/&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">lineEnding</span>/&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">useDefaultExcludes</span>/&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">encoding</span>/&gt;</span><br>            <span class="hljs-tag">&lt;/<span class="hljs-name">unpackOptions</span>&gt;</span><br>            <span class="hljs-comment">&lt;!--依赖的范围 默认：runtime--&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">scope</span>/&gt;</span><br>            <span class="hljs-comment">&lt;!--定义这个依赖项目构建过程中生产的组件是否要包含在此依赖集中 默认：true--&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">useProjectArtifact</span>/&gt;</span><br>            <span class="hljs-comment">&lt;!--同上，定义一些附加组件的设置 默认：false--&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">useProjectAttachments</span>/&gt;</span><br>            <span class="hljs-comment">&lt;!--当有依赖传递时，是否将传递的依赖也接入到压缩包中；--&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">useTransitiveDependencies</span>/&gt;</span><br>            <span class="hljs-comment">&lt;!--依赖传递过滤设置 默认：false--&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">useTransitiveFiltering</span>/&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">dependencySet</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">dependencySets</span>&gt;</span><br>    <span class="hljs-comment">&lt;!--为assembly插件配置maven仓库组件--&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">repositories</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">repository</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">outputDirectory</span>/&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">includes</span>/&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">excludes</span>/&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">fileMode</span>/&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">directoryMode</span>/&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">includeMetadata</span>/&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">groupVersionAlignments</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">groupVersionAlignment</span>&gt;</span><br>                    <span class="hljs-tag">&lt;<span class="hljs-name">id</span>/&gt;</span><br>                    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>/&gt;</span><br>                    <span class="hljs-tag">&lt;<span class="hljs-name">excludes</span>/&gt;</span><br>                <span class="hljs-tag">&lt;/<span class="hljs-name">groupVersionAlignment</span>&gt;</span><br>            <span class="hljs-tag">&lt;/<span class="hljs-name">groupVersionAlignments</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">scope</span>/&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">repository</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">repositories</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">componentDescriptors</span>/&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">assembly</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="container–file-aggregator"><a href="#container–file-aggregator" class="headerlink" title="container–file-aggregator"></a>container–file-aggregator</h4><ul>
+<li>该组件负责将读取<code>&lt;filePattern/&gt;</code>中的表达式对应的文件，将其内容合并，最终输出到<code>&lt;outputPath/&gt;</code>中</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">assembly</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">&quot;http://maven.apache.org/ASSEMBLY/2.1.0&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">xmlns:xsi</span>=<span class="hljs-string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">xsi:schemaLocation</span>=<span class="hljs-string">&quot;http://maven.apache.org/ASSEMBLY/2.1.0 http://maven.apache.org/xsd/assembly-2.1.0.xsd&quot;</span>&gt;</span><br>  ....<br>  <span class="hljs-tag">&lt;<span class="hljs-name">containerDescriptorHandlers</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">containerDescriptorHandler</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">handlerName</span>&gt;</span>file-aggregator<span class="hljs-tag">&lt;/<span class="hljs-name">handlerName</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">configuration</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">filePattern</span>&gt;</span>.*/file.txt<span class="hljs-tag">&lt;/<span class="hljs-name">filePattern</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">outputPath</span>&gt;</span>file.txt<span class="hljs-tag">&lt;/<span class="hljs-name">outputPath</span>&gt;</span><br>      <span class="hljs-tag">&lt;/<span class="hljs-name">configuration</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">containerDescriptorHandler</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">containerDescriptorHandlers</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">assembly</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="container–metaInf-services"><a href="#container–metaInf-services" class="headerlink" title="container–metaInf-services"></a>container–metaInf-services</h4><ul>
+<li>这个组件会匹配所有的<code>META-INF/services</code>目录中的文件并将它们合并到一个<code>META-INF/services</code>目录下的文件中</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">assembly</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">&quot;http://maven.apache.org/ASSEMBLY/2.1.0&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">xmlns:xsi</span>=<span class="hljs-string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">xsi:schemaLocation</span>=<span class="hljs-string">&quot;http://maven.apache.org/ASSEMBLY/2.1.0 http://maven.apache.org/xsd/assembly-2.1.0.xsd&quot;</span>&gt;</span><br>  ....<br>  <span class="hljs-tag">&lt;<span class="hljs-name">containerDescriptorHandlers</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">containerDescriptorHandler</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">handlerName</span>&gt;</span>metaInf-services<span class="hljs-tag">&lt;/<span class="hljs-name">handlerName</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">containerDescriptorHandler</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">containerDescriptorHandlers</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">assembly</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="container–metaInf-spring"><a href="#container–metaInf-spring" class="headerlink" title="container–metaInf-spring"></a>container–metaInf-spring</h4><ul>
+<li>该组件类似metaInf-services会将文件名为<code>META-INF/spring.</code>开头的文件合并</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">assembly</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">&quot;http://maven.apache.org/ASSEMBLY/2.1.0&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">xmlns:xsi</span>=<span class="hljs-string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">xsi:schemaLocation</span>=<span class="hljs-string">&quot;http://maven.apache.org/ASSEMBLY/2.1.0 http://maven.apache.org/xsd/assembly-2.1.0.xsd&quot;</span>&gt;</span><br>  ....<br>  <span class="hljs-tag">&lt;<span class="hljs-name">containerDescriptorHandlers</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">containerDescriptorHandler</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">handlerName</span>&gt;</span>metaInf-spring<span class="hljs-tag">&lt;/<span class="hljs-name">handlerName</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">containerDescriptorHandler</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">containerDescriptorHandlers</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">assembly</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="container–plexus"><a href="#container–plexus" class="headerlink" title="container–plexus"></a>container–plexus</h4><ul>
+<li>该组件会同上，将所有<code>META-INF/plexus/components.xml</code>文件内容合并，并输出到一个有效的<code>META-INF/plexus/components.xml</code>文件中</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">assembly</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">&quot;http://maven.apache.org/ASSEMBLY/2.1.0&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">xmlns:xsi</span>=<span class="hljs-string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">xsi:schemaLocation</span>=<span class="hljs-string">&quot;http://maven.apache.org/ASSEMBLY/2.1.0 http://maven.apache.org/xsd/assembly-2.1.0.xsd&quot;</span>&gt;</span><br>  ....<br>  <span class="hljs-tag">&lt;<span class="hljs-name">containerDescriptorHandlers</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">containerDescriptorHandler</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">handlerName</span>&gt;</span>plexus<span class="hljs-tag">&lt;/<span class="hljs-name">handlerName</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">containerDescriptorHandler</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">containerDescriptorHandlers</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">assembly</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="Assembly样例"><a href="#Assembly样例" class="headerlink" title="Assembly样例"></a>Assembly样例</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;UTF-8&quot;</span>?&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">assembly</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">id</span>&gt;</span>full<span class="hljs-tag">&lt;/<span class="hljs-name">id</span>&gt;</span><br>    <span class="hljs-comment">&lt;!-- 最终打包成一个用于发布的zip文件 --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">formats</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">format</span>&gt;</span>zip<span class="hljs-tag">&lt;/<span class="hljs-name">format</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">formats</span>&gt;</span><br><br>    <span class="hljs-comment">&lt;!-- 把依赖jar包打包进Zip压缩文件的lib目录下 --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">dependencySets</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">dependencySet</span>&gt;</span><br>            <span class="hljs-comment">&lt;!--不使用项目的artifact，第三方jar不要解压，打包进zip文件的lib目录--&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">useProjectArtifact</span>&gt;</span>false<span class="hljs-tag">&lt;/<span class="hljs-name">useProjectArtifact</span>&gt;</span><br><br>            <span class="hljs-comment">&lt;!-- 第三方jar打包进Zip文件的lib目录下， --&gt;</span><br>            <span class="hljs-comment">&lt;!-- 注意此目录要与maven-jar-plugin中classpathPrefix指定的目录相同, --&gt;</span><br>            <span class="hljs-comment">&lt;!-- 不然这些依赖的jar包加载到ClassPath的时候会找不到--&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">outputDirectory</span>&gt;</span>lib<span class="hljs-tag">&lt;/<span class="hljs-name">outputDirectory</span>&gt;</span><br><br>            <span class="hljs-comment">&lt;!-- 第三方jar不要解压--&gt;</span><br>            <span class="hljs-comment">&lt;!--&lt;unpack&gt;false&lt;/unpack&gt;--&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">dependencySet</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">dependencySets</span>&gt;</span><br><br>    <span class="hljs-comment">&lt;!-- 文件设置，你想把哪些文件包含进去，或者把某些文件排除掉，都是在这里配置--&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">fileSets</span>&gt;</span><br>        <span class="hljs-comment">&lt;!-- 把项目自己编译出来的可执行jar，打包进zip文件的根目录 --&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">fileSet</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">directory</span>&gt;</span>$&#123;project.build.directory&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">directory</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">outputDirectory</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">outputDirectory</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">includes</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">include</span>&gt;</span>*.jar<span class="hljs-tag">&lt;/<span class="hljs-name">include</span>&gt;</span><br>            <span class="hljs-tag">&lt;/<span class="hljs-name">includes</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">fileSet</span>&gt;</span><br><br>        <span class="hljs-comment">&lt;!--</span><br><span class="hljs-comment">        把项目readme说明文档，打包进zip文件根目录下</span><br><span class="hljs-comment">        (这里针对目录document/readme.txt文件)</span><br><span class="hljs-comment">        $&#123;projet.document.directory&#125;是pom.xml中自己配置的</span><br><span class="hljs-comment">         --&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">fileSet</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">directoryl</span>&gt;</span>$&#123;projet.document.directory&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">directoryl</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">outputDirectory</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">outputDirectory</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">includes</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">include</span>&gt;</span>readme.*<span class="hljs-tag">&lt;/<span class="hljs-name">include</span>&gt;</span><br>            <span class="hljs-tag">&lt;/<span class="hljs-name">includes</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">fileSet</span>&gt;</span><br><br>        <span class="hljs-comment">&lt;!--</span><br><span class="hljs-comment">        把项目相关的说明文档(除了readme文档)，</span><br><span class="hljs-comment">        打包进zip文件根目录下的document目录</span><br><span class="hljs-comment">        (这里针对document/exclode.txt文件)</span><br><span class="hljs-comment">        $&#123;project.document.directory&#125;是在pom.xml中自己配置的</span><br><span class="hljs-comment">        --&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">fileSet</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">directory</span>&gt;</span>$&#123;project.document.directory&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">directory</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">outputDirectory</span>&gt;</span>document<span class="hljs-tag">&lt;/<span class="hljs-name">outputDirectory</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">excludes</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">exclude</span>&gt;</span>readme.*<span class="hljs-tag">&lt;/<span class="hljs-name">exclude</span>&gt;</span><br>            <span class="hljs-tag">&lt;/<span class="hljs-name">excludes</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">fileSet</span>&gt;</span><br><br>        <span class="hljs-comment">&lt;!--</span><br><span class="hljs-comment">        把项目的脚本文件目录(src/main/scripts )中的启动脚本文件，</span><br><span class="hljs-comment">        打包进zip文件的根目录</span><br><span class="hljs-comment">        (这里针对的是src/scripts/execute/include-file.sh文件)</span><br><span class="hljs-comment">        $&#123;project.script.execute.directory&#125;</span><br><span class="hljs-comment">        --&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">fileSet</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">directory</span>&gt;</span>$&#123;project.script.execute.directory&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">directory</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">outputDirectory</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">outputDirectory</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">includes</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">include</span>&gt;</span>*<span class="hljs-tag">&lt;/<span class="hljs-name">include</span>&gt;</span><br>            <span class="hljs-tag">&lt;/<span class="hljs-name">includes</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">fileSet</span>&gt;</span><br><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">fileSets</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">assembly</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="maven-shade-plugin"><a href="#maven-shade-plugin" class="headerlink" title="maven-shade-plugin"></a>maven-shade-plugin</h3><p>使用maven-assembly-plugin容易产生一个错误，就是在多个依赖冲突的时候无法解决。不过使用 maven-shade-plugin 生成一个 uber-jar，可以解决依赖间的冲突,适用于Spring Framework。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">project</span>&gt;</span><br>  ...<br>  <span class="hljs-tag">&lt;<span class="hljs-name">build</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">plugins</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">plugin</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>maven-shade-plugin<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>3.2.4<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">configuration</span>&gt;</span><br>          <span class="hljs-comment">&lt;!-- put your configurations here --&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">configuration</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">executions</span>&gt;</span><br>          <span class="hljs-tag">&lt;<span class="hljs-name">execution</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">phase</span>&gt;</span>package<span class="hljs-tag">&lt;/<span class="hljs-name">phase</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">goals</span>&gt;</span><br>              <span class="hljs-tag">&lt;<span class="hljs-name">goal</span>&gt;</span>shade<span class="hljs-tag">&lt;/<span class="hljs-name">goal</span>&gt;</span><br>            <span class="hljs-tag">&lt;/<span class="hljs-name">goals</span>&gt;</span><br>          <span class="hljs-tag">&lt;/<span class="hljs-name">execution</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">executions</span>&gt;</span><br>      <span class="hljs-tag">&lt;/<span class="hljs-name">plugin</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">plugins</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">build</span>&gt;</span><br>  ...<br><span class="hljs-tag">&lt;/<span class="hljs-name">project</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>该插件有以下几个默认的配置功能可供选择,命名空间都为<code>org.apache.maven.plugins.shade.resource</code></li>
+</ul>
+<h4 id="ApacheLicenseResourceTransformer"><a href="#ApacheLicenseResourceTransformer" class="headerlink" title="ApacheLicenseResourceTransformer"></a>ApacheLicenseResourceTransformer</h4><p>一些服务提供者或jar包产商在提供的jar包中都会提供他们的权限在<code>META-IN</code>文件夹中，它们都会被习惯性的被命名为<code>LICENSE</code>或<code>LICENSE.txt</code>，当合并这些依赖时，添加这些资源时就会产生冲突而报错;<code>ApacheLicenseResourceTransformer</code>配置则可以忽视掉这些名字的证书</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">project</span>&gt;</span><br>  ...<br>  <span class="hljs-tag">&lt;<span class="hljs-name">build</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">plugins</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">plugin</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>maven-shade-plugin<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>3.2.4<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">executions</span>&gt;</span><br>          <span class="hljs-tag">&lt;<span class="hljs-name">execution</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">goals</span>&gt;</span><br>              <span class="hljs-tag">&lt;<span class="hljs-name">goal</span>&gt;</span>shade<span class="hljs-tag">&lt;/<span class="hljs-name">goal</span>&gt;</span><br>            <span class="hljs-tag">&lt;/<span class="hljs-name">goals</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">configuration</span>&gt;</span><br>              <span class="hljs-tag">&lt;<span class="hljs-name">transformers</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">transformer</span> <span class="hljs-attr">implementation</span>=<span class="hljs-string">&quot;org.apache.maven.plugins.shade.resource.ApacheLicenseResourceTransformer&quot;</span>&gt;</span><br>                <span class="hljs-tag">&lt;/<span class="hljs-name">transformer</span>&gt;</span><br>              <span class="hljs-tag">&lt;/<span class="hljs-name">transformers</span>&gt;</span><br>            <span class="hljs-tag">&lt;/<span class="hljs-name">configuration</span>&gt;</span><br>          <span class="hljs-tag">&lt;/<span class="hljs-name">execution</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">executions</span>&gt;</span><br>      <span class="hljs-tag">&lt;/<span class="hljs-name">plugin</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">plugins</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">build</span>&gt;</span><br>  ...<br><span class="hljs-tag">&lt;/<span class="hljs-name">project</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="AppendingTransformer"><a href="#AppendingTransformer" class="headerlink" title="AppendingTransformer"></a>AppendingTransformer</h4><p>一些jar包包含一些同名资源文件例如（propertes文件），你可以合并输出它以避免冲突</p>
+<ul>
+<li>如下案例将<code>spring-context</code>和<code>plexus-spring</code> 这两个jar包的<code>META-INF/spring.handlers</code>文件，该文件是用于处理XML schema的命名空间的</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">project</span>&gt;</span><br>  ...<br>  <span class="hljs-tag">&lt;<span class="hljs-name">build</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">plugins</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">plugin</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>maven-shade-plugin<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>3.2.4<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">executions</span>&gt;</span><br>          <span class="hljs-tag">&lt;<span class="hljs-name">execution</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">goals</span>&gt;</span><br>              <span class="hljs-tag">&lt;<span class="hljs-name">goal</span>&gt;</span>shade<span class="hljs-tag">&lt;/<span class="hljs-name">goal</span>&gt;</span><br>            <span class="hljs-tag">&lt;/<span class="hljs-name">goals</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">configuration</span>&gt;</span><br>              <span class="hljs-tag">&lt;<span class="hljs-name">transformers</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">transformer</span> <span class="hljs-attr">implementation</span>=<span class="hljs-string">&quot;org.apache.maven.plugins.shade.resource.AppendingTransformer&quot;</span>&gt;</span><br>                  <span class="hljs-tag">&lt;<span class="hljs-name">resource</span>&gt;</span>META-INF/spring.handlers<span class="hljs-tag">&lt;/<span class="hljs-name">resource</span>&gt;</span><br>                <span class="hljs-tag">&lt;/<span class="hljs-name">transformer</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">transformer</span> <span class="hljs-attr">implementation</span>=<span class="hljs-string">&quot;org.apache.maven.plugins.shade.resource.AppendingTransformer&quot;</span>&gt;</span><br>                  <span class="hljs-tag">&lt;<span class="hljs-name">resource</span>&gt;</span>META-INF/spring.schemas<span class="hljs-tag">&lt;/<span class="hljs-name">resource</span>&gt;</span><br>                <span class="hljs-tag">&lt;/<span class="hljs-name">transformer</span>&gt;</span><br>              <span class="hljs-tag">&lt;/<span class="hljs-name">transformers</span>&gt;</span><br>            <span class="hljs-tag">&lt;/<span class="hljs-name">configuration</span>&gt;</span><br>          <span class="hljs-tag">&lt;/<span class="hljs-name">execution</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">executions</span>&gt;</span><br>      <span class="hljs-tag">&lt;/<span class="hljs-name">plugin</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">plugins</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">build</span>&gt;</span><br>  ...<br><span class="hljs-tag">&lt;/<span class="hljs-name">project</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h1 id="其它插件"><a href="#其它插件" class="headerlink" title="其它插件"></a>其它插件</h1><h3 id="maven-archetype-plugin"><a href="#maven-archetype-plugin" class="headerlink" title="maven-archetype-plugin"></a>maven-archetype-plugin</h3><p><a target="_blank" rel="noopener" href="http://maven.apache.org/archetype/maven-archetype-plugin/">http://maven.apache.org/archetype/maven-archetype-plugin/</a></p>
+<p>Archtype指项目的骨架，Maven初学者最开始执行的Maven命令可能就是mvn archetype:generate，这实际上就是让maven-archetype-plugin生成一个很简单的项目骨架，帮助开发者快速上手。可能也有人看到一些文档写了mvn archetype:create， 但实际上create目标已经被弃用了，取而代之的是generate目标，该目标使用交互式的方式提示用户输入必要的信息以创建项目，体验更好。 maven-archetype-plugin还有一些其他目标帮助用户自己定义项目原型，例如你由一个产品需要交付给很多客户进行二次开发，你就可以为 他们提供一个Archtype，帮助他们快速上手。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">plugin</span>&gt;</span><br>          <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>          <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>maven-archetype-plugin<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>          <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>3.0.0<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">plugin</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="maven-resource-plugin"><a href="#maven-resource-plugin" class="headerlink" title="maven-resource-plugin"></a>maven-resource-plugin</h3><p>该插件处理项目的资源文件拷贝到输出目录。可以分别处理main resources 和 test resources。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">plugin</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>maven-resources-plugin<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>3.0.1<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">configuration</span>&gt;</span><br>          <span class="hljs-tag">&lt;<span class="hljs-name">encoding</span>&gt;</span>UTF-8<span class="hljs-tag">&lt;/<span class="hljs-name">encoding</span>&gt;</span><br>     <span class="hljs-tag">&lt;/<span class="hljs-name">configuration</span>&gt;</span><br> <span class="hljs-tag">&lt;/<span class="hljs-name">plugin</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p>参考文档：</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/daerzei/java/article/details/82883472">https://blog.csdn.net/daerzei/java/article/details/82883472</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/jerry010101/java/article/details/93601563">https://blog.csdn.net/jerry010101/java/article/details/93601563</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/liuzhuojava/article/details/86691218">https://blog.csdn.net/liuzhuojava/article/details/86691218</a></li>
+<li><a target="_blank" rel="noopener" href="https://maven.apache.org/plugins">https://maven.apache.org/plugins</a></li>
+</ol>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Maven/" class="category-chain-item">Maven</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/project/" class="print-no-link">#project</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Maven使用</div>
+      <div>https://andrewjiao.github.io/2019/08/14/Maven发布及插件使用/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Andrew_Jiao</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2019年8月14日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2019/10/15/other/%E9%92%A2%E7%90%B4%E4%BA%94%E7%BA%BF%E8%B0%B1%E5%AD%A6%E4%B9%A0/" title="钢琴五线谱学习">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">钢琴五线谱学习</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2019/07/26/springBoot%E9%A1%B9%E7%9B%AE%E7%BB%83%E4%B9%A0/" title="springBoot小练习（增删改查）">
+                        <span class="hidden-mobile">springBoot小练习（增删改查）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/assets/shizuku.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"log":false});</script></body>
+</html>

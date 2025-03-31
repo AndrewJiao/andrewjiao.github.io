@@ -1,0 +1,854 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="https://andrewblogs.oss-cn-heyuan.aliyuncs.com/base/toptag.png">
+  <link rel="icon" href="https://andrewblogs.oss-cn-heyuan.aliyuncs.com/base/toptag.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Andrew_Jiao">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="创建版本库 -mkdir 名称：创建一个目录 -cd 名称 ：进入名称对应文件夹 -pwd ：查看当前目录结构 -git init：将目录变成管理仓库，细心的读者可以发现当前目录下多了一个.git的目录，这个目录是Git来跟踪管理版本库的，没事千万不要手动修改这个目录里面的文件，不然改乱了，就把Git仓库给破坏了。  -ls -ah :列表目录，可以查看影藏目录  把文件添加到版本库 -git a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="git基础">
+<meta property="og:url" content="https://andrewjiao.github.io/2018/12/20/git%E6%93%8D%E4%BD%9C/index.html">
+<meta property="og:site_name" content="good day">
+<meta property="og:description" content="创建版本库 -mkdir 名称：创建一个目录 -cd 名称 ：进入名称对应文件夹 -pwd ：查看当前目录结构 -git init：将目录变成管理仓库，细心的读者可以发现当前目录下多了一个.git的目录，这个目录是Git来跟踪管理版本库的，没事千万不要手动修改这个目录里面的文件，不然改乱了，就把Git仓库给破坏了。  -ls -ah :列表目录，可以查看影藏目录  把文件添加到版本库 -git a">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/sixth.png">
+<meta property="og:image" content="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/seven.png">
+<meta property="og:image" content="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/eight.png">
+<meta property="og:image" content="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/nine.png">
+<meta property="article:published_time" content="2018-12-20T13:41:20.000Z">
+<meta property="article:modified_time" content="2020-08-28T06:37:54.564Z">
+<meta property="article:author" content="Andrew_Jiao">
+<meta property="article:tag" content="git">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/sixth.png">
+  
+  
+  
+  <title>git基础 - good day</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"andrewjiao.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>hello there</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="git基础"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2018-12-20 21:41" pubdate>
+          2018年12月20日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          32 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">git基础</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h3 id="创建版本库"><a href="#创建版本库" class="headerlink" title="创建版本库"></a>创建版本库</h3><ul>
+<li>-mkdir 名称：创建一个目录</li>
+<li>-cd 名称 ：进入名称对应文件夹</li>
+<li>-pwd ：查看当前目录结构</li>
+<li>-git init：将目录变成管理仓库，<strong>细心的读者可以发现当前目录下多了一个<code>.git</code>的目录，这个目录是Git来跟踪管理版本库的，没事千万不要手动修改这个目录里面的文件，不然改乱了，就把Git仓库给破坏了。</strong> </li>
+<li>-ls -ah :列表目录，可以查看影藏目录</li>
+</ul>
+<h3 id="把文件添加到版本库"><a href="#把文件添加到版本库" class="headerlink" title="把文件添加到版本库"></a>把文件添加到版本库</h3><ul>
+<li>-git add 文件名：告诉Git，把文件添加到仓库 <ul>
+<li>可以提交多个文件如：    <code>git add &quot;xxx&quot; &quot;xxx&quot;</code></li>
+</ul>
+</li>
+<li>-git commit：提交文件<ul>
+<li>-m：可以再后面续写本次提交的说明如<code>-m &quot;xxx&quot;</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="时光穿梭机"><a href="#时光穿梭机" class="headerlink" title="时光穿梭机"></a>时光穿梭机</h3><h4 id="查看修改的文件"><a href="#查看修改的文件" class="headerlink" title="查看修改的文件"></a>查看修改的文件</h4><ul>
+<li><p>-git status ：查看结果，具体修改了什么文件</p>
+</li>
+<li><p>-git diff 文件名：查看文件名指定的文件做了哪些修改“详细”</p>
+<ul>
+<li><pre><code class="language-java">$ git diff readme.txt 
+diff --git a/readme.txt b/readme.txt
+index 46d49bf..9247db6 100644
+--- a/readme.txt
++++ b/readme.txt
+@@ -1,2 +1,2 @@
+-Git is a version control system.
++Git is a distributed version control system.
+ Git is free software.
+    //可看出添加了distribute这个单词
+<figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs llvm"><br>#### 版本回退<br><br>+ -git log：查看日志历史记录了<br><br>+ ```java<br>  $ git log<br>  commit <span class="hljs-number">1094</span>adb<span class="hljs-number">7</span>b<span class="hljs-number">9</span>b<span class="hljs-number">3807259</span>d<span class="hljs-number">8</span>cb<span class="hljs-number">349e7</span>df<span class="hljs-number">1</span>d<span class="hljs-number">4</span>d<span class="hljs-number">6477073</span> (HEAD -&gt; master)<br>  Author: Michael Liao &lt;askxuefeng<span class="hljs-title">@gmail.com</span>&gt;<br>  Date:   Fri May <span class="hljs-number">18</span> <span class="hljs-number">21</span>:<span class="hljs-number">06</span>:<span class="hljs-number">15</span> <span class="hljs-number">2018</span> <span class="hljs-number">+0800</span><br><br>      append GPL<br><br>  commit e<span class="hljs-number">475</span>afc<span class="hljs-number">93</span><span class="hljs-keyword">c</span><span class="hljs-number">209</span>a<span class="hljs-number">690</span><span class="hljs-keyword">c</span><span class="hljs-number">39</span><span class="hljs-keyword">c</span><span class="hljs-number">13</span>a<span class="hljs-number">46716e8</span>fa<span class="hljs-number">000</span><span class="hljs-keyword">c</span><span class="hljs-number">366</span><br>  Author: Michael Liao &lt;askxuefeng<span class="hljs-title">@gmail.com</span>&gt;<br>  Date:   Fri May <span class="hljs-number">18</span> <span class="hljs-number">21</span>:<span class="hljs-number">03</span>:<span class="hljs-number">36</span> <span class="hljs-number">2018</span> <span class="hljs-number">+0800</span><br><br>      <span class="hljs-keyword">add</span> distributed<br><br>  commit eaadf<span class="hljs-number">4e385</span>e<span class="hljs-number">865</span>d<span class="hljs-number">25</span><span class="hljs-keyword">c</span><span class="hljs-number">48e7</span>ca<span class="hljs-number">9</span><span class="hljs-keyword">c</span><span class="hljs-number">8395</span><span class="hljs-keyword">c</span><span class="hljs-number">3</span>f<span class="hljs-number">7</span>dfaef<span class="hljs-number">0</span><br>  Author: Michael Liao &lt;askxuefeng<span class="hljs-title">@gmail.com</span>&gt;<br>  Date:   Fri May <span class="hljs-number">18</span> <span class="hljs-number">20</span>:<span class="hljs-number">59</span>:<span class="hljs-number">18</span> <span class="hljs-number">2018</span> <span class="hljs-number">+0800</span><br><br>      wrote a readme file<br></code></pre></td></tr></table></figure>
+</code></pre>
+</li>
+<li><p>–pretty&#x3D;oneline</p>
+</li>
+<li><pre><code class="language-java">$ git log --pretty=oneline
+1094adb7b9b3807259d8cb349e7df1d4d6477073 (HEAD -&gt; master) append GPL
+e475afc93c209a690c39c13a46716e8fa000c366 add distributed
+eaadf4e385e865d25c48e7ca9c8395c3f7dfaef0 wrote a readme file
+//前半部分问版本号
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br></pre></td><td class="code"><pre><code class="hljs markdown"><br><span class="hljs-bullet">+</span> -git reset ：版本回退<br><br><span class="hljs-bullet">  +</span> -- hard HEAD^：退回到上一个版本<br><span class="hljs-bullet">  +</span> -- hard HEAD^^：退回到上上一个版本<br><span class="hljs-bullet">  +</span> -- hard HEAD~100：退回到上100个版本<br><span class="hljs-bullet">  +</span> -- hard 1094a...：退回到指定id的版本，不用写权，git会自动匹配<br><br><span class="hljs-bullet">+</span> -git reflog ：用来记录每一次命令<br><br><span class="hljs-section">##### 小结</span><br><br><span class="hljs-bullet">+</span> Git的版本回退速度非常快，因为Git在内部有个指向当前版本的<span class="hljs-code">`HEAD`</span>指针，当你回退版本的时候，Git仅仅是把HEAD从指向<span class="hljs-code">`append GPL改为指向`</span>add distributed<span class="hljs-code">`然后顺便把工作区的文件更新了。所以你让`</span>HEAD`指向哪个版本号，你就把当前版本定位在哪 <br><br>![<span class="hljs-string">d</span>](<span class="hljs-link">http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/zero.jpg</span>)<br><br><br><br><span class="hljs-bullet">+</span> <span class="hljs-code">`HEAD`</span>指向的版本就是当前版本，因此，Git允许我们在版本的历史之间穿梭，使用命令<span class="hljs-code">`git reset --hard commit_id`</span>。 <br><span class="hljs-bullet">+</span> 穿梭前，用<span class="hljs-code">`git log`</span>可以查看提交历史，以便确定要回退到哪个版本。 <br><span class="hljs-bullet">+</span> 要重返未来，用<span class="hljs-code">`git reflog`</span>查看命令历史，以便确定要回到未来的哪个版本。 <br><br><span class="hljs-section">#### 工作区和暂存区</span><br><br><span class="hljs-section">##### 工作区</span><br><br><span class="hljs-bullet">+</span> 就是你在电脑里能看到的目录，比如我的<span class="hljs-code">`learngit`</span>文件夹就是一个工作区： <br><br>![<span class="hljs-string">s</span>](<span class="hljs-link">http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/zero.png</span>)<br><br><span class="hljs-section">##### 版本库（Repository）</span><br><br><span class="hljs-bullet">+</span> 工作区有一个隐藏目录<span class="hljs-code">`.git`</span>，这个不算工作区，而是Git的版本库。<br><span class="hljs-bullet">+</span> Git的版本库里存了很多东西，其中最重要的就是称为<span class="hljs-strong">**stage**</span>（或者叫index）的暂存区，还有Git为我们自动创建的第一个<span class="hljs-strong">**分支**</span><span class="hljs-code">`master`</span>，以及指向<span class="hljs-code">`master`</span>的一个<span class="hljs-strong">**指针**</span>叫<span class="hljs-code">`HEAD`</span>。<br><br>![<span class="hljs-string">a</span>](<span class="hljs-link">http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/first.jpg</span>)<br><br><br><br><span class="hljs-bullet">+</span> 分支和<span class="hljs-code">`HEAD`</span>的概念我们以后再讲。<br><br>  前面讲了我们把文件往Git版本库里添加的时候，是分两步执行的：<br><br>  第一步是用<span class="hljs-code">`git add`</span>把文件添加进去，实际上就是<span class="hljs-strong">**把文件修改添加到暂存区**</span>；<br><br>  第二步是用<span class="hljs-code">`git commit`</span>提交更改，实际上就是<span class="hljs-strong">**把暂存区的所有内容提交到当前分支**</span>。<br><br>  因为我们创建Git版本库时，Git自动为我们创建了唯一一个<span class="hljs-code">`master`</span>分支，所以，现在，<span class="hljs-code">`git commit`</span>就是往<span class="hljs-code">`master`</span>分支上提交更改。<br><br>  你可以简单理解为，<span class="hljs-strong">**需要提交的文件修改通通放到暂存区，然后，一次性提交暂存区的所有修改**</span>。<br><br><span class="hljs-section">#### 管理修改</span><br><br><span class="hljs-bullet">+</span> git管理的只是修改，而不是文件<br><span class="hljs-bullet">+</span> 你又理解了Git是如何跟踪修改的，每次修改，如果不用<span class="hljs-code">`git add`</span>到暂存区，那就不会加入到<span class="hljs-code">`commit`</span>中。 <br><br><span class="hljs-section">#### 撤销修改</span><br><br><span class="hljs-bullet">+</span> -git checkout -- test.txt ：把test.txt`文件在工作区的修改全部撤销，这里有两种情况： <br><span class="hljs-bullet">  +</span> 自修改后还没有被放到暂存区，现在，撤销修改就回到和版本库一模一样的状态 <br><span class="hljs-bullet">  +</span> 已经添加到暂存区后，又作了修改，现在，撤销修改就回到添加到暂存区后的状态 <br><span class="hljs-bullet">    +</span> <span class="hljs-strong">**注意**</span>：<span class="hljs-code">`git checkout -- file`</span>命令中的<span class="hljs-code">`--`</span>很重要，没有<span class="hljs-code">`--`</span>，就变成了“切换到另一个分支”的命令 <br><span class="hljs-bullet">+</span> -git reset HEAD test.txt：可以把暂存区的修改撤销掉（unstage），重新放回工作区 <br><span class="hljs-bullet">  +</span> 可以再接git checkout -- test.txt将工作区的文件改回原先的状态 <br><span class="hljs-bullet">+</span> 小结：<br><span class="hljs-bullet">  +</span> 当你改乱了工作区某个文件的内容，想直接丢弃工作区的修改时，用命令<span class="hljs-code">`git checkout -- file`</span>。 <br><span class="hljs-bullet">  +</span> 当你不但改乱了工作区某个文件的内容，还添加到了暂存区时，想丢弃修改，分两步，第一步用命令<span class="hljs-code">`git reset HEAD &lt;file&gt;`</span>，就回到了场景1，第二步按场景1操作。 <br><span class="hljs-bullet">  +</span> 已经提交了不合适的修改到版本库时，想要撤销本次提交，参考[<span class="hljs-string">版本回退</span>](<span class="hljs-link">https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/0013744142037508cf42e51debf49668810645e02887691000</span>)一节，不过前提是没有推送到远程库 <br><br><span class="hljs-section">#### 删除文件</span><br><br><span class="hljs-bullet">+</span> -rm test.txt：将工作区中指定的文件删除<br><span class="hljs-bullet">+</span> -git rm test.txt：git会检测到之前删除的文件，这个命令会从版本库删除文件名指定文件<br><span class="hljs-bullet">+</span> 如果删错了<br><span class="hljs-bullet">+</span> -git checkout -- test.txt：其实是用版本库里的版本替换工作区的版本，无论工作区是修改还是删除，都可以“一键还原”。 <br><br><span class="hljs-section">### 远程仓库</span><br><br><span class="hljs-bullet">+</span> $ ssh-keygen -t rsa -C &quot;youremail@example.com&quot;<br><br><span class="hljs-bullet">+</span> 你需要把邮件地址换成你自己的邮件地址，然后一路回车，使用默认值即可，由于这个Key也不是用于军事目的，所以也无需设置密码。<br><br>  如果一切顺利的话，可以在用户主目录里找到<span class="hljs-code">`.ssh`</span>目录，里面有<span class="hljs-code">`id_rsa`</span>和<span class="hljs-code">`id_rsa.pub`</span>两个文件，这两个就是SSH Key的秘钥对，<span class="hljs-code">`id_rsa`</span>是私钥，不能泄露出去，<span class="hljs-code">`id_rsa.pub`</span>是公钥，可以放心地告诉任何人。<br><br><span class="hljs-bullet">+</span> 登陆GitHub，打开“Account settings”，“SSH Keys”页面：<br><br>  然后，点“Add SSH Key”，填上任意Title，在Key文本框里粘贴<span class="hljs-code">`id_rsa.pub`</span>文件的内容：<br><br>![<span class="hljs-string">s</span>](<span class="hljs-link">http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/first.png</span>)<br><br><span class="hljs-bullet">+</span> 点“Add Key”，你就应该看到已经添加的Key： <br><br>![<span class="hljs-string">s</span>](<span class="hljs-link">http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/secend.png</span>)<br><br><span class="hljs-bullet">+</span> 为什么GitHub需要SSH Key呢？因为GitHub需要识别出你推送的提交确实是你推送的，而不是别人冒充的，而Git支持SSH协议，所以，GitHub只要知道了你的公钥，就可以确认只有你自己才能推送。 <br><br><span class="hljs-section">### 从远程库克隆</span><br><br><span class="hljs-bullet">+</span> $ git clone https://github.com/646190632/Jiao：克隆远程仓库的项目到本地，git支持多种协议<br><br><span class="hljs-section">### 分支管理</span><br><br><span class="hljs-section">#### 时间线</span><br><br><span class="hljs-bullet">+</span> 每次提交，Git都把它们串成一条时间线，这条时间线就是一个分支。截止到目前，只有一条时间线，在Git里，这个分支叫主分支，即<span class="hljs-code">`master`</span>分支。 <br><span class="hljs-bullet">+</span> <span class="hljs-code">`HEAD`</span>严格来说不是指向提交，而是指向<span class="hljs-code">`master`</span>，<span class="hljs-code">`master`</span>才是指向提交的，所以，<span class="hljs-code">`HEAD`</span>指向的就是当前分支。 <br><br>![<span class="hljs-string">d</span>](<span class="hljs-link">http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/third.png</span>)<br><br><span class="hljs-section">#### 创建分支</span><br><br><span class="hljs-bullet">+</span> 当我们创建新的分支，例如<span class="hljs-code">`dev`</span>时，Git新建了一个指针叫<span class="hljs-code">`dev`</span>，指向<span class="hljs-code">`master`</span>相同的提交，再把<span class="hljs-code">`HEAD`</span>指向<span class="hljs-code">`dev`</span>，就表示当前分支在<span class="hljs-code">`dev`</span>上 <br><span class="hljs-bullet">+</span> Git创建一个分支很快，因为除了增加一个<span class="hljs-code">`dev`</span>指针，改改<span class="hljs-code">`HEAD`</span>的指向，工作区的文件都没有任何变化 <br><br>![<span class="hljs-string">s</span>](<span class="hljs-link">http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/fourth.png</span>)<br><br><span class="hljs-bullet">+</span> 对工作区的修改和提交就是针对<span class="hljs-code">`dev`</span>分支了，比如新提交一次后，<span class="hljs-code">`dev`</span>指针往前移动一步，而<span class="hljs-code">`master`</span>指针不变 <br><br>![<span class="hljs-string">a</span>](<span class="hljs-link">http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/fifth.png</span>)<br><br><span class="hljs-bullet">+</span> 代码实现<br><br>  <span class="hljs-code">```java</span><br><span class="hljs-code">  $ git checkout -b dev</span><br><span class="hljs-code">  Switched to a new branch &#x27;dev&#x27;</span><br><span class="hljs-code">  //git checkout命令加上-b参数表示创建并切换，相当于以下两条命令：</span><br><span class="hljs-code">  $ git branch dev</span><br><span class="hljs-code">  $ git checkout dev</span><br><span class="hljs-code">  Switched to branch &#x27;dev&#x27;</span><br></code></pre></td></tr></table></figure>
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="查看当前分支"><a href="#查看当前分支" class="headerlink" title="查看当前分支"></a>查看当前分支</h4><ul>
+<li>代码实现</li>
+<li>用<code>git branch</code>命令查看当前分支：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java">$ git branch<br>* dev<br>  master<br>  <span class="hljs-comment">//git branch命令会列出所有分支，当前分支前面会标一个*号。</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="合并分支"><a href="#合并分支" class="headerlink" title="合并分支"></a>合并分支</h4><ul>
+<li>假如我们在<code>dev</code>上的工作完成了，就可以把<code>dev</code>合并到<code>master</code>上。Git怎么合并呢？最简单的方法，就是<strong>直接把<code>master</code>指向<code>dev</code>的当前提交</strong>，就完成了合并：</li>
+</ul>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/sixth.png" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li>代码实现</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java">$ git merge dev<br>Updating d46f35e..b17d20e<br>Fast-forward<br> readme.txt | <span class="hljs-number">1</span> +<br> <span class="hljs-number">1</span> file changed, <span class="hljs-number">1</span> insertion(+)<br>    <span class="hljs-comment">//git merge命令用于合并指定分支到当前分支。合并后，再查看readme.txt的内容，就可以看到，和dev分支的最新提交是完全一样的。</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>注意：上面的<code>Fast-forward</code>信息，Git告诉我们，这次合并是“快进模式”，也就是直接把<code>master</code>指向<code>dev</code>的当前提交，所以合并速度非常快。<ul>
+<li>当然，也不是每次合并都能<code>Fast-forward</code>，我们后面会讲其他方式的合并。</li>
+</ul>
+</li>
+</ul>
+<h4 id="分支的删除"><a href="#分支的删除" class="headerlink" title="分支的删除"></a>分支的删除</h4><ul>
+<li>可以删除<code>dev</code>分支。删除<code>dev</code>分支就是把<code>dev</code>指针给删掉，删掉后，我们就剩下了一条<code>master</code>分支：</li>
+</ul>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/seven.png" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li>代码实现</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java">$ git branch -d dev<br>Deleted branch <span class="hljs-title function_">dev</span> <span class="hljs-params">(was b17d20e)</span>.<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>因为创建、合并和删除分支非常快，所以Git鼓励你使用分支完成某个任务，合并后再删掉分支，这和直接在<code>master</code>分支上工作效果是一样的，但过程更安全。</li>
+</ul>
+<h4 id="解决冲突"><a href="#解决冲突" class="headerlink" title="解决冲突"></a>解决冲突</h4><ul>
+<li>git冲突提示不仅会在命令行中，还在文件中会显示</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java">Git is a distributed version control system.<br>Git is free software distributed under the GPL.<br>Git has a mutable index called stage.<br>Git tracks changes of files.<br>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD<br>Creating a <span class="hljs-keyword">new</span> <span class="hljs-title class_">branch</span> is quick &amp; simple.<br>=======<br>Creating a <span class="hljs-keyword">new</span> <span class="hljs-title class_">branch</span> is quick AND simple.<br>&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature1<br><br><span class="hljs-comment">//Git用&lt;&lt;&lt;&lt;&lt;&lt;&lt;，=======，&gt;&gt;&gt;&gt;&gt;&gt;&gt;标记出不同分支的内容，我们修改如下后保存：</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>如果出现冲突，根据实际情况修改原有冲突文件，两个分支分再次别提交到仓库，再次合并</li>
+</ul>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/eight.png" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li><code>$ git log --graph --pretty=oneline --abbrev-commit</code>：可以通过日志查看解决冲突进程</li>
+</ul>
+<h4 id="分支管理策略"><a href="#分支管理策略" class="headerlink" title="分支管理策略"></a>分支管理策略</h4><ul>
+<li><code>Fast forward</code>模式：这种模式下，删除分支后，会丢掉分支信息。 因为<code>fast forward</code>合并就看不出来曾经做过合并。 <ul>
+<li><code>--no-ff </code>参数用于禁用该模式</li>
+</ul>
+</li>
+<li>如果禁用Fast forward模式的话，**Git就会在merge时生成一个新的commit，这样，从分支历史上就可以看出分支信息 **</li>
+<li>在实际开发中，我们应该按照几个基本原则进行分支管理： <ul>
+<li>首先，<code>master</code><strong>分支应该是非常稳定的，也就是仅用来发布新版本</strong>，平时不能在上面干活； </li>
+<li>那在哪干活呢？干活都在<code>dev</code>分支上，也就是说，<code>dev</code>分支是不稳定的，到某个时候，比如1.0版本发布时，再把<code>dev</code>分支合并到<code>master</code>上，在<code>master</code>分支发布1.0版本； </li>
+<li>你和你的小伙伴们每个人都在<code>dev</code>分支上干活，每个人都有自己的分支，时不时地往<code>dev</code>分支上合并就可以了。 </li>
+<li>所以，团队合作的分支看起来就像这样： </li>
+<li><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/nine.png" srcset="/img/loading.gif" lazyload></li>
+</ul>
+</li>
+</ul>
+<h4 id="Bug分支"><a href="#Bug分支" class="headerlink" title="Bug分支"></a>Bug分支</h4><ul>
+<li>软件开发中，bug就像家常便饭一样。有了bug就需要修复，在Git中，由于分支是如此的强大，所以，<strong>每个bug都可以通过一个新的临时分支来修复</strong>，修复后，合并分支，然后将临时分支删除。 </li>
+<li><code>$ git stash</code>功能 ：可以把当前工作现场“储藏”起来，等以后恢复现场后继续工作 </li>
+<li>关于恢复储藏起来的工作<ul>
+<li>用<code>git stash apply</code>恢复，但是恢复后，stash内容并不删除，你需要用<code>git stash drop</code>来删除； </li>
+<li>用<code>git stash pop</code>，恢复的同时把stash内容也删了：</li>
+</ul>
+</li>
+<li>注意：<ul>
+<li>可以多次使用stash功能</li>
+<li><code>$ git stash apply stash@&#123;0&#125;</code>可以选择取出指定的stash内容</li>
+</ul>
+</li>
+</ul>
+<h4 id="Feature分支"><a href="#Feature分支" class="headerlink" title="Feature分支"></a>Feature分支</h4><h4 id="多人协作"><a href="#多人协作" class="headerlink" title="多人协作"></a>多人协作</h4><ul>
+<li>当你从远程仓库克隆时，实际上Git自动把本地的<code>master</code>分支和远程的<code>master</code>分支对应起来了，并且，远程仓库的默认名称是<code>origin</code>。 </li>
+<li><code>$ git remote</code>：查看远程库的信息<ul>
+<li>参数<code>-v</code>查看详细信息</li>
+</ul>
+</li>
+</ul>
+<h5 id="推送分支"><a href="#推送分支" class="headerlink" title="推送分支"></a>推送分支</h5><ul>
+<li><code>$ git push 远程库 要推送的分支</code>：把<strong>该分支上的所有本地提交推送到远程库</strong> 。推送时，要指定本地分支，这样，Git就会把该分支推送到远程库对应的远程分支上： </li>
+<li>关于哪些分支需要推送<ul>
+<li><code>master</code>分支是主分支，因此要时刻与远程同步；</li>
+<li><code>dev</code>分支是开发分支，团队所有成员都需要在上面工作，所以也需要与远程同步；</li>
+<li>bug分支只用于在本地修复bug，就没必要推到远程了，除非老板要看看你每周到底修复了几个bug；</li>
+<li>feature分支是否推到远程，取决于你是否和你的小伙伴合作在上面开发</li>
+</ul>
+</li>
+</ul>
+<h5 id="抓取分支"><a href="#抓取分支" class="headerlink" title="抓取分支"></a>抓取分支</h5><ul>
+<li><code>$ git branch --set-upstream-to=origin/dev dev</code>：首先需要将本地的分支和远程的分支链接,此处设置<code>dev</code>和<code>origin/dev</code>的链接 </li>
+<li><code>$ git pull</code>：用<code>git pull</code>把最新的提交从<code>origin/dev</code>抓下来</li>
+</ul>
+<h5 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h5><ul>
+<li>多人协作的工作模式通常是这样： <ul>
+<li>首先，可以试图用<code>git push origin &lt;branch-name&gt;</code>推送自己的修改；</li>
+<li>如果推送失败，则因为远程分支比你的本地更新，需要先用<code>git pull</code>试图合并；</li>
+<li>如果合并有冲突，则解决冲突，并在本地提交；</li>
+<li>没有冲突或者解决掉冲突后，再用<code>git push origin &lt;branch-name&gt;</code>推送就能成功！</li>
+</ul>
+</li>
+</ul>
+<h4 id="rebase"><a href="#rebase" class="headerlink" title="rebase"></a>rebase</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java">$ git log --graph --pretty=oneline --abbrev-commit<br>* 7e61ed4 (HEAD -&gt; master) add author<br>* 3611cfe add comment<br>* f005ed4 (origin/master) set exit=<span class="hljs-number">1</span><br>* d1be385 init hello<br>...<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><code>$ git rebase</code>：Git把我们本地的提交“挪动”了位置，放到了<code>f005ed4 (origin/master) set exit=1</code>之后，这样，整个提交历史就成了一条直线 <ul>
+<li>rebase操作可以把本地未push的分叉提交历史整理成直线；</li>
+<li>rebase的目的是使得我们在查看历史提交的变化时更容易，因为分叉的提交需要三方对比</li>
+</ul>
+</li>
+</ul>
+<h3 id="标签管理"><a href="#标签管理" class="headerlink" title="标签管理"></a>标签管理</h3><ul>
+<li>标签都只存储在本地，不会自动推送到远程</li>
+</ul>
+<h4 id="创建标签"><a href="#创建标签" class="headerlink" title="创建标签"></a>创建标签</h4><ul>
+<li><code>$ git tag 版本</code>：打一个新标签 <ul>
+<li>可用<code>git tag</code>查看所有标签：</li>
+</ul>
+</li>
+<li><code>$ git tag 版本号 提交的id</code>：给固定的某次提交或修改添加版本号<ul>
+<li>-a：标签名</li>
+<li>-m：指定说明文字</li>
+</ul>
+</li>
+<li><code>$ git show 版本号</code>：显示这个版本号对应提交的详细信息</li>
+<li>默认标签是打在最新提交的commit上的。 </li>
+<li>如果忘了打标签，比如，现在已经是周五了，但应该在周一打的标签没有打，怎么办？ <ul>
+<li>方法是找到历史提交的commit id，然后打上就可以了</li>
+</ul>
+</li>
+</ul>
+<h4 id="操作标签"><a href="#操作标签" class="headerlink" title="操作标签"></a>操作标签</h4><ul>
+<li>删除本地打错的标签<ul>
+<li><code>$ git tag -d v0.1</code></li>
+</ul>
+</li>
+<li>标签已经推送到远程，要删除远程标签就麻烦一点，先从本地删除： <ul>
+<li><code>$ git tag -d v0.9</code></li>
+<li><code>$ git push origin :refs/tags/v0.9</code>：注意格式</li>
+</ul>
+</li>
+<li>推送某个标签名称对应的版本到远程<ul>
+<li><code>git push origin &lt;tagname&gt;</code></li>
+</ul>
+</li>
+<li>一次性推送全部尚未推送到远程的本地标签 <ul>
+<li><code>$ git push origin --tags</code></li>
+</ul>
+</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/git/" class="category-chain-item">git</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/git/" class="print-no-link">#git</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>git基础</div>
+      <div>https://andrewjiao.github.io/2018/12/20/git操作/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Andrew_Jiao</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2018年12月20日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2018/12/21/Maven/" title="Maven使用">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Maven使用</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2017/07/28/Mysql/" title="Mysql学习">
+                        <span class="hidden-mobile">Mysql学习</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/assets/shizuku.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"log":false});</script></body>
+</html>

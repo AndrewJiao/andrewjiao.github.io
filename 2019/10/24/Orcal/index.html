@@ -1,0 +1,1098 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="https://andrewblogs.oss-cn-heyuan.aliyuncs.com/base/toptag.png">
+  <link rel="icon" href="https://andrewblogs.oss-cn-heyuan.aliyuncs.com/base/toptag.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Andrew_Jiao">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="SQL语言类 DDL（数据定义语言）：  create（创建）    alter（修改）  drop（删除）————主要是对表操  DML（数据操作语言）：  insert(插入)    delete(删除)  update(更新)  select(查询) 、select……for update(查询更新)—-表中数据进行操作  DQL数据查询语言：基本语句、Order by 子句、Group b">
+<meta property="og:type" content="article">
+<meta property="og:title" content="orcal学习">
+<meta property="og:url" content="https://andrewjiao.github.io/2019/10/24/Orcal/index.html">
+<meta property="og:site_name" content="good day">
+<meta property="og:description" content="SQL语言类 DDL（数据定义语言）：  create（创建）    alter（修改）  drop（删除）————主要是对表操  DML（数据操作语言）：  insert(插入)    delete(删除)  update(更新)  select(查询) 、select……for update(查询更新)—-表中数据进行操作  DQL数据查询语言：基本语句、Order by 子句、Group b">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/orcal/selectRownum.png">
+<meta property="article:published_time" content="2019-10-24T02:08:12.000Z">
+<meta property="article:modified_time" content="2020-03-17T05:46:40.192Z">
+<meta property="article:author" content="Andrew_Jiao">
+<meta property="article:tag" content="orcal">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/orcal/selectRownum.png">
+  
+  
+  
+  <title>orcal学习 - good day</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"andrewjiao.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>hello there</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="orcal学习"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-10-24 10:08" pubdate>
+          2019年10月24日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          36 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">orcal学习</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="SQL语言类"><a href="#SQL语言类" class="headerlink" title="SQL语言类"></a>SQL语言类</h1><ol>
+<li><p>DDL（数据定义语言）：  create（创建）    alter（修改）  drop（删除）————主要是对表操</p>
+</li>
+<li><p>DML（数据操作语言）：  insert(插入)    delete(删除)  update(更新)  select(查询) 、select……for update(查询更新)—-表中数据进行操作</p>
+</li>
+<li><p>DQL数据查询语言：基本语句、Order by 子句、Group by 分组语句</p>
+</li>
+<li><p>TCL（事务控制语言）：Commit(提交) 、Savepoint(保存) 、rollback(回滚)、</p>
+</li>
+<li><p>DCL（数据控制语言）：Grant(授权)、revoke(撤销)命令。</p>
+</li>
+</ol>
+<h1 id="Orcal数据类型"><a href="#Orcal数据类型" class="headerlink" title="Orcal数据类型"></a>Orcal数据类型</h1><p>Char:  字符型（最大长度2000，定长、不足时以空格补充）rchar2:字符型 最大长度 4000，变长，实际长度由存储的数据长度决定（与存储的数据长度一致）</p>
+<p>Number(x,y):既可以存储浮点型，也可以存储整形，x表示有效位数的最大位数，y表示小数位最大位数。</p>
+<p>Date：存储时间类型。默认格式：dd–mm–yy:  天-月-年。</p>
+<p>Clob:存储较大的文本，比如存储非结构化XML文档，最大为 4G</p>
+<p>Blob:存储二进制对象，如图形、视频、声音等。</p>
+<p>Long :存储较长字符串，最大长度为2G</p>
+<h1 id="表操作"><a href="#表操作" class="headerlink" title="表操作"></a>表操作</h1><ol>
+<li>创建表（同mysql）</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sql">Creat talbe testTable(<br>字段名 类型 约束<br>)<br></code></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>修改表结构</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs sql">添加字段<br><span class="hljs-keyword">Alter  table</span>  表名 <span class="hljs-keyword">add</span>( 字段名称  数据类型 )<br><span class="hljs-keyword">alter table</span> testTable(test_name varchar2(<span class="hljs-number">200</span>))<br>删除字段<br><span class="hljs-keyword">Alter table</span> 表名 <span class="hljs-keyword">set</span> unused <span class="hljs-keyword">column</span> 列名<br><span class="hljs-keyword">Alter table</span> testTable <span class="hljs-keyword">set</span> unused <span class="hljs-keyword">column</span> test_name<br>一般：不建议删除数据库中的列。<br>修改字段名<br><span class="hljs-keyword">Alter table</span> 表名 rename <span class="hljs-keyword">column</span> 旧列名 <span class="hljs-keyword">to</span> 新列名<br><span class="hljs-keyword">Alter table</span> testTable rename <span class="hljs-keyword">column</span> old_name <span class="hljs-keyword">to</span> new_name<br>修改字段属性<br><span class="hljs-keyword">Alter</span> talbe 表名 modify(字段名 要修改的字段属性)<br><span class="hljs-keyword">Alter table</span> testTable modify(test_name <span class="hljs-type">varchar</span>(<span class="hljs-number">3000</span>))<br>修改字段约束<br><span class="hljs-keyword">alter table</span> test_tb1 <span class="hljs-keyword">add constraint</span>  p_k <span class="hljs-keyword">primary key</span>(test_num)<span class="hljs-comment">-----主键约束</span><br><span class="hljs-keyword">alter table</span> test_tb1 <span class="hljs-keyword">add constraint</span> c_k <span class="hljs-keyword">check</span>(msg<span class="hljs-operator">=</span><span class="hljs-string">&#x27;男&#x27;</span> <span class="hljs-keyword">or</span> msg<span class="hljs-operator">=</span><span class="hljs-string">&#x27;女&#x27;</span>)<span class="hljs-comment">---检查约束</span><br><span class="hljs-keyword">Not null</span><span class="hljs-comment">----非空约束</span><br>修改表名<br>Rename  表名<span class="hljs-number">1</span> （旧名字）<span class="hljs-keyword">to</span> 表名<span class="hljs-number">2</span>（新名字）<br>例子：rename  test_tb <span class="hljs-keyword">to</span> test_tb1<br><br></code></pre></td></tr></table></figure>
+
+<h1 id="DML操作"><a href="#DML操作" class="headerlink" title="DML操作"></a>DML操作</h1><h2 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h2><ul>
+<li>简单案例</li>
+</ul>
+<p><code>Select *|列名|表达式 from 表名 where 条件 order by 列名 </code></p>
+<p>1.* 表示所有列</p>
+<p>2.列名可以选择若干个表中列名，各个表中列名用逗号分隔。</p>
+<p>3.表达式可以是函数，列名，常数等组成表达式。</p>
+<p>4.Where子句是查询的条件</p>
+<p>5.Order by  要求在查询结果中排序，默认是升序。</p>
+<p>查询方式类似mysql</p>
+<ul>
+<li><code>select * from emp order by sal desc（降序）</code></li>
+<li><code>select * from emp order by sal （升序）</code></li>
+<li><code>select * from emp order by sal asc(升序)</code></li>
+</ul>
+<h2 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h2><p>插入：</p>
+<p>Insert into 表名  values(所有字段对应值)；</p>
+<p>Insert into 表名（字段名1,字段名称2….） values(对应字段值)</p>
+<p>例子：<code>insert into test_tb1(test_num,msg) values(666,&#39;MSG values&#39;)</code></p>
+<h2 id="更新"><a href="#更新" class="headerlink" title="更新"></a>更新</h2><p>Update 表名 set 字段名称 &#x3D;值 where 更新条件</p>
+<p>例子：<code>update test_tb1 set msg=&#39;hello oracle&#39; where test_num=123</code></p>
+<h2 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h2><ul>
+<li>Delete 表名 where 条件</li>
+</ul>
+<p>例子：<code>delete test_tb1 where msg=&#39;hello oracle&#39;</code></p>
+<ul>
+<li>Truncate–将表中数据一次性删除</li>
+</ul>
+<p>语法： truncate table 表名</p>
+<p>Truncate和detele区别：</p>
+<ol>
+<li>truncate是DDL命令，删除数据不能回复；delete是DML命令，删除数据可以通过数据库的日志文件进行恢复。</li>
+<li>如果一个表中记录很多，truncate相对delete速度快。</li>
+</ol>
+<p>警告：由于truncate命令比较危险，所有在实际开发中，truncate命令慎用。</p>
+<h1 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h1><p>Oracle SQL 提供了用于执行特定操作的专用函数。这些函数大大增强了 SQL 语言的功能。函数可以接受零个或者多个输入参数，并返回一个输出结果。 Oracle 数据库中主要使用两种类型的函数： </p>
+<h2 id="字符串函数"><a href="#字符串函数" class="headerlink" title="字符串函数"></a>字符串函数</h2><p>字符函数接受字符参数，这些参数可以是表中的列，也可以是一个字符串表达式。 </p>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>示例</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ASCII(X)</td>
+<td><code>SELECT ASCII(&#39;a&#39;) FROM dual;</code></td>
+<td>返回字符X的ASCII码</td>
+</tr>
+<tr>
+<td>CONCAT(X,Y)</td>
+<td><code>SELECT CONCAT(&#39;Hello&#39;,&#39;world&#39;) FROM dual;</code></td>
+<td>连接字符串X和Y</td>
+</tr>
+<tr>
+<td>INSTR(X,STR[,START][,N)</td>
+<td><code>SELECT INSTR(&#39;Hello world&#39;,&#39;or&#39;) FROM dual;</code></td>
+<td>从X中查找str，可以指定从start开始，也可以指定从n开始</td>
+</tr>
+<tr>
+<td>LENGTH(X)</td>
+<td><code>SELECT LENGTH(&#39;Hello&#39;) FROM dual;</code></td>
+<td>返回X的长度</td>
+</tr>
+<tr>
+<td>LOWER(X)</td>
+<td><code>SELECT LOWER(&#39;Hello&#39;) FROM dual;</code></td>
+<td>X转换成小写</td>
+</tr>
+<tr>
+<td>UPPER(X)</td>
+<td><code>SELECT UPPER(&#39;hello&#39;) FROM dual; </code></td>
+<td>X转换成大写</td>
+</tr>
+<tr>
+<td>LTRIM(X[,TRIM_STR])</td>
+<td><code>SELECT LTRIM(&#39;=Hello=&#39;,&#39;=&#39;) FROM dual;</code></td>
+<td>把X的左边截去trim_str字符串，缺省截去空格</td>
+</tr>
+<tr>
+<td>RTRIM(X[,TRIM_STR])</td>
+<td><code>SELECT RTRIM(&#39;=Hello=&#39;,&#39;=&#39;) FROM dual; </code></td>
+<td>把X的右边截去trim_str字符串，缺省截去空格</td>
+</tr>
+<tr>
+<td>TRIM([TRIM_STR  FROM]X)</td>
+<td><code>SELECT TRIM(&#39;=&#39;FROM&#39;=Hello=&#39;) FROM dual; </code></td>
+<td>把X的两边截去trim_str字符串，缺省截去空格</td>
+</tr>
+<tr>
+<td>REPLACE(X,old,new)</td>
+<td><code>SELECT REPLACE(&#39;ABCDE&#39;,&#39;CD&#39;,&#39;AAA&#39;)FROM dual;</code></td>
+<td>在X中查找old，并替换成new</td>
+</tr>
+<tr>
+<td>SUBSTR(X,start[,length])</td>
+<td><code>SELECT SUBSTR(&#39;ABCDE&#39;,2,3) FROM dual; </code></td>
+<td>返回X的字串，从start处开始，截取length个字符，缺省length，默认到结尾</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h2 id="数字函数"><a href="#数字函数" class="headerlink" title="数字函数"></a>数字函数</h2><p>数字函数接受数字参数，参数可以来自表中的一列，也可以是一个数字表达式。 </p>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>说明</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ABS(X)</td>
+<td>X的绝对值</td>
+<td>ABS(-3)&#x3D;3</td>
+</tr>
+<tr>
+<td>ACOS(X)</td>
+<td>X的反余弦</td>
+<td>ACOS(1)&#x3D;0</td>
+</tr>
+<tr>
+<td>COS(X)</td>
+<td>余弦</td>
+<td>COS(1)&#x3D;0.54030230586814</td>
+</tr>
+<tr>
+<td>CEIL(X)</td>
+<td>大于或等于X的最小值</td>
+<td>CEIL(5.4)&#x3D;6</td>
+</tr>
+<tr>
+<td>FLOOR(X)</td>
+<td>小于或等于X的最大值</td>
+<td>FLOOR(5.8)&#x3D;5</td>
+</tr>
+<tr>
+<td>LOG(X,Y)</td>
+<td>X为底Y的对数</td>
+<td>LOG(2，4)&#x3D;2</td>
+</tr>
+<tr>
+<td>MOD(X,Y)</td>
+<td>X除以Y的余数</td>
+<td>MOD(8，3)&#x3D;2</td>
+</tr>
+<tr>
+<td>POWER(X,Y)</td>
+<td>X的Y次幂</td>
+<td>POWER(2，3)&#x3D;8</td>
+</tr>
+<tr>
+<td>ROUND(X[,Y])</td>
+<td>X在第Y位四舍五入</td>
+<td>ROUND(3.456，2)&#x3D;3.46</td>
+</tr>
+<tr>
+<td>SQRT(X)</td>
+<td>X的平方根</td>
+<td>SQRT(4)&#x3D;2</td>
+</tr>
+<tr>
+<td>TRUNC(X[,Y])</td>
+<td>X在第Y位截断</td>
+<td>TRUNC(3.456，2)&#x3D;3.45</td>
+</tr>
+</tbody></table>
+<ul>
+<li>说明</li>
+</ul>
+<ol>
+<li><strong>ROUND(X[,Y])</strong>，四舍五入。</li>
+</ol>
+<p>在缺省 y 时，默认 y&#x3D;0；比如：ROUND(3.56)&#x3D;4。</p>
+<p>y 是正整数，就是四舍五入到小数点后 y 位。ROUND(5.654,2)&#x3D;5.65。</p>
+<p>y 是负整数，四舍五入到小数点左边|y|位。ROUND(351.654,-2)&#x3D;400。</p>
+<ol start="2">
+<li><strong>TRUNC(x[,y])</strong>，直接截取，不四舍五入</li>
+</ol>
+<p>在缺省 y 时，默认 y&#x3D;0；比如：TRUNC (3.56)&#x3D;3。</p>
+<p>Y是正整数，就是四舍五入到小数点后 y 位。TRUNC (5.654,2)&#x3D;5.65。</p>
+<p>y 是负整数，四舍五入到小数点左边|y|位。TRUNC (351.654,-2)&#x3D;300。、</p>
+<h2 id="日期函数"><a href="#日期函数" class="headerlink" title="日期函数"></a>日期函数</h2><p>日期函数对日期进行运算。常用的日期函数有： </p>
+<ol>
+<li><p><strong>ADD_MONTHS(d,n)</strong> ，在某一个日期 d 上，加上指定的月数 n，返回计算后的新日期。 </p>
+<ul>
+<li>d 表示日期，n 表示要加的月数。 </li>
+<li>例：<code>SELECT SYSDATE,add_months(SYSDATE,5) FROM dual; </code></li>
+</ul>
+</li>
+<li><p><strong>LAST_DAY(d)</strong>，返回指定日期当月的最后一天 </p>
+<ul>
+<li>例：<code>SELECT SYSDATE,last_day(SYSDATE) FROM dual; </code></li>
+</ul>
+</li>
+<li><p><strong>ROUND(d[,fmt])</strong>，返回一个以 fmt 为格式的四舍五入日期值， d 是date， fmt 是格式</p>
+<p>模型。默认 fmt 为 DDD，即月中的某一天。</p>
+<ul>
+<li>如果 fmt 为“YEAR”则舍入到某年的 1 月 1 日，即前半年舍去，后半年作为下一年。</li>
+<li>如果 fmt 为“MONTH”则舍入到某月的 1 日，即前月舍去，后半月作为下一月。</li>
+<li>默认为“DDD”，即月中的某一天，最靠近的天，前半天舍去，后半天作为第二天。</li>
+<li>如果 fmt 为“DAY”则舍入到最近的周的周日，即上半周舍去，下半周作为下一周周日。<ul>
+<li>例：<code>SELECT SYSDATE,ROUND(SYSDATE),ROUND(SYSDATE,&#39;day&#39;),ROUND(SYSDATE,&#39;month&#39;),ROUND(SYSDATE,&#39;year&#39;) FROM dual;</code></li>
+</ul>
+</li>
+<li>与 ROUND 对应的函数时 TRUNC(d[,fmt])对日期的操作， TRUNC 与 ROUND 非常相似，只是不对日期进行舍入，直接截取到对应格式的第一天。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">select</span>  trunc(sysdate,<span class="hljs-string">&#x27;yyyy&#x27;</span>) <span class="hljs-keyword">from</span> dual;<span class="hljs-comment">--返回当年第一天.</span><br><span class="hljs-keyword">select</span>  trunc(sysdate,<span class="hljs-string">&#x27;mm&#x27;</span>)   <span class="hljs-keyword">from</span> dual; <span class="hljs-comment">--返回当月第一天.</span><br><span class="hljs-keyword">select</span>  trunc(sysdate,<span class="hljs-string">&#x27;d&#x27;</span>)   <span class="hljs-keyword">from</span> dual;<span class="hljs-operator">-</span>返回当前星期的第一天.<br><span class="hljs-keyword">select</span>  trunc(sysdate,<span class="hljs-string">&#x27;dd&#x27;</span>)  <span class="hljs-keyword">from</span> dual;<span class="hljs-operator">-</span>返回当前年月日<br><span class="hljs-keyword">select</span>  trunc(sysdate, <span class="hljs-string">&#x27;hh&#x27;</span>)  <span class="hljs-keyword">from</span> dual;<span class="hljs-comment">--返回当前小时</span><br><span class="hljs-keyword">select</span>  trunc(SYSDATE, <span class="hljs-string">&#x27;mi&#x27;</span>)  <span class="hljs-keyword">from</span> dual;<span class="hljs-comment">--返回当前分钟</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>EXTRACT(fmt FROM d)</strong>，提取日期中的特定部分。 </p>
+<ul>
+<li>fmt 为：YEAR、MONTH、DAY、HOUR、MINUTE、SECOND。其中 YEAR、MONTH、DAY可以为 DATE 类型匹配，也可以与 TIMESTAMP 类型匹配；但是 HOUR、MINUTE、SECOND 必须与 TIMESTAMP 类型匹配。 </li>
+<li>HOUR 匹配的结果中没有加上时区，因此在中国运行的结果小 8 小时。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> SYSDATE &quot;date&quot;,<br><br>       <span class="hljs-built_in">EXTRACT</span>(<span class="hljs-keyword">YEAR</span> <span class="hljs-keyword">FROM</span> SYSDATE)&quot;year&quot;,<br><br>       <span class="hljs-built_in">EXTRACT</span>(<span class="hljs-keyword">MONTH</span> <span class="hljs-keyword">FROM</span> SYSDATE)&quot;month&quot;,<br><br>       <span class="hljs-built_in">EXTRACT</span>(<span class="hljs-keyword">DAY</span> <span class="hljs-keyword">FROM</span> SYSDATE)&quot;day&quot;,<br><br>       <span class="hljs-built_in">EXTRACT</span>(<span class="hljs-keyword">HOUR</span> <span class="hljs-keyword">FROM</span> SYSTIMESTAMP)&quot;hour&quot;,<br><br>       <span class="hljs-built_in">EXTRACT</span>(<span class="hljs-keyword">MINUTE</span> <span class="hljs-keyword">FROM</span> SYSTIMESTAMP)&quot;minute&quot;,<br><br>       <span class="hljs-built_in">EXTRACT</span>(<span class="hljs-keyword">SECOND</span> <span class="hljs-keyword">FROM</span> SYSTIMESTAMP)&quot;second&quot;<br>       <br>       <span class="hljs-keyword">FROM</span> dual;<br></code></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="转换函数"><a href="#转换函数" class="headerlink" title="转换函数"></a>转换函数</h2><p>转换函数将值从一种数据类型转换为另外一种数据类型。常见的转换函数有 </p>
+<ul>
+<li><strong>TO_CHAR(d|n[,fmt])</strong></li>
+</ul>
+<p>把日期和数字转换为制定格式的字符串。Fmt是格式化字符串 </p>
+<p>例：<code>SELECT TO_CHAR(SYSDATE,&#39;YYYY&quot;年&quot;MM&quot;月&quot;DD&quot;日&quot; HH24:MI:SS&#39;)&quot;date&quot; FROM dual; </code></p>
+<p>针对数字的格式化，格式化字符有： </p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>示例</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>9</td>
+<td>999</td>
+<td>指定位置处显示数字</td>
+</tr>
+<tr>
+<td>,</td>
+<td>99,99</td>
+<td>指定位置返回一个逗号</td>
+</tr>
+<tr>
+<td>$</td>
+<td>$999</td>
+<td>数字开头返回一个美元符号</td>
+</tr>
+<tr>
+<td>EEEE</td>
+<td>9.99EEEE</td>
+<td>科学计数法表示</td>
+</tr>
+<tr>
+<td>L</td>
+<td>L999</td>
+<td>数字前加一个本地货币符号</td>
+</tr>
+<tr>
+<td>PR</td>
+<td>999PR</td>
+<td>如果数字式负数则用尖括号进行表示</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>代码演示：TO_CHAR对数字的处理 </p>
+<p><code>SELECT TO_CHAR(-123123.45,&#39;L9.9EEEEPR&#39;)&quot;date&quot; FROM dual; </code></p>
+<ul>
+<li><strong>TO_NUMBER(X,[,fmt])</strong></li>
+</ul>
+<p>把一个字符串以fmt格式转换为一个数字 </p>
+<p><code>SELECT TO_NUMBER(&#39;-$12,345.67&#39;,&#39;$99,999.99&#39;)&quot;num&quot; FROM dual; </code></p>
+<h3 id="日期转化函数"><a href="#日期转化函数" class="headerlink" title="日期转化函数"></a>日期转化函数</h3><ul>
+<li><strong>TO_DATE(X,[,fmt])</strong></li>
+</ul>
+<p>把一个字符串以fmt格式转换成一个日期类型 </p>
+<p>在使用Oracle的to_date函数来做日期转换时，很多Java程序员也许会直接的采用“yyyy-MM-dd HH:mm:ss”的格式作为格式进行转换，但是在Oracle中会引起错误：<strong>“ORA 01810 格式代码出现两次”</strong>。 </p>
+<p><code>to_date(&#39;2005-01-01 13:14:20&#39;,&#39;yyyy-MM-dd HH24:mm:ss&#39;)  </code></p>
+<p>原因是SQL中不区分大小写，MM和mm被认为是相同的格式代码，所以Oracle的SQL采用了<strong>mi</strong>代替分钟。 </p>
+<p><code>to_date(&#39;2005-01-01 13:14:20&#39;,&#39;yyyy-MM-dd HH24:mi:ss&#39;) </code></p>
+<p>另要以24小时的形式显示出来要用HH24 </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs sql">to_date(sysdate,<span class="hljs-string">&#x27;yyyy-MM-dd HH24:mi:ss&#x27;</span>) <span class="hljs-operator">/</span><span class="hljs-operator">/</span>mi是分钟<br>to_date(sysdate,<span class="hljs-string">&#x27;yyyy-MM-dd HH24:mm:ss&#x27;</span>) <span class="hljs-keyword">from</span> dual;<span class="hljs-operator">/</span><span class="hljs-operator">/</span>mm会显示月份  oracle中的to_date参数含义<br><br>D 一周中的星期几  <br><span class="hljs-keyword">DAY</span> 天的名字，使用空格填充到<span class="hljs-number">9</span>个字符  <br>DD 月中的第几天  <br>DDD 年中的第几天  <br>DY 天的简写名  <br>IW ISO标准的年中的第几周  <br>IYYY ISO标准的四位年份  <br>YYYY 四位年份  <br>YYY,YY,Y 年份的最后三位，两位，一位  <br>HH 小时，按<span class="hljs-number">12</span>小时计  <br>HH24 小时，按<span class="hljs-number">24</span>小时计  <br>MI 分  <br>SS 秒  <br>MM 月  <br>Mon 月份的简写  <br><span class="hljs-keyword">Month</span> 月份的全名  <br>W 该月的第几个星期  <br>WW 年中的第几个星期  <span class="hljs-number">1.</span>日期时间间隔操作 <br><span class="hljs-operator">/</span><span class="hljs-operator">/</span>当前时间减去<span class="hljs-number">7</span>分钟的时间 <br><span class="hljs-keyword">select</span> sysdate,sysdate <span class="hljs-operator">-</span> <span class="hljs-type">interval</span> ’<span class="hljs-number">7</span>’ <span class="hljs-keyword">MINUTE</span> <span class="hljs-keyword">from</span> dual <br><span class="hljs-operator">/</span><span class="hljs-operator">/</span>当前时间减去<span class="hljs-number">7</span>小时的时间 <br><span class="hljs-keyword">select</span> sysdate <span class="hljs-operator">-</span> <span class="hljs-type">interval</span> ’<span class="hljs-number">7</span>’ <span class="hljs-keyword">hour</span> <span class="hljs-keyword">from</span> dual <br><span class="hljs-operator">/</span><span class="hljs-operator">/</span>当前时间减去<span class="hljs-number">7</span>天的时间 <br><span class="hljs-keyword">select</span> sysdate <span class="hljs-operator">-</span> <span class="hljs-type">interval</span> ’<span class="hljs-number">7</span>’ <span class="hljs-keyword">day</span> <span class="hljs-keyword">from</span> dual <br><span class="hljs-operator">/</span><span class="hljs-operator">/</span>当前时间减去<span class="hljs-number">7</span>月的时间 <br><span class="hljs-keyword">select</span> sysdate,sysdate <span class="hljs-operator">-</span> <span class="hljs-type">interval</span> ’<span class="hljs-number">7</span>’ <span class="hljs-keyword">month</span> <span class="hljs-keyword">from</span> dual <br><span class="hljs-operator">/</span><span class="hljs-operator">/</span>当前时间减去<span class="hljs-number">7</span>年的时间 <br><span class="hljs-keyword">select</span> sysdate,sysdate <span class="hljs-operator">-</span> <span class="hljs-type">interval</span> ’<span class="hljs-number">7</span>’ <span class="hljs-keyword">year</span> <span class="hljs-keyword">from</span> dual <br><span class="hljs-operator">/</span><span class="hljs-operator">/</span>时间间隔乘以一个数字 <br><span class="hljs-keyword">select</span> sysdate,sysdate <span class="hljs-operator">-</span> <span class="hljs-number">8</span> <span class="hljs-operator">*</span><span class="hljs-type">interval</span> ’<span class="hljs-number">2</span>’ <span class="hljs-keyword">hour</span> <span class="hljs-keyword">from</span> dual<br></code></pre></td></tr></table></figure>
+
+<p><strong>oracle有毫秒级的数据类型</strong></p>
+<ul>
+<li><p>–返回当前时间 年月日小时分秒毫秒 </p>
+<p><code>select to_char(current_timestamp(5),’DD-MON-YYYY HH24:MI:SSxFF’) from dual;  </code></p>
+</li>
+<li><p>–返回当前 时间的秒毫秒，可以指定秒后面的精度(最大&#x3D;9) </p>
+<p><code>select to_char(current_timestamp(9),’MI:SSxFF’) from dual; </code></p>
+</li>
+</ul>
+<h2 id="其它单行函数"><a href="#其它单行函数" class="headerlink" title="其它单行函数"></a>其它单行函数</h2><ul>
+<li><strong>NVL(X,VALUE)</strong></li>
+</ul>
+<p>如果X为空，返回value，否则返回X </p>
+<p>例：对工资是2000元以下的员工，如果没发奖金，每人奖金100元 (已有奖金则不发)</p>
+<p><code>SELECT ENAME,JOB,SAL,NVL(COMM,100) FROM EMP WHERE SAL&lt;2000; </code></p>
+<ul>
+<li><strong>NVL2(x,value1,value2)</strong></li>
+</ul>
+<p>如果x非空，返回value1，否则返回value2 </p>
+<p>例：对EMP表中工资为2000元以下的员工，如果没有奖金，则奖金为200元，如果有奖金，则在原来的奖金基础上加100元 </p>
+<p><code>SELECT ENAME,JOB,SAL,NVL2(COMM,comm+100,200) &quot;comm&quot; </code></p>
+<h2 id="聚合函数"><a href="#聚合函数" class="headerlink" title="聚合函数"></a>聚合函数</h2><p>聚合函数同时对一组数据进行操作，返回一行结果，比如计算一组数据的总和，平均值 </p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>作用</th>
+<th>语法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>AVG</td>
+<td>平均值</td>
+<td>AVG（表达式）</td>
+</tr>
+<tr>
+<td>SUM</td>
+<td>求和</td>
+<td>SUM(表达式)</td>
+</tr>
+<tr>
+<td>MIN、MAX</td>
+<td>最小值、最大值</td>
+<td>MIN(表达式)、MAX(表达式)</td>
+</tr>
+<tr>
+<td>COUNT</td>
+<td>数据统计</td>
+<td>COUNT（表达式）</td>
+</tr>
+</tbody></table>
+<h1 id="查询增强"><a href="#查询增强" class="headerlink" title="查询增强"></a>查询增强</h1><h2 id="查询所有列资料或特定列资料"><a href="#查询所有列资料或特定列资料" class="headerlink" title="查询所有列资料或特定列资料"></a>查询所有列资料或特定列资料</h2><p>–查询订单产品,产品品名资料</p>
+<p><code>SELECT oeb04,oeb06 FROM oeb_file;</code></p>
+<h2 id="distinct"><a href="#distinct" class="headerlink" title="distinct"></a>distinct</h2><p>消除查询结果的重复行</p>
+<p>–查询订单产品,产品品名资料，且结果消除重复行(请对比SQL示例1)</p>
+<p><code>SELECT DISTINCT oeb04,oeb06 FROM oeb_file;</code></p>
+<h2 id="别名及算术表达式"><a href="#别名及算术表达式" class="headerlink" title="别名及算术表达式"></a>别名及算术表达式</h2><p>在SELECT查询资料列上使用算术表达式(+、-、*、&#x2F;)及as应用使用列别名</p>
+<p>–as指定列别名(列别名也可以不使用as,直接在查询列后面指定即可)，及SQL中使用乘法运算*</p>
+<p><code>SELECT oeb01 as &quot;订单单号&quot;, oeb04 as &quot;订单产品&quot;,oeb06 as &quot;产品品名&quot;,oeb12*oeb13 as &quot;订单金额&quot; FROM oeb_file</code></p>
+<p><strong>注意：如果取了别名,此别名是不能在WHERE 子句中引用的,必须使用原运算式或内嵌表解决</strong> </p>
+<h2 id="nvl函数"><a href="#nvl函数" class="headerlink" title="nvl函数"></a>nvl函数</h2><p>nvl函数或nvl2函数 处理算术表达式运算中栏位空值问题</p>
+<p>如果查询的栏位参与+ - &#x2F; *算术运算，只要参与运算的栏位有一个为空值，则会导致整个运算结果为空值</p>
+<ul>
+<li>**nvl(expr1,expr2)**如果expr1不为空，则返回expr1，否则返回expr2；expr1与expr2可以是任意数据类型,但是expr1与expr2需是相同的数据类型</li>
+<li>**nvl(expr1,expr2,expr3)**如果expr1不为空，则返回expr2，否则返回expr3；expr1可以是任意数据类型,但是expr2与expr3需是相同的数据类型</li>
+</ul>
+<p>–冲销数量ta_oeb013栏位有空值现象 ，ta_oeb013为本公司客制栏位(冲销数量)</p>
+<p><code>SELECT oeb01 as &quot;订单单号&quot;, oeb04 as &quot;订单产品&quot;,oeb06  as &quot;品名&quot;,oeb12-oeb24-ta_oeb013  as &quot;订单未交量&quot;  FROM oeb_file</code></p>
+<h2 id="where-条件子句"><a href="#where-条件子句" class="headerlink" title="where 条件子句"></a>where 条件子句</h2><ul>
+<li><p><strong>常用的WHERE条件如下：</strong> 	</p>
+<p>  等于：&#x3D;                   不等于：&lt;&gt;，!&#x3D;            大于：&gt;</p>
+</li>
+</ul>
+<p>​          大于或等于：&gt;&#x3D;       小于或等于：&lt;&#x3D;            小于：&lt;</p>
+<p>​          匹配于列表值：IN( )  </p>
+<p>​          在两值之间：BETWEEN .. AND ..</p>
+<p>​          测试是否为NULL：IS NULL (注意：”没有空格”、”一个或多个空格” 与 IS NULL 是不同的)</p>
+<p>​          匹配于字符样式：LIKE，执行模糊查询需要使用LIKE,常用LIKE通配符如下：</p>
+<p>​               %：匹配0个或多个字符</p>
+<p>​                _ ：匹配单个字符</p>
+<p>​               如果模糊查询本身要查的栏位资料里面包含有’%’或’_’字符时，则需要使用转义字符ESCAPE</p>
+<p>​          <strong>注意：如果某值是空则并不能用LIKE “%”匹配的到，写SQL查异常这点经常出错</strong></p>
+<ul>
+<li><strong>常用的WHERE条件逻辑操作符如下：</strong></li>
+</ul>
+<p>​          逻辑与：AND，逻辑或：OR，取反：NOT</p>
+<h2 id="升降序"><a href="#升降序" class="headerlink" title="升降序"></a>升降序</h2><p>ORDER BY desc (升序排序:默认)，ORDER BY asc (降序排序)  将查询出来的资料排序</p>
+<p>排序时也可以指定多列排序、非选择资料栏位排序、别名排序、列位置编号排序 </p>
+<p>例：</p>
+<p><code>SELECT zx01,zx02 as &quot;姓名&quot;,zx03,zx04 FROM zx_file  WHERE zx03 = &#39;2G69&#39; or zx03 = &#39;2G60&#39; ORDER BY zx01 asc,&quot;姓名&quot;,3 asc,zx09 desc</code>  –不同列排序必须分别指定排序规则</p>
+<h3 id="排序优化"><a href="#排序优化" class="headerlink" title="排序优化"></a>排序优化</h3><p>通常我们会为排序添加rownum让整个查询结果从1开始列出名次，但在排序查询结果中并没有按名次排名,原因是rownum赋值是在排序之前。</p>
+<p>sql：<code>select q.QUEUEID,q.&quot;NAME&quot;,q.&quot;OWNER&quot;,ROWNUM from QUEUES q ORDER BY QUEUEID;</code></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/orcal/selectRownum.png" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li>rownum并不是一个真实存在的数据列，而是一个随数据集生成而生成的伪数据列。rownum是oracle系统顺序分配为从查询返回的行的编号，oracle在select出一条记录后便加上一个rownum，而不等所有的结果都select出来后再加上rownum。</li>
+</ul>
+<p><strong>解决方法：</strong></p>
+<ol>
+<li>可以使用嵌套子查询</li>
+</ol>
+<p>sql:<code>select q1.queueid,Q1.&quot;NAME&quot; ,ROWNUM FROM (select q.QUEUEID,q.&quot;NAME&quot;,q.&quot;OWNER&quot;,ROWNUM from QUEUES q) q1 ORDER BY Q1.QUEUEID</code></p>
+<p>结果正确，不过在官方文档中，Oracle推荐使用分析函数来解决序号问题，根据不同的实际需求，可以使用row_number()、rank()和dense_rank()几个选择。 </p>
+<ol start="2">
+<li><p>row_number() 根据order by顺序排出一个名次，不会出现并列排名 1 2 3 4 5</p>
+<p>rank() 根据order by排序，会出现并列排名，下一个值会跳过并列值 比如 1 2 2 4 5</p>
+<p>DENSE_RANK() 根据order by排序，出现并列排名以后，下一个值不跳过并列值 1 2 2 3 4</p>
+</li>
+</ol>
+<p><strong>分析函数使用：</strong></p>
+<p>分析函数最大的一个功能是可以使用partition可选参数，用来在其中分组，这三个分析函数都可以在各个分组内从1开始排序 </p>
+<p><strong>语法：ROW_NUMBER()|RANK()|DENSE_RANK() OVER(PARTITION BY COLUMN ORDER BY COLUMN ASC|DESC)</strong> </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span><br>	q.QUEUEID,<br>	q.&quot;NAME&quot;,<br>	q.&quot;OWNER&quot;,<br>	<span class="hljs-built_in">ROW_NUMBER</span> () <span class="hljs-keyword">OVER</span> (<span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> q.QUEUEID),<br>	<span class="hljs-built_in">RANK</span> () <span class="hljs-keyword">OVER</span> (<span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> q.queueid),<br>	<span class="hljs-built_in">DENSE_RANK</span> () <span class="hljs-keyword">OVER</span> (<span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> q.queueid)<br><span class="hljs-keyword">FROM</span><br>	QUEUES q<br><span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span><br>	QUEUEID;<br></code></pre></td></tr></table></figure>
+
+<h2 id="关联查询"><a href="#关联查询" class="headerlink" title="关联查询"></a>关联查询</h2><p>基于2个或2个以上的视图或表的查询</p>
+<p><strong>说明：</strong></p>
+<ol>
+<li>必须在FROM子句后接上2个或2个以上的表或视图</li>
+<li>查询的资料列如果在FROM子句后面所捷的表或视图有多个,则必须在查询的资料栏位前面加上表或视图名作为首码,否则会引起意性错误</li>
+<li>当使用连接查询时必须在WHERE子句中指定连接的条件,否则会产生笛卡尔积(X*Y)</li>
+<li>使用别名可以简化SQL的编写,别名必须跟在表或视图的后面</li>
+</ol>
+<h3 id="简单链接查询"><a href="#简单链接查询" class="headerlink" title="简单链接查询"></a>简单链接查询</h3><p>FROM子句接 表或视图，WHERE子句指定连接条件</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">----查询tiptop GP系统用户帐号和部门信息</span><br><span class="hljs-keyword">SELECT</span> zx_file.zx01,zx_file.zx02,zx_file.zx03,gem_file.gem02   <br>  <span class="hljs-keyword">FROM</span> zx_file,gem_file  <br> <span class="hljs-keyword">WHERE</span> zx_file.zx03 <span class="hljs-operator">=</span> gem_file.gem01  <br><span class="hljs-comment">--等同于</span><br><span class="hljs-comment">----查询tiptop GP系统用户帐号和部门信息</span><br><span class="hljs-keyword">SELECT</span> zx01,zx02,zx03,gem02   <br>  <span class="hljs-keyword">FROM</span> zx_file,gem_file  <br> <span class="hljs-keyword">WHERE</span> zx03 <span class="hljs-operator">=</span> gem01<br>ZX01      ZX02     ZX03     GEM02<br><br><span class="hljs-comment">-------    -------     -----           ---------</span><br>terry       李帅        <span class="hljs-number">2</span>G69     		  海外资讯<br>zhanna      詹妹        <span class="hljs-number">2</span>G89 			  会计部<br></code></pre></td></tr></table></figure>
+
+<h3 id="内连接INNER-JOIN"><a href="#内连接INNER-JOIN" class="headerlink" title="内连接INNER JOIN"></a>内连接INNER JOIN</h3><p>相关链接：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/misswjr/p/9437170.html">https://www.cnblogs.com/misswjr/p/9437170.html</a></p>
+<p>相关链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/u011955534/article/details/14168913">https://blog.csdn.net/u011955534/article/details/14168913</a></p>
+<p>参考链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/idomyway/article/details/78785112">https://blog.csdn.net/idomyway/article/details/78785112</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/SQL/" class="category-chain-item">SQL</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/orcal/" class="print-no-link">#orcal</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>orcal学习</div>
+      <div>https://andrewjiao.github.io/2019/10/24/Orcal/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Andrew_Jiao</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2019年10月24日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2019/12/21/mybatis/" title="mybatis">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">mybatis</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2019/10/15/other/%E9%92%A2%E7%90%B4%E4%BA%94%E7%BA%BF%E8%B0%B1%E5%AD%A6%E4%B9%A0/" title="钢琴五线谱学习">
+                        <span class="hidden-mobile">钢琴五线谱学习</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/assets/shizuku.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"log":false});</script></body>
+</html>

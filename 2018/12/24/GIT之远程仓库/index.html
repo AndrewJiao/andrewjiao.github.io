@@ -1,0 +1,807 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="https://andrewblogs.oss-cn-heyuan.aliyuncs.com/base/toptag.png">
+  <link rel="icon" href="https://andrewblogs.oss-cn-heyuan.aliyuncs.com/base/toptag.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Andrew_Jiao">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Git 远程仓库(Github)Git 并不像 SVN 那样有个中心服务器。 目前我们使用到的 Git 命令都是在本地执行，如果你想通过 Git 分享你的代码或者与其他开发人员合作。 你就需要将数据放到一台其他开发人员能够连接的服务器上。此时就需要远程仓库服务器来存放大家的代码，主要流行的远程仓库有github，gitlab等等。 添加远程仓库添加秘钥SSHKey操作实际上我们不需要SSHKey也">
+<meta property="og:type" content="article">
+<meta property="og:title" content="git远程仓库">
+<meta property="og:url" content="https://andrewjiao.github.io/2018/12/24/GIT%E4%B9%8B%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93/index.html">
+<meta property="og:site_name" content="good day">
+<meta property="og:description" content="Git 远程仓库(Github)Git 并不像 SVN 那样有个中心服务器。 目前我们使用到的 Git 命令都是在本地执行，如果你想通过 Git 分享你的代码或者与其他开发人员合作。 你就需要将数据放到一台其他开发人员能够连接的服务器上。此时就需要远程仓库服务器来存放大家的代码，主要流行的远程仓库有github，gitlab等等。 添加远程仓库添加秘钥SSHKey操作实际上我们不需要SSHKey也">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/generateKey.png">
+<meta property="og:image" content="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/ssh-add.png">
+<meta property="og:image" content="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/bindSSHkey.png">
+<meta property="og:image" content="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/connectSuccess.png">
+<meta property="og:image" content="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/newRepository.png">
+<meta property="og:image" content="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/newRepositoryUrl.png">
+<meta property="og:image" content="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/gitRepositoryUrl.png">
+<meta property="og:image" content="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/gitConnectRepository.png">
+<meta property="og:image" content="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/gitHubTips.png">
+<meta property="og:image" content="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/inportCode.png">
+<meta property="og:image" content="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/gitUpstream.png">
+<meta property="article:published_time" content="2018-12-24T15:31:30.000Z">
+<meta property="article:modified_time" content="2020-09-27T01:10:41.737Z">
+<meta property="article:author" content="Andrew_Jiao">
+<meta property="article:tag" content="git">
+<meta property="article:tag" content="repository">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/generateKey.png">
+  
+  
+  
+  <title>git远程仓库 - good day</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"andrewjiao.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>hello there</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="git远程仓库"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2018-12-24 23:31" pubdate>
+          2018年12月24日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          18 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">git远程仓库</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="Git-远程仓库-Github"><a href="#Git-远程仓库-Github" class="headerlink" title="Git 远程仓库(Github)"></a>Git 远程仓库(Github)</h1><p>Git 并不像 SVN 那样有个中心服务器。</p>
+<p>目前我们使用到的 Git 命令都是在本地执行，如果你想通过 Git 分享你的代码或者与其他开发人员合作。 你就需要将数据放到一台其他开发人员能够连接的服务器上。此时就需要远程仓库服务器来存放大家的代码，主要流行的远程仓库有github，gitlab等等。</p>
+<h1 id="添加远程仓库"><a href="#添加远程仓库" class="headerlink" title="添加远程仓库"></a>添加远程仓库</h1><h2 id="添加秘钥SSHKey操作"><a href="#添加秘钥SSHKey操作" class="headerlink" title="添加秘钥SSHKey操作"></a>添加秘钥SSHKey操作</h2><p>实际上我们不需要SSHKey也可以提交代码或从远程仓库拉取代码，但是每次提交都会提示我们输入你的gitHub账号密码。因此配置SSHKey可以帮助我们实现gitHub的免登录解决很多烦恼。其原理主要是通过git指令生成一对秘钥（公钥和私钥），git是免登陆是基于<u>非对称加密</u>。我们将我们的公钥交给gitHub远程仓库服务器，当我们提交代码远程服务器需要验证用户时，会利用我们的公钥加密一段信息给我们，随后我们用本地的私钥去解密这段信息，如果解密成功则可证明我们是合法用户，因而省去了输入账号密码验证用户的过程。</p>
+<h3 id="生成SSHKey"><a href="#生成SSHKey" class="headerlink" title="生成SSHKey"></a>生成SSHKey</h3><p>如下指令是生产秘钥的指令</p>
+<p><code>$ ssh-keygen -t rsa -C &quot;youremail@example.com&quot;</code></p>
+<ul>
+<li>其中参数中的email需要改为你在github官网注册的邮箱同时也是你的github账号</li>
+</ul>
+<hr>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/generateKey.png" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li>由于我已有一个key因此会提示是否覆盖，之后会要求确认路径和输入密码（可忽略）</li>
+<li>上图中会看到SSHkey生成的默认路径为用户目录下的.ssh目录（是一个隐藏目录）</li>
+</ul>
+<h3 id="添加秘钥到ssh-agent"><a href="#添加秘钥到ssh-agent" class="headerlink" title="添加秘钥到ssh-agent"></a>添加秘钥到ssh-agent</h3><p>确保 ssh-agent 是可用的。ssh-agent是一种控制用来保存公钥身份验证所使用的私钥的程序，其实ssh-agent就是一个密钥管理器，运行ssh-agent以后，使用ssh-add将私钥交给ssh-agent保管，其他程序需要身份验证的时候可以将验证申请交给ssh-agent来完成整个认证过程。 </p>
+<p><code>eval &quot;$(ssh-agent -s)&quot;</code></p>
+<p>添加生成的 SSH key 到 ssh-agent。 </p>
+<p><code>$ ssh-add ~/.ssh/id_rsa </code></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/ssh-add.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="将公钥告诉给远程仓库"><a href="#将公钥告诉给远程仓库" class="headerlink" title="将公钥告诉给远程仓库"></a>将公钥告诉给远程仓库</h3><ol>
+<li>复制.ssh目录下的id_rsa.pub文件内的key</li>
+<li>进入你的github仓库</li>
+<li>点击用户-setting-SSH and GPG keys在图中3位置粘贴你的key</li>
+</ol>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/bindSSHkey.png" srcset="/img/loading.gif" lazyload></p>
+<ol start="4">
+<li>最后点击Add SSH key后会将key生成成功，系统还会给你发送邮件提示</li>
+</ol>
+<p>为了验证是否成功，输入以下命令：</p>
+<p><code>$ ssh -T git@github.com</code></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/connectSuccess.png" srcset="/img/loading.gif" lazyload></p>
+<p>此时，你的秘钥就已经配置成功了</p>
+<ol start="5">
+<li>此外，还需要输入一下指令存储账号密码，且第一次需要输入账号密码</li>
+</ol>
+<p><code>git config --global credential.helper store</code></p>
+<h2 id="创建远程仓库"><a href="#创建远程仓库" class="headerlink" title="创建远程仓库"></a>创建远程仓库</h2><p>本例以gitHub为例</p>
+<p>git远程仓库创建很简单，当你利用github账号登录后</p>
+<ol>
+<li>点击图标处确保返回主页</li>
+<li>点击绿色new按钮，新建一个远程仓库，后续按说明提示新建一个仓库即可</li>
+</ol>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/newRepository.png" srcset="/img/loading.gif" lazyload></p>
+<p>其实这里我们只需要填一个版本仓库的名字，点击Create repository就OK了。 </p>
+<h2 id="关联远程仓库"><a href="#关联远程仓库" class="headerlink" title="关联远程仓库"></a>关联远程仓库</h2><h3 id="关联仓库路径"><a href="#关联仓库路径" class="headerlink" title="关联仓库路径"></a>关联仓库路径</h3><p>首先需要添加远程仓库,<u>shortname</u>可认为是远程仓库的别名，方便以后建立分支后指定远程仓库等操作，通常我们用origin(实际上本操作相当于给远程仓库的url取别名)</p>
+<p><code>git remote add [shortname] [url]</code></p>
+<ul>
+<li>参数shortname为别名</li>
+<li>参数url可从github远程仓库中获取如下图</li>
+</ul>
+<hr>
+<p>url可从创建成功后的远程仓库中获取到，如下图</p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/newRepositoryUrl.png" srcset="/img/loading.gif" lazyload></p>
+<p>也可以在仓库主页上点击绿色按钮”Clone of download”获取到</p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/gitRepositoryUrl.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>具体操作</strong></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/gitConnectRepository.png" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li>此处包含查看别名，删除别名新增别名等操作</li>
+</ul>
+<h3 id="推送分支到远程"><a href="#推送分支到远程" class="headerlink" title="推送分支到远程"></a>推送分支到远程</h3><ul>
+<li><code>$ git push -u origin master </code></li>
+</ul>
+<p>将本地的master分支推送到origin主机，同时指定origin为默认主机；-u参数标识将后面两个参数设为默认，以后push就不用加origin master参数了</p>
+<ul>
+<li><strong>关于其他分支</strong></li>
+</ul>
+<p>如果需要提交其他分支也是需要先将其他分支切换为当前分支然后push如下</p>
+<p><code>$ git checkout fa </code><!-- 切换分支 --> </p>
+<p><code>$ git push -u origin fa </code></p>
+<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><p>在创建一个新的远程仓库后，也可以参考github给的提示操作</p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/gitHubTips.png" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li>在本地创建一个新的仓库并关联远程仓库</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java">echo <span class="hljs-string">&quot;# justTest&quot;</span> &gt;&gt; README.md  <span class="hljs-comment">//编辑README.md文件</span><br>git init					<span class="hljs-comment">//在本地目录初始化一个git仓库管理这个目录</span><br>git add README.md			<span class="hljs-comment">//添加提交代码</span><br>git commit -m <span class="hljs-string">&quot;first commit&quot;</span> <span class="hljs-comment">//提交代码到本地仓库</span><br>git remote add origin https:<span class="hljs-comment">//github.com/AndrewJiao/justTest.git  //设置远程仓库别名</span><br>git push -u origin master	<span class="hljs-comment">//推送代码并设置关联指定远程仓库</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>推送一个已有的仓库代码到远程仓库</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java">git remote add origin https:<span class="hljs-comment">//github.com/AndrewJiao/justTest.git</span><br>git push -u origin master<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>导入其他远程仓库的代码到这个仓库</li>
+</ul>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/inportCode.png" srcset="/img/loading.gif" lazyload></p>
+<h1 id="远程分支跟踪"><a href="#远程分支跟踪" class="headerlink" title="远程分支跟踪"></a>远程分支跟踪</h1><p>上述操作可见r分支只能提交远程仓库的master分支，其他分支也是，倘若我们想从本地A分支提交代码到远程B分支，又或是想查看upsteam（上游）分支是否是我们要提交的分支该怎么办？</p>
+<p><code>git branch --set-upstream branch-name origin/branch-name </code></p>
+<p>将<code>branch-name</code>分支追踪远程分支<code>origin/branch-name</code> </p>
+<p><code>git branch -u origin/serverfix </code></p>
+<p>也可以用上述指令设置当前分支跟踪远程分支origin&#x2F;serverfix </p>
+<hr>
+<ul>
+<li>如果要查看本地与远程upstream分支的追踪关系可用以下指令</li>
+</ul>
+<p><code>git branch -vv </code></p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/git/gitUpstream.png" srcset="/img/loading.gif" lazyload></p>
+<h1 id="使用两个秘钥"><a href="#使用两个秘钥" class="headerlink" title="使用两个秘钥"></a>使用两个秘钥</h1><p>我们在家里和在公司用不同的电脑提交到我们的远程仓库时，均可以用同一个秘钥，如果你忘记拷贝秘钥到公司，也可以在公司生成一个新的秘钥以同样的方式添加的远程仓库中。那么，如果我们想在同一个地方用不同的秘钥登录不同的远程仓库，应该如何操作才能让git识别不同秘钥呢？</p>
+<p>假如在公司，我们已经有了一个工作用的秘钥，此时，可以新建一对秘钥（方法一样，需注意文件名参数需要不一致以保障秘钥不会被覆盖）</p>
+<hr>
+<h2 id="创建秘钥"><a href="#创建秘钥" class="headerlink" title="创建秘钥"></a>创建秘钥</h2><ol>
+<li>创建新的 密钥&#x2F;公钥，并指定密钥名称，比如id_rsa_x（x为任意名称）</li>
+</ol>
+<p><code>ssh-keygen -t rsa -f ~/.ssh/id_rsa_x -C &quot;yourmail@xxx.com&quot;</code></p>
+<p>操作完成后，该目录会多出 id_rsa_x 和 id_rsa_x.pub 两个文件。</p>
+<ol start="2">
+<li>清空本地的 SSH 缓存，添加新的 SSH 密钥 到 SSH agent中</li>
+</ol>
+<p><code>ssh-agent bash</code></p>
+<p>初始化操作</p>
+<p><code>ssh-add -D</code></p>
+<p>清除缓存</p>
+<p><code>ssh-add ~/.ssh/id_rsa_github</code><br><code>sh-add ~/.ssh/id_rsa_gitlab</code></p>
+<p>添加两个私钥给SSH agent管理中心，如果在.ssh目录下可省略文件路径 :ssh-add id_rsa_github</p>
+<p><code>ssh -T git@github.com</code></p>
+<p><code>ssh -T git@gitlab.com</code></p>
+<ol start="3">
+<li>分别测试秘钥连接是否可用</li>
+</ol>
+<p><code>xxx! You’ve successfully authenticated, but GitHub does not provide bash access.</code></p>
+<p>出现上述提示，连接成功</p>
+<h2 id="git账户设置（此步骤可不需要，只影响提交的用户名）"><a href="#git账户设置（此步骤可不需要，只影响提交的用户名）" class="headerlink" title="git账户设置（此步骤可不需要，只影响提交的用户名）"></a>git账户设置（此步骤可不需要，只影响提交的用户名）</h2><ul>
+<li>取消 git 全局用户名&#x2F;邮箱的设置，设置独立的 用户名&#x2F;邮箱<ol>
+<li>取消全局 用户名&#x2F;邮箱 配置<ul>
+<li><code> git config --global --unset user.name</code></li>
+<li><code> git config --global --unset user.email</code></li>
+</ul>
+</li>
+<li>进入项目文件夹，单独设置每个repo 用户名&#x2F;邮箱<ul>
+<li><code>$ git config user.email &quot;xxxx@xx.com&quot;</code></li>
+<li><code>$ git config user.name &quot;xxxx&quot;</code></li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<h2 id="编辑ssh-config文件"><a href="#编辑ssh-config文件" class="headerlink" title="编辑ssh config文件"></a>编辑ssh config文件</h2><p>没有这个文件可以手动创建一个，文件内容如下</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-comment"># 第一个账号，默认使用的账号</span><br>Host github<br>HostName gitlab.abc.net<br>User ypjiao<br>IdentityFile ~/.ssh/id_rsa<br><span class="hljs-comment"># 第二个账号</span><br>Host gitlab  <span class="hljs-comment"># second为前缀名，可以任意设置</span><br>HostName gitlab.com<br>User Andrew_Jiao<br>IdentityFile ~/.ssh/id_rsa_jiao<br><br><br><span class="hljs-comment"># 配置文件参数</span><br><span class="hljs-comment"># Host : Host可以看作是一个你要识别的模式，对识别的模式，进行配置对应的的主机名和ssh文件（可以直接填写ip地址）</span><br><span class="hljs-comment"># HostName : 要登录主机的主机名（建议与Host一致）</span><br><span class="hljs-comment"># User : 登录名（如gitlab的username）</span><br><span class="hljs-comment"># IdentityFile : 指明上面User对应的identityFile路径</span><br><span class="hljs-comment"># Port: 端口号（如果不是默认22号端口则需要指定）</span><br></code></pre></td></tr></table></figure>
+
+<p>该文件内容的意思是</p>
+<p>当你希望克隆<code>Andrew_Jiao@gitlab.com:tik5213/aspirin-release-manager.git</code>这个仓库时。你可以使用如下命令来克隆：</p>
+<p><code>git clone home:tik5213/aspirin-release-manager.git </code></p>
+<ul>
+<li>testrepo 替换成 <a href="mailto:&#x67;&#x69;&#x74;&#64;&#103;&#105;&#x74;&#108;&#x61;&#98;&#x2e;&#x61;&#98;&#x63;&#x2e;&#110;&#x65;&#x74;">git@gitlab.abc.net</a> （即 HostName + User） 最终，使用 IdentityFile 中指明的 ~&#x2F;.ssh&#x2F;testrepo_rsa 私钥去请求下载目标仓库。</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/git/" class="category-chain-item">git</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/git/" class="print-no-link">#git</a>
+      
+        <a href="/tags/repository/" class="print-no-link">#repository</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>git远程仓库</div>
+      <div>https://andrewjiao.github.io/2018/12/24/GIT之远程仓库/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Andrew_Jiao</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2018年12月24日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2019/02/24/Maven%E4%BB%93%E5%BA%93/" title="Maven仓库统计">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Maven仓库统计</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2018/12/24/git%E5%91%BD%E4%BB%A4%E6%8F%90%E5%8D%87/" title="git特殊命令">
+                        <span class="hidden-mobile">git特殊命令</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/assets/shizuku.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"log":false});</script></body>
+</html>

@@ -1,0 +1,847 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="https://andrewblogs.oss-cn-heyuan.aliyuncs.com/base/toptag.png">
+  <link rel="icon" href="https://andrewblogs.oss-cn-heyuan.aliyuncs.com/base/toptag.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Andrew_Jiao">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="spring加载启动tomcat服务器时，会读取项目中的web.xml文件来启动具体的服务；在servelet3.0后，web.xml文件消失，通过读取包目录中META-INF&#x2F;services文件夹中描述文件加载启动指定的服务；这种机制称为spi机制；  基于web.xml文件  基于描述文件加载   描述文件名为服务接口类名称该接口由servelet提供，并需要实现onStartup">
+<meta property="og:type" content="article">
+<meta property="og:title" content="spring分析">
+<meta property="og:url" content="https://andrewjiao.github.io/2013/12/24/Spring/index.html">
+<meta property="og:site_name" content="good day">
+<meta property="og:description" content="spring加载启动tomcat服务器时，会读取项目中的web.xml文件来启动具体的服务；在servelet3.0后，web.xml文件消失，通过读取包目录中META-INF&#x2F;services文件夹中描述文件加载启动指定的服务；这种机制称为spi机制；  基于web.xml文件  基于描述文件加载   描述文件名为服务接口类名称该接口由servelet提供，并需要实现onStartup">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="d:\Andrew_pro\blog\upload_image\spring\serverlet.png">
+<meta property="og:image" content="d:\Andrew_pro\blog\upload_image\spring\spring-servlet.png">
+<meta property="og:image" content="d:\Andrew_pro\blog\upload_image\spring\BeamDefinition.jpg">
+<meta property="og:image" content="d:\Andrew_pro\blog\upload_image\spring\BeanInit.png">
+<meta property="og:image" content="d:\Andrew_pro\blog\upload_image\spring\springMVCgetHandler.png">
+<meta property="og:image" content="d:\Andrew_pro\blog\upload_image\spring\getHandler.png">
+<meta property="og:image" content="d:\Andrew_pro\blog\upload_image\spring\createMethodHandler.png">
+<meta property="og:image" content="d:\Andrew_pro\blog\upload_image\spring\adviceChain.png">
+<meta property="article:published_time" content="2013-12-24T15:31:30.000Z">
+<meta property="article:modified_time" content="2021-05-05T04:09:24.576Z">
+<meta property="article:author" content="Andrew_Jiao">
+<meta property="article:tag" content="spring">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="d:\Andrew_pro\blog\upload_image\spring\serverlet.png">
+  
+  
+  
+  <title>spring分析 - good day</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"andrewjiao.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>hello there</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="spring分析"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2013-12-24 23:31" pubdate>
+          2013年12月24日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          40 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">spring分析</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="spring加载"><a href="#spring加载" class="headerlink" title="spring加载"></a>spring加载</h1><p>启动tomcat服务器时，会读取项目中的web.xml文件来启动具体的服务；在servelet3.0后，web.xml文件消失，通过读取包目录中META-INF&#x2F;services文件夹中描述文件加载启动指定的服务；这种机制称为spi机制；</p>
+<ul>
+<li><p>基于web.xml文件</p>
+</li>
+<li><p>基于描述文件加载</p>
+</li>
+</ul>
+<p>描述文件名为服务接口类名称该接口由servelet提供，并需要实现onStartup方法；描述文件内容为具体服务启动对象类名称实现刚才的接口，由spring实现</p>
+<p><img src="D:\Andrew_pro\blog\upload_image\spring\serverlet.png" srcset="/img/loading.gif" lazyload alt="image-20210419155730218"></p>
+<p>在spring中如下</p>
+<p><img src="D:\Andrew_pro\blog\upload_image\spring\spring-servlet.png" srcset="/img/loading.gif" lazyload alt="image-20210419160027602"></p>
+<h2 id="启动Spring"><a href="#启动Spring" class="headerlink" title="启动Spring"></a>启动Spring</h2><ol>
+<li>Spring实现Servelet3.0的SPI规范，实现了接口极其方法onStartup()</li>
+<li>Tomcat依据规范调用这个接口的onStartup()方法</li>
+<li>Spring依据HandlesTypes注解描述的接口，将所有实现类注入到onStartup()方法的Set集合参数中<ul>
+<li>下述接口是Spring提供的接口，也是HandlesTypes注解描述中的接口</li>
+</ul>
+</li>
+<li>根据Set集合中的类，创建对象</li>
+<li>执行这些对象的onStartup方法</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">WebApplicationInitializer</span> &#123;<br><br>	<span class="hljs-comment">/**</span><br><span class="hljs-comment">	 * Configure the given &#123;<span class="hljs-doctag">@link</span> ServletContext&#125; with any servlets, filters, listeners</span><br><span class="hljs-comment">	 * context-params and attributes necessary for initializing this web application. See</span><br><span class="hljs-comment">	 * examples &#123;<span class="hljs-doctag">@linkplain</span> WebApplicationInitializer above&#125;.</span><br><span class="hljs-comment">	 * <span class="hljs-doctag">@param</span> servletContext the &#123;<span class="hljs-doctag">@code</span> ServletContext&#125; to initialize</span><br><span class="hljs-comment">	 * <span class="hljs-doctag">@throws</span> ServletException if any call against the given &#123;<span class="hljs-doctag">@code</span> ServletContext&#125;</span><br><span class="hljs-comment">	 * throws a &#123;<span class="hljs-doctag">@code</span> ServletException&#125;</span><br><span class="hljs-comment">	 */</span><br>	<span class="hljs-keyword">void</span> <span class="hljs-title function_">onStartup</span><span class="hljs-params">(ServletContext servletContext)</span> <span class="hljs-keyword">throws</span> ServletException;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="启动配置类"><a href="#启动配置类" class="headerlink" title="启动配置类"></a>启动配置类</h2><p>由上分析可见spring的启动类为org.springframework.web.SpringServletContainerInitializer，该类负责加载spring所需的组件；</p>
+<p>其中@HandlesTypes注解修饰的接口为具体要加载的配置类接口（WebApplicationInitializer），我们可以实现它完成spring框架的整合以及spring相关组件的配置</p>
+<ul>
+<li>如下所示MyWebApplicationInitializer也是WebApplicationInitializer接口的子类实现</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/***</span><br><span class="hljs-comment"> * 该类配置来源于spring官网</span><br><span class="hljs-comment"> * tomcat 启动时会加载此类，然后执行相关方法</span><br><span class="hljs-comment"> * 完成初始化动作(此类中要完成原web.xml中要</span><br><span class="hljs-comment"> * 执行的一些操作)</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyWebApplicationInitializer</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">WebApplicationInitializer</span> &#123;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">onStartup</span><span class="hljs-params">(ServletContext servletContext)</span> &#123;<br><br>        <span class="hljs-comment">// 生成IOC容器</span><br>        <span class="hljs-type">AnnotationConfigWebApplicationContext</span> <span class="hljs-variable">context</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">AnnotationConfigWebApplicationContext</span>();<br>        <span class="hljs-comment">// 注册配置类，配置类由我们实现</span><br>        context.register(AppConfig.class);<br><br>        <span class="hljs-comment">// Create and register the DispatcherServlet</span><br>        <span class="hljs-comment">// 创建DispatcherServlet</span><br>        <span class="hljs-type">DispatcherServlet</span> <span class="hljs-variable">servlet</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">DispatcherServlet</span>(context);<br>        <span class="hljs-comment">// 向servlet容器对象注册创建DispatchdespacerServlet</span><br>        <span class="hljs-comment">// DispatcherServlet有对应的doGet，doPost方法（存在继承父类中），注册后Tomcat就能把请求分发给DispatcherServlet了</span><br>        ServletRegistration.<span class="hljs-type">Dynamic</span> <span class="hljs-variable">registration</span> <span class="hljs-operator">=</span> servletContext.addServlet(<span class="hljs-string">&quot;app&quot;</span>, servlet);<br>        registration.setLoadOnStartup(<span class="hljs-number">1</span>);<br>        registration.addMapping(<span class="hljs-string">&quot;/app/*&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>我们继承AbstractAnnotationConfigDispatcherServletInitializer并实现它的抽象方法以达到自定义配置的实现</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.db.common.config;<br><span class="hljs-keyword">import</span> javax.servlet.FilterRegistration;<br><span class="hljs-keyword">import</span> javax.servlet.ServletContext;<br><span class="hljs-keyword">import</span> javax.servlet.ServletException;<br><br><span class="hljs-keyword">import</span> org.springframework.web.filter.DelegatingFilterProxy;<br><span class="hljs-keyword">import</span> org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;<br><span class="hljs-comment">/***</span><br><span class="hljs-comment"> * tomcat 启动时会加载此类，然后执行相关方法</span><br><span class="hljs-comment"> * 完成初始化动作(此类中要完成原web.xml中要</span><br><span class="hljs-comment"> * 执行的一些操作)</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> ta</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AppWebInitializer</span> <span class="hljs-keyword">extends</span> <br>    <span class="hljs-title class_">AbstractAnnotationConfigDispatcherServletInitializer</span> &#123;<br>	<span class="hljs-comment">//此类对象在执行时首先会执行onStartup方法完成一些初始化操作</span><br>	<span class="hljs-comment">//并且会注册spring mvc前端控制器</span><br>    <span class="hljs-meta">@Override</span><br>	<span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">onStartup</span><span class="hljs-params">(ServletContext servletContext)</span> <span class="hljs-keyword">throws</span> ServletException &#123;<br>		System.out.println(<span class="hljs-string">&quot;onStartup()&quot;</span>);<br>		<span class="hljs-comment">//super.onStartup(servletContext);</span><br>		registerContextLoaderListener(servletContext);<br>		registerFilter(servletContext);<br>		registerDispatcherServlet(servletContext);<br>	&#125;<br>    <span class="hljs-comment">//注册shiro中的核心过滤器</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">registerFilter</span><span class="hljs-params">(ServletContext servletContext)</span> &#123;<br>		<span class="hljs-comment">//注册Filter对象</span><br>		<span class="hljs-comment">//什么时候需要采用此方式进行注册?</span><br>		<span class="hljs-comment">//项目没有web.xml并且此filter不是自己写的</span><br>		FilterRegistration.Dynamic dy=<br>		servletContext.addFilter(<span class="hljs-string">&quot;filterProxy&quot;</span>,<br>				DelegatingFilterProxy.class);<br>		dy.setInitParameter(<span class="hljs-string">&quot;targetBeanName&quot;</span>,<span class="hljs-string">&quot;shiroFilterFactory&quot;</span>);<br>		dy.addMappingForUrlPatterns(<br>				<span class="hljs-literal">null</span>,<span class="hljs-comment">//EnumSet&lt;DispatcherType&gt;</span><br>				<span class="hljs-literal">false</span>,<span class="hljs-string">&quot;/*&quot;</span>);<span class="hljs-comment">//url-pattern</span><br>	&#125;<br><br>	<span class="hljs-comment">//官方建议在此方法中加载model(service,respository)</span><br>	<span class="hljs-meta">@Override</span><br>	<span class="hljs-keyword">protected</span> Class&lt;?&gt;[] getRootConfigClasses() &#123;<br>		System.out.println(<span class="hljs-string">&quot;getRootConfigClasses()&quot;</span>);<br>		<span class="hljs-comment">//return new Class[]&#123;AppDataSourceConfig.class,AppMyBatisConfig.class&#125;;</span><br>		<span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Class</span>[]&#123;AppRootConfig.class&#125;;<br>	&#125;<br>	<span class="hljs-comment">//官方建议在此方法中加载View,Controller,...</span><br>	<span class="hljs-meta">@Override</span><br>	<span class="hljs-keyword">protected</span> Class&lt;?&gt;[] getServletConfigClasses() &#123;<br>		System.out.println(<span class="hljs-string">&quot;getServletConfigClasses()&quot;</span>);<br>		<span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Class</span>[]&#123;AppMvcConfig.class&#125;;<br>	&#125;<br>	<span class="hljs-comment">//官方建议在此方法中定义请求映射</span><br>	<span class="hljs-meta">@Override</span><br>	<span class="hljs-keyword">protected</span> String[] getServletMappings() &#123;<br>		System.out.println(<span class="hljs-string">&quot;getServletMappings()&quot;</span>);<br>		<span class="hljs-comment">//由前端控制器处理所有以.do结尾的请求</span><br>		<span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">String</span>[]&#123;<span class="hljs-string">&quot;*.do&quot;</span>&#125;;<br>	&#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+
+
+<h1 id="SpringIOC"><a href="#SpringIOC" class="headerlink" title="SpringIOC"></a>SpringIOC</h1><p>ioc容器核心来源于两个map，分别以Map&lt;String beanName,BeanDefinition definition&gt;,Map&lt;String beanName,Object object&gt;的方式存储数据；</p>
+<p>他们都属于BeanFactory接口下的对象</p>
+<h2 id="IOC加载流程"><a href="#IOC加载流程" class="headerlink" title="IOC加载流程"></a>IOC加载流程</h2><h3 id="核心控制类"><a href="#核心控制类" class="headerlink" title="核心控制类"></a>核心控制类</h3><p>AbstractApplicationContext类的refresh()方法控制了IOC容器的加载流程，其中比较关键的几步如下：</p>
+<ol>
+<li>ConfigurableListableBeanFactory beanFactory &#x3D; obtainFreshBeanFactory();，创建BeanFactory，注册BeanDefinition</li>
+<li>prepareBeanFactory(beanFactory);，准备类加载器，用于创建对象</li>
+<li>finishBeanFactoryInitialization(beanFactory);，初始化singleton的Bean对象</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">refresh</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> BeansException, IllegalStateException &#123;<br>   <span class="hljs-comment">// 来个锁，不然 refresh() 还没结束，你又来个启动或销毁容器的操作，那不就乱套了嘛</span><br>   <span class="hljs-keyword">synchronized</span> (<span class="hljs-built_in">this</span>.startupShutdownMonitor) &#123;<br> <br>      <span class="hljs-comment">// 准备工作，记录下容器的启动时间、标记“已启动”状态、处理配置文件中的占位符</span><br>      prepareRefresh();<br> <br>      <span class="hljs-comment">// 这步比较关键，这步完成后，配置文件就会解析成一个个 Bean 定义，注册到 BeanFactory 中，</span><br>      <span class="hljs-comment">// 当然，这里说的 Bean 还没有初始化，只是配置信息都提取出来了，</span><br>      <span class="hljs-comment">// 注册也只是将这些信息都保存到了注册中心(说到底核心是一个 beanName-&gt; beanDefinition 的 map)</span><br>      <span class="hljs-type">ConfigurableListableBeanFactory</span> <span class="hljs-variable">beanFactory</span> <span class="hljs-operator">=</span> obtainFreshBeanFactory();<br> <br>      <span class="hljs-comment">// 设置 BeanFactory 的类加载器，添加几个 BeanPostProcessor，手动注册几个特殊的 bean</span><br>      <span class="hljs-comment">// 这块待会会展开说</span><br>      prepareBeanFactory(beanFactory);<br> <br>      <span class="hljs-keyword">try</span> &#123;<br>         <span class="hljs-comment">// 【这里需要知道 BeanFactoryPostProcessor 这个知识点，Bean 如果实现了此接口，</span><br>         <span class="hljs-comment">// 那么在容器初始化以后，Spring 会负责调用里面的 postProcessBeanFactory 方法。】</span><br> <br>         <span class="hljs-comment">// 这里是提供给子类的扩展点，到这里的时候，所有的 Bean 都加载、注册完成了，但是都还没有初始化</span><br>         <span class="hljs-comment">// 具体的子类可以在这步的时候添加一些特殊的 BeanFactoryPostProcessor 的实现类或做点什么事</span><br>         postProcessBeanFactory(beanFactory);<br>         <span class="hljs-comment">// 调用 BeanFactoryPostProcessor 各个实现类的 postProcessBeanFactory(factory) 方法</span><br>         invokeBeanFactoryPostProcessors(beanFactory);<br> <br>         <span class="hljs-comment">// 注册 BeanPostProcessor 的实现类，注意看和 BeanFactoryPostProcessor 的区别</span><br>         <span class="hljs-comment">// 此接口两个方法: postProcessBeforeInitialization 和 postProcessAfterInitialization</span><br>         <span class="hljs-comment">// 两个方法分别在 Bean 初始化之前和初始化之后得到执行。注意，到这里 Bean 还没初始化</span><br>         registerBeanPostProcessors(beanFactory);<br> <br>         <span class="hljs-comment">// 初始化当前 ApplicationContext 的 MessageSource，国际化这里就不展开说了，不然没完没了了</span><br>         initMessageSource();<br> <br>         <span class="hljs-comment">// 初始化当前 ApplicationContext 的事件广播器，这里也不展开了</span><br>         initApplicationEventMulticaster();<br> <br>         <span class="hljs-comment">// 从方法名就可以知道，典型的模板方法(钩子方法)，</span><br>         <span class="hljs-comment">// 具体的子类可以在这里初始化一些特殊的 Bean（在初始化 singleton beans 之前）</span><br>         onRefresh();<br> <br>         <span class="hljs-comment">// 注册事件监听器，监听器需要实现 ApplicationListener 接口。这也不是我们的重点，过</span><br>         registerListeners();<br> <br>         <span class="hljs-comment">// 重点，重点，重点</span><br>         <span class="hljs-comment">// 初始化所有的 singleton beans</span><br>         <span class="hljs-comment">//（lazy-init 的除外）</span><br>         finishBeanFactoryInitialization(beanFactory);<br> <br>         <span class="hljs-comment">// 最后，广播事件，ApplicationContext 初始化完成</span><br>         finishRefresh();<br>      &#125;<br> <br>      <span class="hljs-keyword">catch</span> (BeansException ex) &#123;<br>         <span class="hljs-keyword">if</span> (logger.isWarnEnabled()) &#123;<br>            logger.warn(<span class="hljs-string">&quot;Exception encountered during context initialization - &quot;</span> +<br>                  <span class="hljs-string">&quot;cancelling refresh attempt: &quot;</span> + ex);<br>         &#125;<br> <br>         <span class="hljs-comment">// Destroy already created singletons to avoid dangling resources.</span><br>         <span class="hljs-comment">// 销毁已经初始化的 singleton 的 Beans，以免有些 bean 会一直占用资源</span><br>         destroyBeans();<br> <br>         <span class="hljs-comment">// Reset &#x27;active&#x27; flag.</span><br>         cancelRefresh(ex);<br> <br>         <span class="hljs-comment">// 把异常往外抛</span><br>         <span class="hljs-keyword">throw</span> ex;<br>      &#125;<br> <br>      <span class="hljs-keyword">finally</span> &#123;<br>         <span class="hljs-comment">// Reset common introspection caches in Spring&#x27;s core, since we</span><br>         <span class="hljs-comment">// might not ever need metadata for singleton beans anymore...</span><br>         resetCommonCaches();<br>      &#125;<br>   &#125;<br>&#125;<br><span class="hljs-comment">//代码注释解析来自博客https://blog.csdn.net/nuomizhende45/article/details/81158383/</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="创建BeanFactory，注册BeanDefinition"><a href="#创建BeanFactory，注册BeanDefinition" class="headerlink" title="创建BeanFactory，注册BeanDefinition"></a>创建BeanFactory，注册BeanDefinition</h3><p>需要注意以下几点</p>
+<ol>
+<li>初始三各类继承关系如下，AbstractApplicationContext→AbstractRefreshableApplicationContext→AbstractXmlApplicationContext</li>
+<li>AbstractRefreshableApplicationContext类会创建Bean工厂“DefaultListableBeanFactory”该工厂内涵几个核心Map，后续流程中会被注入到BeanDefinitionReader对象中用于BeanDefinition的注入</li>
+<li>DefaultBeanDefinitionDocumentReader通过委派BeanDefinitionParserDelegate来实现BeanDefinition的封装，核心流程均由这个被委派这完成</li>
+<li>后续会通过BeanDefinitionReaderUtils的静态方法registerBeanDefinition()注册BeanDefition，实际上Spring框架在多个地方都调用该方法手动注册一些Spring核心类</li>
+</ol>
+<img src="D:\Andrew_pro\blog\upload_image\spring\BeamDefinition.jpg" srcset="/img/loading.gif" lazyload alt="BeamDefinition"  />
+
+<h3 id="准备类加载器"><a href="#准备类加载器" class="headerlink" title="准备类加载器"></a>准备类加载器</h3><p>该方法主要职责在第一行，设置类加载器；</p>
+<p>需要注意，目前该方法始终是在AbstractApplicationContext类中的，而AbstractApplicationContext继承自DefaultResourceLoader，在DefaultResourceLoader的无参构造函数中就通过<u>this.classLoader &#x3D; ClassUtils.getDefaultClassLoader();来创建获取类加载器</u></p>
+<p> ClassUtils是Spring框架的类对象操作工具类，可提取出来学习利用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><code class="hljs java"><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Configure the factory&#x27;s standard context characteristics,</span><br><span class="hljs-comment"> * such as the context&#x27;s ClassLoader and post-processors.</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> beanFactory the BeanFactory to configure</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">prepareBeanFactory</span><span class="hljs-params">(ConfigurableListableBeanFactory beanFactory)</span> &#123;<br>   <span class="hljs-comment">// 设置 BeanFactory 的类加载器，我们知道 BeanFactory 需要加载类，也就需要类加载器，</span><br>   <span class="hljs-comment">// 这里设置为当前 ApplicationContext 的类加载器</span><br>   beanFactory.setBeanClassLoader(getClassLoader());<br>   <span class="hljs-comment">// 设置 BeanExpressionResolver</span><br>   beanFactory.setBeanExpressionResolver(<span class="hljs-keyword">new</span> <span class="hljs-title class_">StandardBeanExpressionResolver</span>(beanFactory.getBeanClassLoader()));<br>   <span class="hljs-comment">// </span><br>   beanFactory.addPropertyEditorRegistrar(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ResourceEditorRegistrar</span>(<span class="hljs-built_in">this</span>, getEnvironment()));<br> <br>   <span class="hljs-comment">// 添加一个 BeanPostProcessor，这个 processor 比较简单，</span><br>   <span class="hljs-comment">// 实现了 Aware 接口的几个特殊的 beans 在初始化的时候，这个 processor 负责回调</span><br>   beanFactory.addBeanPostProcessor(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ApplicationContextAwareProcessor</span>(<span class="hljs-built_in">this</span>));<br> <br>   <span class="hljs-comment">// 下面几行的意思就是，如果某个 bean 依赖于以下几个接口的实现类，在自动装配的时候忽略它们，</span><br>   <span class="hljs-comment">// Spring 会通过其他方式来处理这些依赖。</span><br>   beanFactory.ignoreDependencyInterface(EnvironmentAware.class);<br>   beanFactory.ignoreDependencyInterface(EmbeddedValueResolverAware.class);<br>   beanFactory.ignoreDependencyInterface(ResourceLoaderAware.class);<br>   beanFactory.ignoreDependencyInterface(ApplicationEventPublisherAware.class);<br>   beanFactory.ignoreDependencyInterface(MessageSourceAware.class);<br>   beanFactory.ignoreDependencyInterface(ApplicationContextAware.class);<br> <br>   <span class="hljs-comment">/**</span><br><span class="hljs-comment">    * 下面几行就是为特殊的几个 bean 赋值，如果有 bean 依赖了以下几个，会注入这边相应的值，</span><br><span class="hljs-comment">    * 之前我们说过，&quot;当前 ApplicationContext 持有一个 BeanFactory&quot;，这里解释了第一行</span><br><span class="hljs-comment">    * ApplicationContext 继承了 ResourceLoader、ApplicationEventPublisher、MessageSource</span><br><span class="hljs-comment">    * 所以对于这几个，可以赋值为 this，注意 this 是一个 ApplicationContext</span><br><span class="hljs-comment">    * 那这里怎么没看到为 MessageSource 赋值呢？那是因为 MessageSource 被注册成为了一个普通的 bean</span><br><span class="hljs-comment">    */</span><br>   beanFactory.registerResolvableDependency(BeanFactory.class, beanFactory);<br>   beanFactory.registerResolvableDependency(ResourceLoader.class, <span class="hljs-built_in">this</span>);<br>   beanFactory.registerResolvableDependency(ApplicationEventPublisher.class, <span class="hljs-built_in">this</span>);<br>   beanFactory.registerResolvableDependency(ApplicationContext.class, <span class="hljs-built_in">this</span>);<br> <br>   <span class="hljs-comment">// 这个 BeanPostProcessor 也很简单，在 bean 实例化后，如果是 ApplicationListener 的子类，</span><br>   <span class="hljs-comment">// 那么将其添加到 listener 列表中，可以理解成：注册事件监听器</span><br>   beanFactory.addBeanPostProcessor(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ApplicationListenerDetector</span>(<span class="hljs-built_in">this</span>));<br> <br>   <span class="hljs-comment">// Detect a LoadTimeWeaver and prepare for weaving, if found.</span><br>   <span class="hljs-comment">// 这里涉及到特殊的 bean，名为：loadTimeWeaver，这不是我们的重点，忽略它</span><br>   <span class="hljs-keyword">if</span> (beanFactory.containsBean(LOAD_TIME_WEAVER_BEAN_NAME)) &#123;<br>      beanFactory.addBeanPostProcessor(<span class="hljs-keyword">new</span> <span class="hljs-title class_">LoadTimeWeaverAwareProcessor</span>(beanFactory));<br>      <span class="hljs-comment">// Set a temporary ClassLoader for type matching.</span><br>      beanFactory.setTempClassLoader(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ContextTypeMatchClassLoader</span>(beanFactory.getBeanClassLoader()));<br>   &#125;<br> <br>   <span class="hljs-comment">/**</span><br><span class="hljs-comment">    * 从下面几行代码我们可以知道，Spring 往往很 &quot;智能&quot; 就是因为它会帮我们默认注册一些有用的 bean，</span><br><span class="hljs-comment">    * 我们也可以选择覆盖</span><br><span class="hljs-comment">    */</span><br> <br>   <span class="hljs-comment">// 如果没有定义 &quot;environment&quot; 这个 bean，那么 Spring 会 &quot;手动&quot; 注册一个</span><br>   <span class="hljs-keyword">if</span> (!beanFactory.containsLocalBean(ENVIRONMENT_BEAN_NAME)) &#123;<br>      beanFactory.registerSingleton(ENVIRONMENT_BEAN_NAME, getEnvironment());<br>   &#125;<br>   <span class="hljs-comment">// 如果没有定义 &quot;systemProperties&quot; 这个 bean，那么 Spring 会 &quot;手动&quot; 注册一个</span><br>   <span class="hljs-keyword">if</span> (!beanFactory.containsLocalBean(SYSTEM_PROPERTIES_BEAN_NAME)) &#123;<br>      beanFactory.registerSingleton(SYSTEM_PROPERTIES_BEAN_NAME, getEnvironment().getSystemProperties());<br>   &#125;<br>   <span class="hljs-comment">// 如果没有定义 &quot;systemEnvironment&quot; 这个 bean，那么 Spring 会 &quot;手动&quot; 注册一个</span><br>   <span class="hljs-keyword">if</span> (!beanFactory.containsLocalBean(SYSTEM_ENVIRONMENT_BEAN_NAME)) &#123;<br>      beanFactory.registerSingleton(SYSTEM_ENVIRONMENT_BEAN_NAME, getEnvironment().getSystemEnvironment());<br>   &#125;<br>&#125;<br><span class="hljs-comment">//代码注释解析来自博客https://blog.csdn.net/nuomizhende45/article/details/81158383/</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="后置处理器"><a href="#后置处理器" class="headerlink" title="后置处理器"></a>后置处理器</h3><p>后置处理器有两种，BeanFactoryPostProcessor和BeanPostProcessor</p>
+<ul>
+<li>BeanFactoryPostProcessor：<strong>用于拓展Spring框架</strong>，内部可得到Bean容器，操作BeanDefinition</li>
+<li>BeanPostProcessor：用于增加Bean生命周期操作</li>
+</ul>
+<p>此时还没有创建Bean对象，这里只讲BeanFactoryPostProcessor，Spring主要的后置处理较多，这里距离三个常用到的</p>
+<ul>
+<li>PropertySourcesPlaceholderConfigurer：处理配置类占位符${..}</li>
+<li>ConfigurationClassParser：<strong>识别注解标签，创建对应的BeanDefiniton</strong></li>
+</ul>
+<h3 id="初始化Bean对象"><a href="#初始化Bean对象" class="headerlink" title="初始化Bean对象"></a>初始化Bean对象</h3><p>Bean对象的初始化利用到了反射技术，核心操作类如图可见为AbstractAutowireCapableBeanFactory.java，它负责了bean对象的创建，属性注入，init方法和后置处理器的调度使用</p>
+<p>可将getBean()方法看作bean的初始化开启方法，我们经常通过applictionContext.getBean()方法获取bean，两者是同一个方法</p>
+<p><img src="D:\Andrew_pro\blog\upload_image\spring\BeanInit.png" srcset="/img/loading.gif" lazyload alt="Bean初始化"></p>
+<h1 id="SpringMVC"><a href="#SpringMVC" class="headerlink" title="SpringMVC"></a>SpringMVC</h1><p>SpringMVC核心是DispatcherServlet对象，核心方法是doDispatch()</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">DispatcherServlet</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>由于DispatcherServlet是个Servlet对象，虽然没有doGet，doPost方法(实际已被父类实现)，但请求最终会进入该类的doService()-&gt;doDispatch()</strong></p>
+<p>Controller对象中的方法和映射如何匹配?</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Controller</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyController</span>&#123;<span class="hljs-comment">//类加载(将类读到内存)--&gt;Class</span><br>	  <span class="hljs-meta">@RequestMapping(&quot;doIndexUI&quot;)</span><br>	  <span class="hljs-keyword">public</span> String <span class="hljs-title function_">doIndexUI</span><span class="hljs-params">()</span>&#123;<br>		  <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;starter&quot;</span>;<span class="hljs-comment">//WEB-INF/pages/starter.html</span><br>	  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>SpringMvc找Controller流程</p>
+<ol>
+<li>扫描项目所有包，注册所有注解和配置描述的bean，由ioc容器预先完成</li>
+<li>@拿到所有Controller类</li>
+<li>遍历类中的所有方法对象Method.class</li>
+<li>判断方法是否添加了@RequestMapping注解</li>
+<li>将RequestMapping注解中的描述如：”doIndexUI”作为key，步骤4的方法对象作为value存入map集合中</li>
+<li>容器启动完成</li>
+<li>根据用户发送的请求，拦截获取URI   注：URL&#x3D;<a target="_blank" rel="noopener" href="http://localhost/test.do">http://localhost:80/test.do</a>   URI&#x3D;&#x2F;test.do</li>
+<li>根据URI（&#x2F;test.do）查找Map集合获取Method方法对象</li>
+<li>通过反射调用Method方法</li>
+</ol>
+<h1 id="DispatcherSerblet主流程"><a href="#DispatcherSerblet主流程" class="headerlink" title="DispatcherSerblet主流程"></a>DispatcherSerblet主流程</h1><p>注意，此时容器已启动完成，用户请求发送通过servlet传递进入doDispatch()方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">doDispatch</span><span class="hljs-params">(HttpServletRequest request, HttpServletResponse response)</span> <span class="hljs-keyword">throws</span> Exception &#123;<br>		<span class="hljs-type">HttpServletRequest</span> <span class="hljs-variable">processedRequest</span> <span class="hljs-operator">=</span> request;<br>		<span class="hljs-type">HandlerExecutionChain</span> <span class="hljs-variable">mappedHandler</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<br>		<span class="hljs-type">boolean</span> <span class="hljs-variable">multipartRequestParsed</span> <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>;<br><br>		<span class="hljs-type">WebAsyncManager</span> <span class="hljs-variable">asyncManager</span> <span class="hljs-operator">=</span> WebAsyncUtils.getAsyncManager(request);<br><br>		<span class="hljs-keyword">try</span> &#123;<br>			<span class="hljs-type">ModelAndView</span> <span class="hljs-variable">mv</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<br>			<span class="hljs-type">Exception</span> <span class="hljs-variable">dispatchException</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<br><br>			<span class="hljs-keyword">try</span> &#123;<br>                <span class="hljs-comment">// 处理确认所有的带有二进制文件的请求，遵循http协议，判断请求中的描述符确认</span><br>				processedRequest = checkMultipart(request);<br>				multipartRequestParsed = (processedRequest != request);<br><br>				<span class="hljs-comment">// Determine handler for the current request.</span><br>                <span class="hljs-comment">// 根据请求获取mapperHandler，即Controller对象或映射指定的Method对象</span><br>				mappedHandler = getHandler(processedRequest);<br>				<span class="hljs-keyword">if</span> (mappedHandler == <span class="hljs-literal">null</span>) &#123;<br>					noHandlerFound(processedRequest, response);<br>					<span class="hljs-keyword">return</span>;<br>				&#125;<br><br>				<span class="hljs-comment">// Determine handler adapter for the current request.</span><br>                 <span class="hljs-comment">// 获取Handler适配器，原理同getHandler，根据情况获取不同种类的Handler适配器</span><br>				<span class="hljs-type">HandlerAdapter</span> <span class="hljs-variable">ha</span> <span class="hljs-operator">=</span> getHandlerAdapter(mappedHandler.getHandler());<br><br>				<span class="hljs-comment">// Process last-modified header, if supported by the handler.</span><br>				<span class="hljs-type">String</span> <span class="hljs-variable">method</span> <span class="hljs-operator">=</span> request.getMethod();<br>				<span class="hljs-type">boolean</span> <span class="hljs-variable">isGet</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;GET&quot;</span>.equals(method);<br>				<span class="hljs-keyword">if</span> (isGet || <span class="hljs-string">&quot;HEAD&quot;</span>.equals(method)) &#123;<br>					<span class="hljs-type">long</span> <span class="hljs-variable">lastModified</span> <span class="hljs-operator">=</span> ha.getLastModified(request, mappedHandler.getHandler());<br>					<span class="hljs-keyword">if</span> (<span class="hljs-keyword">new</span> <span class="hljs-title class_">ServletWebRequest</span>(request, response).checkNotModified(lastModified) &amp;&amp; isGet) &#123;<br>						<span class="hljs-keyword">return</span>;<br>					&#125;<br>				&#125;<br><br>				<span class="hljs-keyword">if</span> (!mappedHandler.applyPreHandle(processedRequest, response)) &#123;<br>					<span class="hljs-keyword">return</span>;<br>				&#125;<br><br>				<span class="hljs-comment">// Actually invoke the handler.</span><br>				mv = ha.handle(processedRequest, response, mappedHandler.getHandler());<br><br>				<span class="hljs-keyword">if</span> (asyncManager.isConcurrentHandlingStarted()) &#123;<br>					<span class="hljs-keyword">return</span>;<br>				&#125;<br><br>				applyDefaultViewName(processedRequest, mv);<br>				mappedHandler.applyPostHandle(processedRequest, response, mv);<br>			&#125;<br>			<span class="hljs-keyword">catch</span> (Exception ex) &#123;<br>				dispatchException = ex;<br>			&#125;<br>			<span class="hljs-keyword">catch</span> (Throwable err) &#123;<br>				<span class="hljs-comment">// As of 4.3, we&#x27;re processing Errors thrown from handler methods as well,</span><br>				<span class="hljs-comment">// making them available for @ExceptionHandler methods and other scenarios.</span><br>				dispatchException = <span class="hljs-keyword">new</span> <span class="hljs-title class_">NestedServletException</span>(<span class="hljs-string">&quot;Handler dispatch failed&quot;</span>, err);<br>			&#125;<br>			processDispatchResult(processedRequest, response, mappedHandler, mv, dispatchException);<br>		&#125;<br>		<span class="hljs-keyword">catch</span> (Exception ex) &#123;<br>			triggerAfterCompletion(processedRequest, response, mappedHandler, ex);<br>		&#125;<br>		<span class="hljs-keyword">catch</span> (Throwable err) &#123;<br>			triggerAfterCompletion(processedRequest, response, mappedHandler,<br>					<span class="hljs-keyword">new</span> <span class="hljs-title class_">NestedServletException</span>(<span class="hljs-string">&quot;Handler processing failed&quot;</span>, err));<br>		&#125;<br>		<span class="hljs-keyword">finally</span> &#123;<br>			<span class="hljs-keyword">if</span> (asyncManager.isConcurrentHandlingStarted()) &#123;<br>				<span class="hljs-comment">// Instead of postHandle and afterCompletion</span><br>				<span class="hljs-keyword">if</span> (mappedHandler != <span class="hljs-literal">null</span>) &#123;<br>					mappedHandler.applyAfterConcurrentHandlingStarted(processedRequest, response);<br>				&#125;<br>			&#125;<br>			<span class="hljs-keyword">else</span> &#123;<br>				<span class="hljs-comment">// Clean up any resources used by a multipart request.</span><br>				<span class="hljs-keyword">if</span> (multipartRequestParsed) &#123;<br>					cleanupMultipart(processedRequest);<br>				&#125;<br>			&#125;<br>		&#125;<br>	&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="获取MethodHandler"><a href="#获取MethodHandler" class="headerlink" title="获取MethodHandler"></a>获取MethodHandler</h2><ul>
+<li>通过getHandler(processedRequest);开启</li>
+</ul>
+<p>MethodHandler可能是Controller控制器的封装类，也可能是对应Method对象的封装类</p>
+<p>DispacherServlet对象有一个HandelrMapping对象集合，HandlerMapping对象里的Map集合用来存储之前描述的Method对象；之所以有不同的HandlerMapping是由于Spring有多种Controller的实现，需要不同的Handler处理</p>
+<p><img src="D:\Andrew_pro\blog\upload_image\spring\springMVCgetHandler.png" srcset="/img/loading.gif" lazyload alt="image-20210501184910811"></p>
+<ul>
+<li>最终HandlerMapping们会通过自身集合中的Map集合获取到对应的Method或对象</li>
+<li>上述代码最终返回HandlerMethod，它实际上是uri和对应Method对象的包装类，也可以理解为Controller</li>
+</ul>
+<p><img src="D:\Andrew_pro\blog\upload_image\spring\getHandler.png" srcset="/img/loading.gif" lazyload alt="获取Handler"></p>
+<p>由图可见，不同的HandlerMapping有不同的Map集合，分情况进入</p>
+<h3 id="Controller案例1"><a href="#Controller案例1" class="headerlink" title="Controller案例1"></a>Controller案例1</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 类型1Controller，通过注解<span class="hljs-doctag">@Controller</span>实现</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@Controller</span><br><span class="hljs-meta">@RequestMapping(&quot;/ControllerType1/&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ControllerType1</span> &#123;<br>    <span class="hljs-meta">@RequestMapping(&quot;getPathValue&quot;)</span><br>    <span class="hljs-meta">@ResponseBody</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">testController</span><span class="hljs-params">(<span class="hljs-meta">@PathVariable</span> String name)</span>&#123;<br>        System.out.println(<span class="hljs-string">&quot;Controller2执行&quot;</span>);<br>        System.out.println(<span class="hljs-string">&quot;hello,&quot;</span>+name);<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;hello,&quot;</span>+name;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="Controller案例2"><a href="#Controller案例2" class="headerlink" title="Controller案例2"></a>Controller案例2</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 基于实现Controller接口实现Controller</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@Component(&quot;/ControllerType2&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ControllerType2</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Controller</span> &#123;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> ModelAndView <span class="hljs-title function_">handleRequest</span><span class="hljs-params">(HttpServletRequest request, HttpServletResponse response)</span> <span class="hljs-keyword">throws</span> Exception &#123;<br>        <span class="hljs-comment">// 通过paramMap读取请求参数手动操作数据</span><br>        <span class="hljs-comment">// Map&lt;String, String[]&gt; parameterMap = request.getParameterMap();</span><br>        System.out.println(<span class="hljs-string">&quot;Controller2执行&quot;</span>);<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ModelAndView</span>(<span class="hljs-string">&quot;Controller2,say hello&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="请求分发"><a href="#请求分发" class="headerlink" title="请求分发"></a>请求分发</h2><p>handlerAdapter.handle()</p>
+<p>根据情况调用适当的适配器后，通过适配器调用实际要进入的方法，这里分上述两个Controller案例分析</p>
+<h3 id="案例一，基于实现Controller接口"><a href="#案例一，基于实现Controller接口" class="headerlink" title="案例一，基于实现Controller接口"></a>案例一，基于实现Controller接口</h3><p>原理很简单，直接调用Controller对象的的对应方法即可</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">SimpleControllerHandlerAdapter</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">HandlerAdapter</span> &#123;<br>    <span class="hljs-comment">//参数4的handler就是先前被封装的Controller对象</span><br>    <span class="hljs-keyword">public</span> ModelAndView <span class="hljs-title function_">handle</span><span class="hljs-params">(HttpServletRequest request, HttpServletResponse response, Object handler)</span><br>			<span class="hljs-keyword">throws</span> Exception &#123;<br><br>		<span class="hljs-keyword">return</span> ((Controller) handler).handleRequest(request, response);<br>	&#125;<br>&#125;    <br></code></pre></td></tr></table></figure>
+
+<h3 id="案例二，基于注解RequestMapping"><a href="#案例二，基于注解RequestMapping" class="headerlink" title="案例二，基于注解RequestMapping"></a>案例二，基于注解RequestMapping</h3><p>部分源码跳过</p>
+<h4 id="获取参数处理器"><a href="#获取参数处理器" class="headerlink" title="获取参数处理器"></a>获取参数处理器</h4><p>参数处理器中的参数指的时Controller中映射方法的参数</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> HandlerMethodArgumentResolver <span class="hljs-title function_">getArgumentResolver</span><span class="hljs-params">(MethodParameter parameter)</span> &#123;<br>    	<span class="hljs-comment">//先从缓存中获取</span><br>		<span class="hljs-type">HandlerMethodArgumentResolver</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> <span class="hljs-built_in">this</span>.argumentResolverCache.get(parameter);<br>		<span class="hljs-keyword">if</span> (result == <span class="hljs-literal">null</span>) &#123;<br>			<span class="hljs-keyword">for</span> (HandlerMethodArgumentResolver resolver : <span class="hljs-built_in">this</span>.argumentResolvers) &#123;<br>                <span class="hljs-comment">//基于不同参数处理器的supportsParameter方法判定</span><br>				<span class="hljs-keyword">if</span> (resolver.supportsParameter(parameter)) &#123;<br>					result = resolver;<br>					<span class="hljs-built_in">this</span>.argumentResolverCache.put(parameter, result);<br>					<span class="hljs-keyword">break</span>;<br>				&#125;<br>			&#125;<br>		&#125;<br>		<span class="hljs-keyword">return</span> result;<br>	&#125;<br></code></pre></td></tr></table></figure>
+
+<p>举例几个参数处理器案例</p>
+<ul>
+<li>当请求方法中有@RequestBody注解时，直接通过参数中的注解判断</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br>	<span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">supportsParameter</span><span class="hljs-params">(MethodParameter parameter)</span> &#123;<br>		<span class="hljs-keyword">return</span> parameter.hasParameterAnnotation(RequestBody.class);<br>	&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>当请求方法参数中有@RequestParam时，通过是否含注解判断</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br>	<span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">supportsParameter</span><span class="hljs-params">(MethodParameter parameter)</span> &#123;<br>		<span class="hljs-type">RequestParam</span> <span class="hljs-variable">requestParam</span> <span class="hljs-operator">=</span> parameter.getParameterAnnotation(RequestParam.class);<br>		<span class="hljs-keyword">return</span> (requestParam != <span class="hljs-literal">null</span> &amp;&amp; Map.class.isAssignableFrom(parameter.getParameterType()) &amp;&amp;<br>				!StringUtils.hasText(requestParam.name()));<br>	&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>当请求方法参数中有@PathVariable也同理</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br>	<span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">supportsParameter</span><span class="hljs-params">(MethodParameter parameter)</span> &#123;<br>		<span class="hljs-type">PathVariable</span> <span class="hljs-variable">ann</span> <span class="hljs-operator">=</span> parameter.getParameterAnnotation(PathVariable.class);<br>		<span class="hljs-keyword">return</span> (ann != <span class="hljs-literal">null</span> &amp;&amp; Map.class.isAssignableFrom(parameter.getParameterType()) &amp;&amp;<br>				!StringUtils.hasText(ann.value()));<br>	&#125;<br></code></pre></td></tr></table></figure>
+
+<p>不同参数处理器有不同的操作，依据需要装配的类型而定，后续不一一例举了，可自行查看HandlerMethodArgumentResolver接口下的子类</p>
+<h1 id="SpringAOP"><a href="#SpringAOP" class="headerlink" title="SpringAOP"></a>SpringAOP</h1><h2 id="代理对象创建"><a href="#代理对象创建" class="headerlink" title="代理对象创建"></a>代理对象创建</h2><p>代理对象创建在Bean生命周期init方法之后执行，由Spring内置的后置处理器BeanPostProcess实现</p>
+<ul>
+<li>该方法在AbstractAutowireCapableBeanFactory类中</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs java"><br><span class="hljs-meta">@Override</span><br>	<span class="hljs-keyword">public</span> Object <span class="hljs-title function_">applyBeanPostProcessorsAfterInitialization</span><span class="hljs-params">(Object existingBean, String beanName)</span><br>			<span class="hljs-keyword">throws</span> BeansException &#123;<br><br>		<span class="hljs-type">Object</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> existingBean;<br>        <span class="hljs-comment">//循环执行所有后置处理器</span><br>		<span class="hljs-keyword">for</span> (BeanPostProcessor processor : getBeanPostProcessors()) &#123;<br>			<span class="hljs-type">Object</span> <span class="hljs-variable">current</span> <span class="hljs-operator">=</span> processor.postProcessAfterInitialization(result, beanName);<br>			<span class="hljs-keyword">if</span> (current == <span class="hljs-literal">null</span>) &#123;<br>				<span class="hljs-keyword">return</span> result;<br>			&#125;<br>			result = current;<br>		&#125;<br>		<span class="hljs-keyword">return</span> result;<br>	&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>代理对象创建主要逻辑</li>
+<li>具体实现通知类为<strong>AbstractAutoProxyCreator</strong></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">protected</span> Object <span class="hljs-title function_">wrapIfNecessary</span><span class="hljs-params">(Object bean, String beanName, Object cacheKey)</span> &#123;<br>		<span class="hljs-keyword">if</span> (StringUtils.hasLength(beanName) &amp;&amp; <span class="hljs-built_in">this</span>.targetSourcedBeans.contains(beanName)) &#123;<br>			<span class="hljs-keyword">return</span> bean;<br>		&#125;<br>		<span class="hljs-keyword">if</span> (Boolean.FALSE.equals(<span class="hljs-built_in">this</span>.advisedBeans.get(cacheKey))) &#123;<br>			<span class="hljs-keyword">return</span> bean;<br>		&#125;<br>		<span class="hljs-keyword">if</span> (isInfrastructureClass(bean.getClass()) || shouldSkip(bean.getClass(), beanName)) &#123;<br>			<span class="hljs-built_in">this</span>.advisedBeans.put(cacheKey, Boolean.FALSE);<br>			<span class="hljs-keyword">return</span> bean;<br>		&#125;<br><br>		<span class="hljs-comment">// 创建并获取所有的通知，通知会被加入通知缓存</span><br>		Object[] specificInterceptors = getAdvicesAndAdvisorsForBean(bean.getClass(), beanName, <span class="hljs-literal">null</span>);<br>		<span class="hljs-keyword">if</span> (specificInterceptors != DO_NOT_PROXY) &#123;<br>			<span class="hljs-built_in">this</span>.advisedBeans.put(cacheKey, Boolean.TRUE);<br>            <span class="hljs-comment">//创建代理对象</span><br>			<span class="hljs-type">Object</span> <span class="hljs-variable">proxy</span> <span class="hljs-operator">=</span> createProxy(<br>					bean.getClass(), beanName, specificInterceptors, <span class="hljs-keyword">new</span> <span class="hljs-title class_">SingletonTargetSource</span>(bean));<br>			<span class="hljs-built_in">this</span>.proxyTypes.put(cacheKey, proxy.getClass());<br>			<span class="hljs-keyword">return</span> proxy;<br>		&#125;<br>		<span class="hljs-comment">// 代理对象加入缓存</span><br>		<span class="hljs-built_in">this</span>.advisedBeans.put(cacheKey, Boolean.FALSE);<br>		<span class="hljs-keyword">return</span> bean;<br>	&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>匹配可用通知</li>
+<li>创建代理对象工厂</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">protected</span> Object <span class="hljs-title function_">createProxy</span><span class="hljs-params">(Class&lt;?&gt; beanClass, <span class="hljs-meta">@Nullable</span> String beanName,</span><br><span class="hljs-params">			<span class="hljs-meta">@Nullable</span> Object[] specificInterceptors, TargetSource targetSource)</span> &#123;<br><br>		<span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.beanFactory <span class="hljs-keyword">instanceof</span> ConfigurableListableBeanFactory) &#123;<br>			AutoProxyUtils.exposeTargetClass((ConfigurableListableBeanFactory) <span class="hljs-built_in">this</span>.beanFactory, beanName, beanClass);<br>		&#125;<br>		<span class="hljs-comment">//场景代理对象工厂为工厂注入属性</span><br>		<span class="hljs-type">ProxyFactory</span> <span class="hljs-variable">proxyFactory</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ProxyFactory</span>();<br>		proxyFactory.copyFrom(<span class="hljs-built_in">this</span>);<br>		<span class="hljs-keyword">if</span> (!proxyFactory.isProxyTargetClass()) &#123;<br>			<span class="hljs-comment">//此处逻辑判断依据需要被代理类是否有接口</span><br>			<span class="hljs-keyword">if</span> (shouldProxyTargetClass(beanClass, beanName)) &#123;<br>				proxyFactory.setProxyTargetClass(<span class="hljs-literal">true</span>);<br>			&#125;<br>			<span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-comment">//有接口则进入以下逻辑为工厂添加接口</span><br>				evaluateProxyInterfaces(beanClass, proxyFactory);<br>			&#125;<br>		&#125;<br>		<span class="hljs-comment">//筛选通知，找到对应的通知</span><br>		Advisor[] advisors = buildAdvisors(beanName, specificInterceptors);<br>    	<span class="hljs-comment">//设置通知</span><br>		proxyFactory.addAdvisors(advisors);<br>     	<span class="hljs-comment">//设置目标类，后续代理对象需要调用原方法时，通过该对象调用</span><br>		proxyFactory.setTargetSource(targetSource);<br>    	<span class="hljs-comment">//钩子方法，无具体实现</span><br>		customizeProxyFactory(proxyFactory);<br>		<br>		proxyFactory.setFrozen(<span class="hljs-built_in">this</span>.freezeProxy);<br>		<span class="hljs-keyword">if</span> (advisorsPreFiltered()) &#123;<br>			proxyFactory.setPreFiltered(<span class="hljs-literal">true</span>);<br>		&#125;<br>		<span class="hljs-comment">//通过工厂创建代理对象</span><br>		<span class="hljs-keyword">return</span> proxyFactory.getProxy(getProxyClassLoader());<br>	&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>接下来进入代理工厂</li>
+</ul>
+<h3 id="ProxyFactory"><a href="#ProxyFactory" class="headerlink" title="ProxyFactory"></a>ProxyFactory</h3><p>代理后置处理器会createAopProxy().getProxy(classLoader)；方法依据条件调用后对应的代理创建方法；</p>
+<p>工厂依据事先设置的属性判断创建何种代理</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> AopProxy <span class="hljs-title function_">createAopProxy</span><span class="hljs-params">(AdvisedSupport config)</span> <span class="hljs-keyword">throws</span> AopConfigException &#123;<br>		<span class="hljs-keyword">if</span> (config.isOptimize() || config.isProxyTargetClass() || hasNoUserSuppliedProxyInterfaces(config)) &#123;<br>			Class&lt;?&gt; targetClass = config.getTargetClass();<br>			<span class="hljs-keyword">if</span> (targetClass == <span class="hljs-literal">null</span>) &#123;<br>				<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">AopConfigException</span>(<span class="hljs-string">&quot;TargetSource cannot determine target class: &quot;</span> +<br>						<span class="hljs-string">&quot;Either an interface or a target is required for proxy creation.&quot;</span>);<br>			&#125;<br>			<span class="hljs-keyword">if</span> (targetClass.isInterface() || Proxy.isProxyClass(targetClass)) &#123;<br>           		 <span class="hljs-comment">//jdk动态代理</span><br>				<span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">JdkDynamicAopProxy</span>(config);<br>			&#125;<br>            <span class="hljs-comment">//CGLIB代理</span><br>			<span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ObjenesisCglibAopProxy</span>(config);<br>		&#125;<br>		<span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-comment">//jdk动态代理</span><br>			<span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">JdkDynamicAopProxy</span>(config);<br>		&#125;<br>	&#125;<br><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="通知的执行"><a href="#通知的执行" class="headerlink" title="通知的执行"></a>通知的执行</h2><p>无论切面是基于JDK还是CGLIB实现，均会调用特定方法获取到<strong>通知集合(adviceChain)</strong>，通过这个集合SpringAOP基于责任链的模式实现了通知方法的切入</p>
+<ul>
+<li>通知集合总是以特定顺序排序</li>
+</ul>
+<p><img src="D:\Andrew_pro\blog\upload_image\spring\createMethodHandler.png" srcset="/img/loading.gif" lazyload alt="createMethodHandler"></p>
+<ul>
+<li>通知通过传递MethodInvocation对象实现责任链模式</li>
+<li>methodInvocation.proceed()能进入MethodInvocation对象中遍历数组找到下一个通知并进入对应invoke()方法，它们以类似递归的方式执行</li>
+<li>invokeAdviceMethod()方法为调用通知，底层基于反射调用对应通知</li>
+</ul>
+<p><img src="D:\Andrew_pro\blog\upload_image\spring\adviceChain.png" srcset="/img/loading.gif" lazyload alt="adviceChain"></p>
+<h2 id="通知具体分析"><a href="#通知具体分析" class="headerlink" title="通知具体分析"></a>通知具体分析</h2><p>五种不同的通知实现的方式和承担的职责不同，以下对核心代码分析</p>
+<h3 id="arround环绕同通知"><a href="#arround环绕同通知" class="headerlink" title="arround环绕同通知"></a>arround环绕同通知</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br>	<span class="hljs-keyword">public</span> Object <span class="hljs-title function_">invoke</span><span class="hljs-params">(MethodInvocation mi)</span> <span class="hljs-keyword">throws</span> Throwable &#123;<br>		<span class="hljs-keyword">if</span> (!(mi <span class="hljs-keyword">instanceof</span> ProxyMethodInvocation)) &#123;<br>			<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IllegalStateException</span>(<span class="hljs-string">&quot;MethodInvocation is not a Spring ProxyMethodInvocation: &quot;</span> + mi);<br>		&#125;<br>		<span class="hljs-type">ProxyMethodInvocation</span> <span class="hljs-variable">pmi</span> <span class="hljs-operator">=</span> (ProxyMethodInvocation) mi;<br>        <span class="hljs-comment">//为环绕通知创建ProceedingJoinPoint对象，将作为参数注入具体的通知方法以供用户使用</span><br>        <span class="hljs-comment">//通过这个JoinPoint能重新进入MethodHandler的proceed()方法继续通知责任链</span><br>		<span class="hljs-type">ProceedingJoinPoint</span> <span class="hljs-variable">pjp</span> <span class="hljs-operator">=</span> lazyGetProceedingJoinPoint(pmi);<br>		<span class="hljs-type">JoinPointMatch</span> <span class="hljs-variable">jpm</span> <span class="hljs-operator">=</span> getJoinPointMatch(pmi);<br>        <span class="hljs-comment">//调用通知方法</span><br>		<span class="hljs-keyword">return</span> invokeAdviceMethod(pjp, jpm, <span class="hljs-literal">null</span>, <span class="hljs-literal">null</span>);<br>	&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="before前置通知"><a href="#before前置通知" class="headerlink" title="before前置通知"></a>before前置通知</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br>	<span class="hljs-keyword">public</span> Object <span class="hljs-title function_">invoke</span><span class="hljs-params">(MethodInvocation mi)</span> <span class="hljs-keyword">throws</span> Throwable &#123;<br>        <span class="hljs-comment">//没什么好讲的，先执行通知方法</span><br>		<span class="hljs-built_in">this</span>.advice.before(mi.getMethod(), mi.getArguments(), mi.getThis() );<br>        <span class="hljs-comment">//再重新进入MethodHandler继续责任链</span><br>		<span class="hljs-keyword">return</span> mi.proceed();<br>	&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="after后置通知"><a href="#after后置通知" class="headerlink" title="after后置通知"></a>after后置通知</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> Object <span class="hljs-title function_">invoke</span><span class="hljs-params">(MethodInvocation mi)</span> <span class="hljs-keyword">throws</span> Throwable &#123;<br>		<span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-comment">//先进入责任链</span><br>			<span class="hljs-keyword">return</span> mi.proceed();<br>		&#125;<br>		<span class="hljs-keyword">finally</span> &#123;<br>            <span class="hljs-comment">//后执行通知</span><br>            <span class="hljs-comment">//可见后置通知执行代码是再finally块的，因此无论是否异常都会执行</span><br>			invokeAdviceMethod(getJoinPointMatch(), <span class="hljs-literal">null</span>, <span class="hljs-literal">null</span>);<br>		&#125;<br>	&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="afterReturning返回通知"><a href="#afterReturning返回通知" class="headerlink" title="afterReturning返回通知"></a>afterReturning返回通知</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> Object <span class="hljs-title function_">invoke</span><span class="hljs-params">(MethodInvocation mi)</span> <span class="hljs-keyword">throws</span> Throwable &#123;<br>		<span class="hljs-type">Object</span> <span class="hljs-variable">retVal</span> <span class="hljs-operator">=</span> mi.proceed();<br>            <span class="hljs-comment">//先进入责任链</span><br>		<span class="hljs-built_in">this</span>.advice.afterReturning(retVal, mi.getMethod(), mi.getArguments(), mi.getThis());<br>            <span class="hljs-comment">//后执行通知</span><br>		<span class="hljs-keyword">return</span> retVal;<br>	&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="afterThrowing异常通知"><a href="#afterThrowing异常通知" class="headerlink" title="afterThrowing异常通知"></a>afterThrowing异常通知</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> Object <span class="hljs-title function_">invoke</span><span class="hljs-params">(MethodInvocation mi)</span> <span class="hljs-keyword">throws</span> Throwable &#123;<br>		<span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-comment">//先进入责任链</span><br>			<span class="hljs-keyword">return</span> mi.proceed();<br>		&#125;<br>    	<span class="hljs-comment">//可见由于通知在异常代码块中，只有代码出现异常才会执行该通知</span><br>		<span class="hljs-keyword">catch</span> (Throwable ex) &#123;<br>			<span class="hljs-keyword">if</span> (shouldInvokeOnThrowing(ex)) &#123;<br>            	<span class="hljs-comment">//出现异常后执行通知</span><br>				invokeAdviceMethod(getJoinPointMatch(), <span class="hljs-literal">null</span>, ex);<br>			&#125;<br>			<span class="hljs-keyword">throw</span> ex;<br>		&#125;<br>	&#125;<br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/spring/" class="category-chain-item">spring</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/spring/" class="print-no-link">#spring</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>spring分析</div>
+      <div>https://andrewjiao.github.io/2013/12/24/Spring/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Andrew_Jiao</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2013年12月24日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2013/12/24/Ognl%E7%B1%BB%E5%BA%93/" title="OGNL类库">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">OGNL类库</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2013/12/24/js%E6%9D%82%E9%A1%B9/" title="js杂项">
+                        <span class="hidden-mobile">js杂项</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/assets/shizuku.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"log":false});</script></body>
+</html>

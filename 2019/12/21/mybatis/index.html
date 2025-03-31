@@ -1,0 +1,1108 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="https://andrewblogs.oss-cn-heyuan.aliyuncs.com/base/toptag.png">
+  <link rel="icon" href="https://andrewblogs.oss-cn-heyuan.aliyuncs.com/base/toptag.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Andrew_Jiao">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="架构分析应用架构分析Mybatis 是一个优秀的持久层框架，底层基于 JDBC 实现与数据库的交互，并在JDBC 操作的基础上做了封装和优化，其应用架构如图所示：  Mybatis 之所以能够成为互联网项目中持久层应用的翘楚，其核心竞争力应该是它灵活的 SQL 定制，参数及结果集的映射。 产品架构分析互联网项目中的任何一个框架都可以看成是一个产品，每个产品都有它自己的产品架构，Mybatis 也不">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mybatis">
+<meta property="og:url" content="https://andrewjiao.github.io/2019/12/21/mybatis/index.html">
+<meta property="og:site_name" content="good day">
+<meta property="og:description" content="架构分析应用架构分析Mybatis 是一个优秀的持久层框架，底层基于 JDBC 实现与数据库的交互，并在JDBC 操作的基础上做了封装和优化，其应用架构如图所示：  Mybatis 之所以能够成为互联网项目中持久层应用的翘楚，其核心竞争力应该是它灵活的 SQL 定制，参数及结果集的映射。 产品架构分析互联网项目中的任何一个框架都可以看成是一个产品，每个产品都有它自己的产品架构，Mybatis 也不">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/mybatis/mybatis1.png">
+<meta property="og:image" content="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/mybatis/mybatis_jiagou.png">
+<meta property="og:image" content="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/mybatis/xmlMap.png">
+<meta property="og:image" content="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/mybatis/mybatis_api.png">
+<meta property="og:image" content="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/mybatis/mybatis_factory.png">
+<meta property="og:image" content="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/mybatis/XmlConfigBuilder.png">
+<meta property="og:image" content="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/mybatis/openSession.jpg">
+<meta property="og:image" content="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/mybatis/mybatis_processObject.png">
+<meta property="og:image" content="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/mybatis/mapper.png">
+<meta property="og:image" content="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/mybatis/proxy.png">
+<meta property="og:image" content="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/mybatis/proxyProcess.png">
+<meta property="og:image" content="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/mybatis/mapperProceess.png">
+<meta property="og:image" content="d:\Andrew_pro\blog\upload_image\mybatis\packageMapper.png">
+<meta property="og:image" content="d:\Andrew_pro\blog\upload_image\mybatis\parseMapper.png">
+<meta property="og:image" content="d:\Andrew_pro\blog\upload_image\mybatis\parseMapperSubConfig.png">
+<meta property="og:image" content="d:\Andrew_pro\blog\upload_image\mybatis\mapperStatistics.png">
+<meta property="og:image" content="d:\Andrew_pro\blog\upload_image\mybatis\addXmlStatementBuilder.png">
+<meta property="og:image" content="d:\Andrew_pro\blog\upload_image\mybatis\creatSqlSource.png">
+<meta property="og:image" content="d:\Andrew_pro\blog\upload_image\mybatis\MapperStatment.png">
+<meta property="og:image" content="d:\Andrew_pro\blog\upload_image\mybatis\setDatabaseId1.png">
+<meta property="og:image" content="d:\Andrew_pro\blog\upload_image\mybatis\sqlTag.png">
+<meta property="og:image" content="d:\Andrew_pro\blog\upload_image\mybatis\setDatabasisId2.png">
+<meta property="og:image" content="d:\Andrew_pro\blog\upload_image\mybatis\sqlFragment.png">
+<meta property="og:image" content="d:\Andrew_pro\blog\upload_image\mybatis\useSql2.png">
+<meta property="og:image" content="d:\Andrew_pro\blog\upload_image\mybatis\useSql.png">
+<meta property="og:image" content="d:\Andrew_pro\blog\upload_image\mybatis\sqlTree_1.png">
+<meta property="og:image" content="d:\Andrew_pro\blog\upload_image\mybatis\initNodeHandler.png">
+<meta property="og:image" content="d:\Andrew_pro\blog\upload_image\mybatis\ParameterMapping.png">
+<meta property="og:image" content="d:\Andrew_pro\blog\upload_image\mybatis\handleToken.png">
+<meta property="article:published_time" content="2019-12-21T13:31:00.000Z">
+<meta property="article:modified_time" content="2025-03-31T07:39:27.728Z">
+<meta property="article:author" content="Andrew_Jiao">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/mybatis/mybatis1.png">
+  
+  
+  
+  <title>mybatis - good day</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"andrewjiao.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>hello there</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="mybatis"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-12-21 21:31" pubdate>
+          2019年12月21日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          11k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          96 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">mybatis</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="架构分析"><a href="#架构分析" class="headerlink" title="架构分析"></a>架构分析</h1><h2 id="应用架构分析"><a href="#应用架构分析" class="headerlink" title="应用架构分析"></a>应用架构分析</h2><p>Mybatis 是一个优秀的持久层框架，底层基于 JDBC 实现与数据库的交互，并在<br>JDBC 操作的基础上做了封装和优化，其应用架构如图所示：</p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/mybatis/mybatis1.png" srcset="/img/loading.gif" lazyload></p>
+<p>Mybatis 之所以能够成为互联网项目中持久层应用的翘楚，其核心竞争力应该是它灵活的 SQL 定制，参数及结果集的映射。</p>
+<h2 id="产品架构分析"><a href="#产品架构分析" class="headerlink" title="产品架构分析"></a>产品架构分析</h2><p>互联网项目中的任何一个框架都可以看成是一个产品，每个产品都有它自己的产品架构，Mybatis 也不例外，它的产品架构主要可以从接口应用，SQL<br>处理以及基础服务支撑等几个角度进行分析。如下图所示：</p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/mybatis/mybatis_jiagou.png" srcset="/img/loading.gif" lazyload></p>
+<p>所有想成为平台架构师的程序员，在应用一个互联网框架的过程中都应对框架的设计理念，实现思路有一个很好的认知，并基于认知强化实践过程，拓展产品架构思维。</p>
+<h2 id="技术架构分析"><a href="#技术架构分析" class="headerlink" title="技术架构分析"></a>技术架构分析</h2><p>mybatis配置的核心均是通过读取配置xml文件或注解annotation来实现配置的加载。这些配置均会放在各种集合中（如下图所示），而这些集合将会被<br><strong>configuration</strong>类综合管理</p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/mybatis/xmlMap.png" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li>mybatis的API架构</li>
+</ul>
+<p>mybatis会暴露一个API主要为用户操作的API，SqlSession通过SqlSessionFactoryBactory工厂创建来执行sql操作</p>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/mybatis/mybatis_api.png" srcset="/img/loading.gif" lazyload></p>
+<h1 id="Mybatis实践"><a href="#Mybatis实践" class="headerlink" title="Mybatis实践"></a>Mybatis实践</h1><h2 id="SqlSessionFactory"><a href="#SqlSessionFactory" class="headerlink" title="SqlSessionFactory"></a>SqlSessionFactory</h2><ul>
+<li>SqlSessionFactory 工厂对象创建分析<ol>
+<li>系统底层会通过流读取所有mybatis配置以及mapper文件</li>
+<li>这些数据存储到对应的对象或集合中，几乎所有的数据均由configuration对象管理</li>
+<li>上述操作均是通过构造者XmlConfigBuilder和<strong>一系列构造者</strong>实现，并将数据存储到configuration中</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Before</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">init</span><span class="hljs-params">()</span><span class="hljs-keyword">throws</span> IOException&#123;<br>   <span class="hljs-comment">//所有框架都有配置(xml,annotation,properties,...)</span><br>   <span class="hljs-comment">//1)对于文件需要实用IO进行读取</span><br>   <span class="hljs-comment">//2)对于注解需要借助反射进行读取</span><br>   InputStream in=Resources.getResourceAsStream(<span class="hljs-string">&quot;mybatis-configs.xml&quot;</span>);<br>   <span class="hljs-comment">//InputStream in=getClass().getClassLoader().getResourceAsStream(&quot;mybatis-configs.xml&quot;);</span><br>   <span class="hljs-comment">//假如是读取文件获取了流对象，后续需要对流对象中的内容进行读取和解析</span><br>   <span class="hljs-comment">//1)SqlSessionFactoryBuilder对象底层会首先借助xml解析器对流进行相关解析</span><br>   <span class="hljs-comment">//2)SqlSessionFactoryBuilder对象会对解析内容进行封装</span><br>   factory=<span class="hljs-keyword">new</span> <span class="hljs-title class_">SqlSessionFactoryBuilder</span>().build(in);<br>   <span class="hljs-comment">//系统底层建造者模式构建工厂对象(此对象构建过程相对复杂)</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/mybatis/mybatis_factory.png" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li>SqlSessionFactory 创建之时序图分析</li>
+</ul>
+<h3 id="XmlConfigBuilder分析"><a href="#XmlConfigBuilder分析" class="headerlink" title="XmlConfigBuilder分析"></a>XmlConfigBuilder分析</h3><p>XmlConfigBuilder中主要做了两种操作</p>
+<ol>
+<li>读取流（读取为document对象）</li>
+<li>赋值configuration</li>
+</ol>
+<ul>
+<li>流的读取位于xmlConfigBuilder的构造方法中，其主要职责就是已document的方式读出流，这里后续不做具体分析;</li>
+<li>后续会进行数据封装，参考<a href="#MappereStatment">封装</a></li>
+</ul>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/mybatis/XmlConfigBuilder.png" srcset="/img/loading.gif" lazyload></p>
+<hr>
+<h2 id="OpenSession"><a href="#OpenSession" class="headerlink" title="OpenSession"></a>OpenSession</h2><ul>
+<li>SqlSession对象生成分析<ol>
+<li>获取数据源，生成TransactionFactory(数据源在加载配置的时候就已经初始化)</li>
+<li>初始化需要的Executor</li>
+</ol>
+</li>
+</ul>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/mybatis/openSession.jpg" srcset="/img/loading.gif" lazyload></p>
+<h2 id="SqlSession"><a href="#SqlSession" class="headerlink" title="SqlSession"></a>SqlSession</h2><ul>
+<li><p>SqlSession 对象应用过程分析</p>
+<ol>
+<li>SqlSession默认都是使用defaultSqlSession</li>
+<li>SqlSession会通过Configuration对象获取存储的MappedStatement，即mapper文件写的sql<ul>
+<li>SqlSession是通过配置文件命名空间+sql的ID来匹配对应map的key查询MappedStatement</li>
+<li>MapperStatememt保存对应mapper文件指定的sql及相关sql配置</li>
+</ul>
+</li>
+<li>SqlSession通过内部的Executor执行器去执行sql的查询（当开启缓存是会优先执行CachedExecutor)</li>
+<li>BaseExecutor是mybatis的默认缓存执行器，它是一个装饰者装饰其它默认执行器，因此当其它执行器执行时均会执行它</li>
+<li>最终通过封装过的StatementHandler来执行sql（statement）类似JDBC，参考JDBC</li>
+</ol>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/mybatis/mybatis_processObject.png" srcset="/img/loading.gif" lazyload></p>
+</li>
+</ul>
+<h2 id="mapper"><a href="#mapper" class="headerlink" title="mapper"></a>mapper</h2><ul>
+<li>Mapper接口对象应用方式分析<ol>
+<li>mybatis会通过mapper接口对象的路径和方法获取到statement的key值以便获取到MapperStatement</li>
+<li>它是由JDK动态代理来实现的</li>
+</ol>
+</li>
+</ul>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/mybatis/mapper.png" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li>Mapper 接口代理对象创建分析</li>
+</ul>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/mybatis/proxy.png" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li>模拟mapper代理实现</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> java.lang.reflect.InvocationHandler;<br><span class="hljs-keyword">import</span> java.lang.reflect.Method;<br><span class="hljs-keyword">import</span> java.lang.reflect.Proxy;<br><span class="hljs-keyword">import</span> java.util.List;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 代理工厂对象，用于生产代理对象</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ProxyFactory</span> &#123;<br>    Class&lt;?&gt; dao;<br>    ProxyFactory(Class&lt;?&gt; dao)&#123;<br>        <span class="hljs-built_in">this</span>.dao = dao;<br>    &#125;<br>    Object <span class="hljs-title function_">newInstance</span><span class="hljs-params">(InvocationHandler handler)</span>&#123;<br>        <span class="hljs-keyword">return</span> Proxy.newProxyInstance(dao.getClassLoader(),<span class="hljs-keyword">new</span> <span class="hljs-title class_">Class</span>&lt;?&gt;[]&#123;dao&#125;,handler);<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 用户自定义mapper接口</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">interface</span> <span class="hljs-title class_">MybatisDao</span>&#123;<br>    List&lt;Object&gt; <span class="hljs-title function_">selectAll</span><span class="hljs-params">()</span>;<br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 代理工具实现类，用于生产代理对象以及代理方法逻辑实现</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">MybatisProxyHandler</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">InvocationHandler</span>&#123;<br>    SqlSession sqlSession;<br>    Class&lt;?&gt; daoInterface;<br>    MybatisProxyHandler(SqlSession sqlSession,Class&lt;?&gt; daoInterface)&#123;<br>        <span class="hljs-built_in">this</span>.sqlSession = sqlSession;<br>        <span class="hljs-built_in">this</span>.daoInterface = daoInterface;<br>    &#125;<br>    <span class="hljs-comment">//具体代理操作，mybatis并没真正意义上用代理方法，仅仅只是用来获取mapper接口的路径</span><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> Object <span class="hljs-title function_">invoke</span><span class="hljs-params">(Object proxy, Method method, Object[] args)</span> <span class="hljs-keyword">throws</span> Throwable &#123;<br>        System.out.println(<span class="hljs-string">&quot;invocation handler&quot;</span>);<br>        <span class="hljs-type">String</span> <span class="hljs-variable">className</span> <span class="hljs-operator">=</span> daoInterface.getName();<br>        <span class="hljs-type">String</span> <span class="hljs-variable">methodName</span> <span class="hljs-operator">=</span> method.getName();<br>        <span class="hljs-type">String</span> <span class="hljs-variable">statement</span> <span class="hljs-operator">=</span> className+methodName;<br>        sqlSession.query(statement);<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>    &#125;<br>&#125;<br><span class="hljs-comment">//模拟sqlSession接口</span><br><span class="hljs-keyword">interface</span> <span class="hljs-title class_">SqlSession</span>&#123;<br>    Object <span class="hljs-title function_">query</span><span class="hljs-params">(String statement)</span>;<br>&#125;<br><span class="hljs-comment">//模拟DefaultSqlSession</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">DefaultSqlSession</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">SqlSession</span>&#123;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> Object <span class="hljs-title function_">query</span><span class="hljs-params">(String statement)</span> &#123;<br>        System.out.println(<span class="hljs-string">&quot;query data from statement:&quot;</span>+statement);<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>    &#125;<br>&#125;<br><span class="hljs-comment">//测试</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">test</span>&#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        <span class="hljs-type">SqlSession</span> <span class="hljs-variable">sqlSession</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">DefaultSqlSession</span>();<br>        Class&lt;?&gt; daoInterfase = MybatisDao.class;<br><br>        <span class="hljs-type">InvocationHandler</span> <span class="hljs-variable">invocationHandler</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">MybatisProxyHandler</span>(sqlSession,daoInterfase);<br>        <span class="hljs-type">ProxyFactory</span> <span class="hljs-variable">factory</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ProxyFactory</span>(daoInterfase);<br>        <span class="hljs-type">MybatisDao</span> <span class="hljs-variable">proxy</span> <span class="hljs-operator">=</span> (MybatisDao)factory.newInstance(invocationHandler);<br><br>        proxy.selectAll();<br><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>Mapper 代理创建之时序图分析</li>
+</ul>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/mybatis/proxyProcess.png" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li>Mapper 代理对象数据访问应用过程分析<ol>
+<li>可见基于接口实现mybatis的sql调度也是通过基础的<code>session.selectList(statement);</code>操作来实现的</li>
+</ol>
+</li>
+</ul>
+<p><img src="http://ypimage.oss-cn-shenzhen.aliyuncs.com/upload_image/mybatis/mapperProceess.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h2><p>正确的使用mybatisAPI需要事先了解各个API对象的生命周期，以便我们知道他们之间的地位关系，错误的使用会导致非常严重的并发问题。</p>
+<p>提示：依赖注入框架可以创建线程安全的、基于事务的 SqlSession 和映射器，并将它们直接注入到你的 bean 中，因此可以直接忽略它们的生命周期。<br>如果对如何通过依赖注入框架使用 MyBatis 感兴趣，<u>可以研究一下 MyBatis-Spring 或 MyBatis-Guice 两个子项目</u>。</p>
+<ul>
+<li><strong>SqlSessionFactoryBuilder</strong>:这个类可以被实例化、使用和丢弃，一旦创建了 SqlSessionFactory，就不再需要它了。 因此<br>SqlSessionFactoryBuilder 实例的最佳作用域是方法作用域（也就是局部方法变量）。 你可以重用 SqlSessionFactoryBuilder 来创建多个<br>SqlSessionFactory 实例，但最好还是不要一直保留着它，以保证所有的 XML 解析资源可以被释放给更重要的事情。</li>
+</ul>
+<h1 id="其它对象应用分析"><a href="#其它对象应用分析" class="headerlink" title="其它对象应用分析"></a>其它对象应用分析</h1><h1 id="数据封装及初始化分析"><a href="#数据封装及初始化分析" class="headerlink" title="数据封装及初始化分析"></a>数据封装及初始化分析</h1><h2 id="mapper加载分析"><a href="#mapper加载分析" class="headerlink" title="mapper加载分析"></a>mapper加载分析</h2><h3 id="XmlConfigBuilder"><a href="#XmlConfigBuilder" class="headerlink" title="XmlConfigBuilder"></a>XmlConfigBuilder</h3><ul>
+<li>内部的<span id="parseConfiguration">parseConfiguration</span>方法可以清晰的找到所有数据的封装方法，以mapper为例</li>
+</ul>
+<p><img src="D:\Andrew_pro\blog\upload_image\mybatis\packageMapper.png" srcset="/img/loading.gif" lazyload alt="image-20200927152115775"></p>
+<h3 id="XMLMapperBuilder"><a href="#XMLMapperBuilder" class="headerlink" title="XMLMapperBuilder"></a>XMLMapperBuilder</h3><ul>
+<li>我们都知道mybatis_config主配置文件中的mappers存储的是所有mapper文件的路径，myubatis基于这个路径找到具体的每个mapper文件</li>
+<li>mapper文件的读取和封装类似mybatis的主配置文件，都是由builder类的构造方法负责读取流，parse()<br>方法负责封装数据，因此具体的封装要看parse()方法；<strong>这里可以看到框架重新启用了一个构造者XMLMapperBuilder去封装数据。</strong></li>
+</ul>
+<p><img src="D:\Andrew_pro\blog\upload_image\mybatis\parseMapper.png" srcset="/img/loading.gif" lazyload alt="image-20200927152934471"></p>
+<p>进入parse()方法可以看到它会从mapper配置文件的根目录标签“mapper”开始解析。</p>
+<ul>
+<li>通过isResourceLoaded()，addLoadedResource()方法实现配置文件的缓存</li>
+<li>后续parsePendingResultMaps()，parsePendingCacheRefs()，parsePendingStatements()方法负责重新加载初始化配置数据，即二次加载，这里不做详细描述</li>
+<li>mapper配置文件封装操作在configurationElement()方法</li>
+</ul>
+<p><img src="D:\Andrew_pro\blog\upload_image\mybatis\parseMapperSubConfig.png" srcset="/img/loading.gif" lazyload alt="image-20200927161642394"></p>
+<p>如下图所示，可以看到是对mapper下的各种属性的封装和初始化，包括命名空间，结果集，参数集等</p>
+<ul>
+<li>sql语句封装具体在buildStatementFromContext()方法</li>
+</ul>
+<p><img src="D:\Andrew_pro\blog\upload_image\mybatis\mapperStatistics.png" srcset="/img/loading.gif" lazyload alt="image-20200928105833920"></p>
+<h3 id="XMLStatementBuilder"><a href="#XMLStatementBuilder" class="headerlink" title="XMLStatementBuilder"></a><span id="XMLStatementBuilder">XMLStatementBuilder</span></h3><p>逐步进入方法，(其中会有包含mybatis多数据库支持的逻辑方法，在以后的章节中会聊)最终找到XMLStatementBuilder，这个构造者用于封装具体<br><code>select|insert|update|delete</code>标签中的属性和语句</p>
+<ul>
+<li>可以清晰的看见它通过parseStatementNode()方法完成数据封装</li>
+</ul>
+<p><img src="D:\Andrew_pro\blog\upload_image\mybatis\addXmlStatementBuilder.png" srcset="/img/loading.gif" lazyload alt="image-20200928110255555"></p>
+<p>最终可以找到它会用到MapperBuilderAssistant类来辅助封装数据</p>
+<ul>
+<li>MapperBuilderAssistant在初始化XMLMapperBuilder对象时的构造函数中初始化，即一个mapper文件对应一个builderAssistant</li>
+<li>方法中会用到<code>langDriver.createSqlSource(configuration, context, parameterTypeClass);</code><br>来将sql语句封装成SqlSource类型，这是一种基于组合模式的数据存储类型。</li>
+<li>利用applyCurrentNamespace()方法生产key，该key将作为以后查询这个sql的索引</li>
+<li>addMappedStatement()方法最终具体实现了sql 数据封装，即将SqlSource等类型数据加入主配置Configuration中</li>
+</ul>
+<p><img src="D:\Andrew_pro\blog\upload_image\mybatis\creatSqlSource.png" srcset="/img/loading.gif" lazyload alt="image-20200929153050360"></p>
+<h3 id="MapperStatment-Builder"><a href="#MapperStatment-Builder" class="headerlink" title="MapperStatment.Builder"></a>MapperStatment.Builder</h3><ol>
+<li>在封装方法中可以找到新启动了一个<span id="MappereStatment">MappereStatment</span><br>的内部类Builder，这是构造者模式的一个变种，用于构造MapperStatment</li>
+<li>最后通过configuration的addMappedStatement()<br>方法将MapperStatment自己加入Configuration.MapperStatments的Map集合中以便configuration主配置文件管理，将来当我们要执行某个sql时，便会根据id为key来查找要执行的sql。</li>
+</ol>
+<p><img src="D:\Andrew_pro\blog\upload_image\mybatis\MapperStatment.png" srcset="/img/loading.gif" lazyload alt="image-20200929160402307"></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p><strong>XmlConfigBuilder</strong>作为总构造者，负责加载调度其它构造者参与进程。其中<strong>XmlMapperBuilder</strong><br>专项作为mapper配置文件的启动类，它会逐个从mybatis主配置文件中的mapper路径来读取流，解析成document最终通过调度其下的一系列方法来参与构造。<br><strong>XmlStatementBuilder</strong>是mapperBuilder下主要用来封装<code>&lt;insert/&gt;|&lt;update/&gt;|&lt;delete/&gt;|&lt;select/&gt;</code><br>语句中的sql以及参数和结果集的，它会负责读取标签中的配置，最终通过MapperStatment的内部类构造者MapperStatment.Builder将数据封装到configuration下。每个sql及sql的配置都交由MapperStatment管理，而MapperStatment则被configuration类的一个Map封装。</p>
+<p>builder包含关系如下:<br>XmlConfigBuilder<br>└─XmlMapperBuilder<br>└─XmlStatementBuilder<br>└─MapperStatment.Builder</p>
+<hr>
+<h2 id="Sql标签及多数据库支持"><a href="#Sql标签及多数据库支持" class="headerlink" title="Sql标签及多数据库支持"></a>Sql标签及多数据库支持</h2><p>当我们在MapperConfiguration配置文件中添加如下配置时，默认开启多数据库支持；此时，mybatis会根据当前链接的数据库来为Configuration配置匹配正确的数据库配置(<br>从下列配置中匹配，即mysql数据库匹配mysql)。随后我们可在mapper文件中的所有sql标签添加databaseId属性，此时，mybatis只会读取符合databaseId属性的sql</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs xml">mybatis-config.xml<br><span class="hljs-tag">&lt;<span class="hljs-name">databaseIdProvider</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;DB_VENDOR&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;Oracle&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;oracle&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;MySQL&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;mysql&quot;</span>/&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">databaseIdProvider</span>&gt;</span><br>        -----------------------------------<br>        <span class="hljs-comment">&lt;!-- 当我们连接mysql数据库时，一下两条sql均会被加载 --&gt;</span><br>        mapper.xml<br><span class="hljs-tag">&lt;<span class="hljs-name">sql</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;selectAll&quot;</span> <span class="hljs-attr">databaseId</span>=<span class="hljs-string">&quot;mysql&quot;</span>&gt;</span><br>select * from student<br><span class="hljs-tag">&lt;/<span class="hljs-name">sql</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">select</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;selectStudentsBySQLFragment&quot;</span> <span class="hljs-attr">resultType</span>=<span class="hljs-string">&quot;org.example.pojo.Student&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">include</span> <span class="hljs-attr">refid</span>=<span class="hljs-string">&quot;selectAll&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">include</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">if</span> <span class="hljs-attr">test</span>=<span class="hljs-string">&quot;list != null and list.size &gt; 0&quot;</span>&gt;</span><br>    where id in<br>    <span class="hljs-tag">&lt;<span class="hljs-name">foreach</span> <span class="hljs-attr">collection</span>=<span class="hljs-string">&quot;list&quot;</span> <span class="hljs-attr">open</span>=<span class="hljs-string">&quot;(&quot;</span> <span class="hljs-attr">close</span>=<span class="hljs-string">&quot;)&quot;</span> <span class="hljs-attr">separator</span>=<span class="hljs-string">&quot;,&quot;</span> <span class="hljs-attr">item</span>=<span class="hljs-string">&quot;item&quot;</span>&gt;</span><br>        #&#123;item.id&#125;<br>    <span class="hljs-tag">&lt;/<span class="hljs-name">foreach</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">if</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span><br><br></code></pre></td></tr></table></figure>
+
+<h3 id="多数据库配置识别封装"><a href="#多数据库配置识别封装" class="headerlink" title="多数据库配置识别封装"></a>多数据库配置识别封装</h3><p>该方法位于XMLConfigBuilder.java这个构建者中，核心方法是最后两行</p>
+<ul>
+<li><code>databaseIdProvider.getDatabaseId(environment.getDataSource());</code>：可以看出它会获取数据源，随后在方法中执行以下两个操作：<ul>
+<li>从数据源中获取数据源名称,此例中即：”MySQL”</li>
+<li>匹配上文的<code>&lt;/databaseIdProvider&gt;</code>标签内的配置，当能匹配上时则进行辅助；相反，没有匹配则不作配置；</li>
+</ul>
+</li>
+<li><code>configuration.setDatabaseId(databaseId);</code>进行配置</li>
+</ul>
+<p><img src="D:\Andrew_pro\blog\upload_image\mybatis\setDatabaseId1.png" srcset="/img/loading.gif" lazyload alt="image-20201022143827466"></p>
+<h3 id="多数据库配置使用"><a href="#多数据库配置使用" class="headerlink" title="多数据库配置使用"></a>多数据库配置使用</h3><p>下文中会分别解析Sql标签的实现原理以及databaseId实现多数据配置的使用原理</p>
+<ul>
+<li>在上文的xml文件的Mapper配置中，以<code>&lt;sql/&gt;</code>标签为例，它的databaseId为“mysql”</li>
+</ul>
+<p>在构建者XMLMapperBuilder中，找到Sql的封装方法，这里不做截图:</p>
+<ul>
+<li><code>sqlElement(context.evalNodes(&quot;/mapper/sql&quot;));</code></li>
+</ul>
+<p>进入有databaseId配置的方法，注意：这里获取的databaseId是先前从主配置文件中封装的</p>
+<p><img src="D:\Andrew_pro\blog\upload_image\mybatis\sqlTag.png" srcset="/img/loading.gif" lazyload alt="image-20201022145732372"></p>
+<p>该方法有以下几步</p>
+<ol>
+<li>获取属性值，<ol>
+<li>id：用于生成key值id，将来座位索引</li>
+<li>databaseId：会用于匹配先前在主配置文件中配置并加载的databaseId</li>
+</ol>
+</li>
+<li>生成ID:这个ID会成为索引key来方便以后进行调用</li>
+<li>判断匹配两个databaseID是否一样，若一样则进行存储</li>
+</ol>
+<p><img src="D:\Andrew_pro\blog\upload_image\mybatis\setDatabasisId2.png" srcset="/img/loading.gif" lazyload alt="image-20201022150112491"></p>
+<p>总结：</p>
+<p>多数据库配置指的是当mybatis连接特定数据库时，只读取与这个数据库相关的sql（前提是我们要配置databaseId）；它的配置存储在Configuration主配置类的databaseId变量中；程序读取mapper文件后会一一获取它们的databaseId属性来逐一判断是否加载；</p>
+<h3 id="关于sql标签的调用"><a href="#关于sql标签的调用" class="headerlink" title="关于sql标签的调用"></a>关于sql标签的调用</h3><p>上文用到sql标签的存储来演示多数据库配置，那sql标签是如何被调用的呢？</p>
+<p>上文中提到sql标签中的内容会被存到一个sqlFragments的集合中，这个集合虽然是XmlMapperBuilder构建者的成员变量，但是它的初始化实际上是在Configuration主配置中实现的。因此可得出，在特定配置文件配置的sqlNode是可以全局使用它的，<br><strong>但是sql标签的加载必须先于include标签的加载</strong>；</p>
+<p><img src="D:\Andrew_pro\blog\upload_image\mybatis\sqlFragment.png" srcset="/img/loading.gif" lazyload alt="image-20201022151753420"></p>
+<p>调用位于具体的<code>&lt;select/&gt;&lt;insert/&gt;&lt;delete/&gt;&lt;update/&gt;</code>标签加载方法中，在SqlSource对象生成之前；（SqlSource对象是实现动态sql，数据拼接的基础；</p>
+<p>该方法之前有分析过，可参考<a href="#XMLStatementBuilder">XMLStatementBuilder</a></p>
+<p><img src="D:\Andrew_pro\blog\upload_image\mybatis\useSql2.png" srcset="/img/loading.gif" lazyload alt="image-20201023154457577"></p>
+<p>内部实现</p>
+<ul>
+<li>该方法运用递归的方式逐一查找每个子节点，找到那些需要替换的include标签进行替换</li>
+<li>同时当有符合${}表达式的参数时执行注入（注意：该操作只作用于sql标签中OGNL表达式）</li>
+</ul>
+<p><img src="D:\Andrew_pro\blog\upload_image\mybatis\useSql.png" srcset="/img/loading.gif" lazyload alt="image-20201023163938806"></p>
+<h1 id="动态Mappere分析"><a href="#动态Mappere分析" class="headerlink" title="动态Mappere分析"></a>动态Mappere分析</h1><h2 id="sql封装结构"><a href="#sql封装结构" class="headerlink" title="sql封装结构"></a>sql封装结构</h2><h3 id="树和mapper文件对应关系"><a href="#树和mapper文件对应关系" class="headerlink" title="树和mapper文件对应关系"></a>树和mapper文件对应关系</h3><p>mybatis需要在用户内存空间中暂存sql数据，以便后续及时调用，而存在内存空间的结构需要仰仗mybatis的Sql数据结构</p>
+<p>mybatis中sql的数据结构是mybatis框架的重要组成部分，实现动态sql，sql参数传递等操作均要依赖于优秀的数据结构，下面将介绍mybatis框架实现在这种数据结构的方案</p>
+<p>mybatis的sql数据结构基于<strong>组合模式</strong>实现，这种模式将对象组合成树形结构以表示“部分-整体”的层次结构，而在mybatis的sql数据封装中，会将每个<br><code>&lt;insert/&gt;|&lt;update/&gt;|&lt;delete/&gt;|&lt;select/&gt;</code>标签中的sql内容封装到这种树型结构中(即：每条sql为一棵树结构)，如下图所示。</p>
+<p>这些树最终将封装到<a href="#MappereStatment">MappereStatment封装</a>对象中，受Configuration对象的MappedStatements集合管理。</p>
+<p><img src="D:\Andrew_pro\blog\upload_image\mybatis\sqlTree_1.png" srcset="/img/loading.gif" lazyload alt="sqlTree_1"></p>
+<h3 id="树的实现"><a href="#树的实现" class="headerlink" title="树的实现"></a>树的实现</h3><ul>
+<li><p>标准的组合模式分为三个结构</p>
+<ol>
+<li>Component ：组合中的对象声明接口，在适当的情况下，实现所有类共有接口的默认行为。声明一个接口用于访问和管理Component子部件。</li>
+<li>Leaf：叶子对象。叶子结点没有子结点。</li>
+<li>Composite：容器对象，定义有枝节点行为，用来存储子部件，在Component接口中实现与子部件有关操作，如增加(add)和删除(<br>remove)等。</li>
+</ol>
+</li>
+<li><p>在mybatis中，上述组合部件对应的类如下</p>
+<ul>
+<li>Component 作为整个树的接口，由SqlNode实现，它下面有一个公共方法<code>apply()</code><br>用于执行所有SqlNode的默认行为，默认行为视SqlNode实现对象类型而定后续会继续分析</li>
+<li>Leaf子叶对象则会有很多种，它们各有各自的作为，在mapper文件中对应<code>&lt;insert/&gt;|&lt;update/&gt;|&lt;delete/&gt;|&lt;select/&gt;</code><br>标签中的每一行内容。都继承自SqlNode并实现不同的<code>apply()</code>方法，常见的类包括：TextSqlNode、IfSqlNode、StaticTextSqlNode等。</li>
+<li>Composite容器对象由MixedSqlNode实现，同样也继承自SqlNode接口，实现自定义的<code>apply()</code>方法。容器用于承载各种Leaf子叶对象</li>
+<li>此外DynamicContext对象作为<code>apply()</code>方法的参数，作用是封装具体的sql操作，如sql的获取和拼接等</li>
+</ul>
+</li>
+</ul>
+<h4 id="容器MixedSqlNode"><a href="#容器MixedSqlNode" class="headerlink" title="容器MixedSqlNode"></a>容器MixedSqlNode</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MixedSqlNode</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">SqlNode</span> &#123;<br>  <span class="hljs-comment">//SqlNode容器用集合实现  </span><br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> List&lt;SqlNode&gt; contents;<br><br>  <span class="hljs-keyword">public</span> <span class="hljs-title function_">MixedSqlNode</span><span class="hljs-params">(List&lt;SqlNode&gt; contents)</span> &#123;<br>    <span class="hljs-built_in">this</span>.contents = contents;<br>  &#125;<br><br>  <span class="hljs-comment">//默认方法是遍历调用所有子叶节点中的apply()方法</span><br>  <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">apply</span><span class="hljs-params">(DynamicContext context)</span> &#123;...&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="子叶StaticTextSqlNode"><a href="#子叶StaticTextSqlNode" class="headerlink" title="子叶StaticTextSqlNode"></a>子叶StaticTextSqlNode</h4><p>用于封装静态sql语句，mybatis会识别sql语句是否有${}符号，若没有动态sql符号则新建StaticTextSqlNode对象存储这条sql</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> Clinton Begin</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">StaticTextSqlNode</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">SqlNode</span> &#123;<br>  <span class="hljs-comment">//字符串对象用于存储sql</span><br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String text;<br><br>  <span class="hljs-keyword">public</span> <span class="hljs-title function_">StaticTextSqlNode</span><span class="hljs-params">(String text)</span> &#123;<br>    <span class="hljs-built_in">this</span>.text = text;<br>  &#125;<br><br>  <span class="hljs-meta">@Override</span><br>  <span class="hljs-comment">//拼接本条sql</span><br>  <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">apply</span><span class="hljs-params">(DynamicContext context)</span> &#123;<br>    context.appendSql(<span class="hljs-built_in">this</span>.text);<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>  &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="子叶TextSqlNode"><a href="#子叶TextSqlNode" class="headerlink" title="子叶TextSqlNode"></a>子叶TextSqlNode</h4><p>用于封装动态sql语句，与StaticTextSqlNode相反，当有${}符号时自动封装语句到该对象</p>
+<ul>
+<li>内部会用到两个内部类来辅助完成sql拼接和动态sql判断</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs java"><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TextSqlNode</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">SqlNode</span> &#123;<br>  <span class="hljs-comment">//存储sql文本</span><br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String text;<br>  <span class="hljs-comment">//注入过滤器，用于过滤输入参数</span><br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Pattern injectionFilter;<br><br>  <span class="hljs-keyword">public</span> <span class="hljs-title function_">TextSqlNode</span><span class="hljs-params">(String text)</span> &#123;<br>    <span class="hljs-built_in">this</span>(text, <span class="hljs-literal">null</span>);<br>  &#125;<br>  <br>  <span class="hljs-keyword">public</span> <span class="hljs-title function_">TextSqlNode</span><span class="hljs-params">(String text, Pattern injectionFilter)</span> &#123;<br>    <span class="hljs-built_in">this</span>.text = text;<br>    <span class="hljs-built_in">this</span>.injectionFilter = injectionFilter;<br>  &#125;<br>  <span class="hljs-comment">//利用内部类DynamicCheckerTokenParser负责判断动态是否是动态sql</span><br>  <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">isDynamic</span><span class="hljs-params">()</span> &#123;...&#125;<br><br>  <span class="hljs-comment">//利用内部类BindingTokenParser负责$&#123;&#125;参数拼接</span><br>  <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">apply</span><span class="hljs-params">(DynamicContext context)</span> &#123;...&#125;<br><br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">BindingTokenParser</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">TokenHandler</span> &#123;...&#125;<br>  <br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">DynamicCheckerTokenParser</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">TokenHandler</span> &#123;...&#125;<br>  <br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="动态sql标签"><a href="#动态sql标签" class="headerlink" title="动态sql标签"></a>动态sql标签</h4><p>子叶节点sql中，均是以xml节点形式存在，这种节点会利用ognl类库来辅助完成实现test属性的解析</p>
+<h5 id="子叶标签IfSqlNode"><a href="#子叶标签IfSqlNode" class="headerlink" title="子叶标签IfSqlNode"></a>子叶标签IfSqlNode</h5><ul>
+<li>节点SqlNode中会多出一个表达式解析器用于解析和判断节点中test属性对应的值</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">IfSqlNode</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">SqlNode</span> &#123;<br>  <span class="hljs-comment">//表达式解析器，用于解析if标签中的test属性内容</span><br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> ExpressionEvaluator evaluator;<br>  <span class="hljs-comment">//test存储if标签中的test属性内容</span><br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String test;<br>  <span class="hljs-comment">//封装下一级sqlNode，一般都是MixedSqlNode</span><br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> SqlNode contents;<br><br>  <span class="hljs-keyword">public</span> <span class="hljs-title function_">IfSqlNode</span><span class="hljs-params">(SqlNode contents, String test)</span> &#123;<br>    <span class="hljs-built_in">this</span>.test = test;<br>    <span class="hljs-built_in">this</span>.contents = contents;<br>    <span class="hljs-built_in">this</span>.evaluator = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ExpressionEvaluator</span>();<br>  &#125;<br><br>  <span class="hljs-comment">//利用表达式解析器里面的evaluateBoolean()方法解析判断test属性中的值是否符合要求</span><br>  <span class="hljs-comment">//若符合要求则继续执行其下的sqlNode</span><br>  <span class="hljs-comment">//&lt;if test=&quot;name != null and name != &#x27;&#x27;&quot;/&gt;  </span><br>  <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">apply</span><span class="hljs-params">(DynamicContext context)</span> &#123;<br>    <span class="hljs-keyword">if</span> (evaluator.evaluateBoolean(test, context.getBindings())) &#123;<br>      contents.apply(context);<br>      <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>  &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>下面会给出案例，两个if节点会封装成如下形式</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs xml"><br><span class="hljs-tag">&lt;<span class="hljs-name">select</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;selectStudentsIf&quot;</span> <span class="hljs-attr">resultType</span>=<span class="hljs-string">&quot;org.example.pojo.Student&quot;</span>&gt;</span><br>    select * from student where 1=1<br>    <span class="hljs-tag">&lt;<span class="hljs-name">if</span> <span class="hljs-attr">test</span>=<span class="hljs-string">&quot;name != null and name != &#x27;&#x27;&quot;</span>&gt;</span><br>        and name like &#x27;%&#x27; #&#123;name&#125; &#x27;%&#x27;<br>    <span class="hljs-tag">&lt;/<span class="hljs-name">if</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">if</span> <span class="hljs-attr">test</span>=<span class="hljs-string">&quot;age &gt; 0&quot;</span>&gt;</span><br>        and age &gt; #&#123;age&#125;<br>    <span class="hljs-tag">&lt;/<span class="hljs-name">if</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs json">MixedSqlNode<span class="hljs-punctuation">:</span><br>content<span class="hljs-punctuation">[</span><br>TextSqlNode<span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;select * from student where 1=1&quot;</span><span class="hljs-punctuation">,</span><br>ifSqlNode<span class="hljs-punctuation">:</span> test<span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;name != null and name != &#x27;&#x27;&quot;</span><br>MixedSqlNode<span class="hljs-punctuation">:</span> content<span class="hljs-punctuation">[</span><br>StaticTextSqlNode<span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;and name like &#x27;%&#x27; #&#123;name&#125; &#x27;%&#x27;&quot;</span><br><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span><br>ifSqlNode<span class="hljs-punctuation">:</span> test<span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;age &gt; 0&quot;</span><br>MixedSqlNode<span class="hljs-punctuation">:</span> content<span class="hljs-punctuation">[</span><br>StaticTextSqlNode<span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;and name like &#x27;%&#x27; #&#123;name&#125; &#x27;%&#x27;&quot;</span><br><span class="hljs-punctuation">]</span><br><span class="hljs-punctuation">]</span><br><span class="hljs-punctuation">]</span> <br></code></pre></td></tr></table></figure>
+
+<h5 id="子叶标签TrimSqlNode"><a href="#子叶标签TrimSqlNode" class="headerlink" title="子叶标签TrimSqlNode"></a>子叶标签TrimSqlNode</h5><h6 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h6><p>要知道TrimSqlNode首先需要了解<code>&lt;trim/&gt;</code>标签的作用，trim标记是一个格式化的标记，可以完成set或者是where标记的功能</p>
+<p>详情可参考如下案例</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs xml">select * from user<br><br>        　　<br><span class="hljs-tag">&lt;<span class="hljs-name">trim</span> <span class="hljs-attr">prefix</span>=<span class="hljs-string">&quot;WHERE&quot;</span> <span class="hljs-attr">prefixoverride</span>=<span class="hljs-string">&quot;AND |OR&quot;</span>&gt;</span><br><br>    　　　　<br>    <span class="hljs-tag">&lt;<span class="hljs-name">if</span> <span class="hljs-attr">test</span>=<span class="hljs-string">&quot;name != null and name.length()&gt;0&quot;</span>&gt;</span>AND name=#&#123;name&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">if</span>&gt;</span><br><br>    　　　　<br>    <span class="hljs-tag">&lt;<span class="hljs-name">if</span> <span class="hljs-attr">test</span>=<span class="hljs-string">&quot;gender != null and gender.length()&gt;0&quot;</span>&gt;</span>AND gender=#&#123;gender&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">if</span>&gt;</span><br><br>    　　<br><span class="hljs-tag">&lt;/<span class="hljs-name">trim</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>假如说name和gender的值都不为null的话打印的SQL为：select * from user where  <del>and</del> name &#x3D; ‘xx’ and gender &#x3D; ‘xx’</p>
+<p>在删除线标记的地方是不存在第一个and的，上面两个属性的意思如下：</p>
+<ul>
+<li>prefix：前缀+ prefixoverride：去掉第一个and或者是or</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs xml">　update user<br><br>        　　<br><span class="hljs-tag">&lt;<span class="hljs-name">trim</span> <span class="hljs-attr">prefix</span>=<span class="hljs-string">&quot;set&quot;</span> <span class="hljs-attr">suffixoverride</span>=<span class="hljs-string">&quot;,&quot;</span> <span class="hljs-attr">suffix</span>=<span class="hljs-string">&quot; where id = #&#123;id&#125; &quot;</span>&gt;</span><br><br>    　　　　<br>    <span class="hljs-tag">&lt;<span class="hljs-name">if</span> <span class="hljs-attr">test</span>=<span class="hljs-string">&quot;name != null and name.length()&gt;0&quot;</span>&gt;</span>name=#&#123;name&#125; ,<span class="hljs-tag">&lt;/<span class="hljs-name">if</span>&gt;</span><br><br>    　　　　<br>    <span class="hljs-tag">&lt;<span class="hljs-name">if</span> <span class="hljs-attr">test</span>=<span class="hljs-string">&quot;gender != null and gender.length()&gt;0&quot;</span>&gt;</span>gender=#&#123;gender&#125; ,<span class="hljs-tag">&lt;/<span class="hljs-name">if</span>&gt;</span><br><br>    　　<br><span class="hljs-tag">&lt;/<span class="hljs-name">trim</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>假如说name和gender的值都不为null的话打印的SQL为：update user set name&#x3D;’xx’ , gender&#x3D;’xx’ <del>,</del>  where id&#x3D;’x’</p>
+<p>在删除线标记的地方不存在逗号，而且自动加了一个set前缀和where后缀，上面三个属性的意义如下，其中prefix意义如上：</p>
+<ul>
+<li>suffixoverride：去掉最后一个逗号（也可以是其他的标记，就像是上面前缀中的and一样）</li>
+<li>suffix：后缀</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/qiankun-site/p/5758924.html">原文链接</a></p>
+<h6 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h6><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TrimSqlNode</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">SqlNode</span> &#123;<br>  <span class="hljs-comment">//封装下级节点</span><br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> SqlNode contents;<br>  <span class="hljs-comment">//封装对应的标签属性</span><br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String prefix;<br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String suffix;<br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> List&lt;String&gt; prefixesToOverride;<br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> List&lt;String&gt; suffixesToOverride;<br>    <br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Configuration configuration;<br><br>  <span class="hljs-comment">//解析这个&lt;trim/&gt;标签并转化成对应的sql</span><br>  <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">apply</span><span class="hljs-params">(DynamicContext context)</span> &#123;<br>    <span class="hljs-comment">//修改传参，将DynamicContext替换为FilteredDynamicContext，以便后续实现属性suffixoverride的功能将多余的符号剔除</span><br>    <span class="hljs-type">FilteredDynamicContext</span> <span class="hljs-variable">filteredDynamicContext</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">FilteredDynamicContext</span>(context);<br>    <span class="hljs-comment">//继续执行其内部的其它SqlNode</span><br>    <span class="hljs-type">boolean</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> contents.apply(filteredDynamicContext);<br>    <span class="hljs-comment">//它会调用内部类的方法applyAll()去实现sql的重拼接</span><br>    filteredDynamicContext.applyAll();<br>    <span class="hljs-keyword">return</span> result;<br>  &#125;<br>	<br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">FilteredDynamicContext</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">DynamicContext</span> &#123;<br>    <br>  	<span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">applyAll</span><span class="hljs-params">()</span> &#123;<br>      sqlBuffer = <span class="hljs-keyword">new</span> <span class="hljs-title class_">StringBuilder</span>(sqlBuffer.toString().trim());<br>      <span class="hljs-type">String</span> <span class="hljs-variable">trimmedUppercaseSql</span> <span class="hljs-operator">=</span> sqlBuffer.toString().toUpperCase(Locale.ENGLISH);<br>      <span class="hljs-keyword">if</span> (trimmedUppercaseSql.length() &gt; <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-comment">//分别实现prefix和suffix属性的功能，通过字符串操作重新拼接sql</span><br>        applyPrefix(sqlBuffer, trimmedUppercaseSql);<br>        applySuffix(sqlBuffer, trimmedUppercaseSql);<br>      &#125;<br>      delegate.appendSql(sqlBuffer.toString());<br>    &#125;<br>  &#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="子叶标签WhereSqlNode"><a href="#子叶标签WhereSqlNode" class="headerlink" title="子叶标签WhereSqlNode"></a>子叶标签WhereSqlNode</h5><p>WhereSqlNode实际上是基于trim实现，因此WhereSqlNode继承TrimSqlNode共享它的所有方法，不同之处在于自动为TrimSqlNode添加了需要的初始化属性。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">WhereSqlNode</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">TrimSqlNode</span> &#123;<br>  <span class="hljs-comment">//配置需要删除的prefixOverride参数，通trim标签的prefixoverride属性</span><br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> List&lt;String&gt; prefixList = Arrays.asList(<span class="hljs-string">&quot;AND &quot;</span>,<span class="hljs-string">&quot;OR &quot;</span>,<span class="hljs-string">&quot;AND\n&quot;</span>, <span class="hljs-string">&quot;OR\n&quot;</span>, <span class="hljs-string">&quot;AND\r&quot;</span>, <span class="hljs-string">&quot;OR\r&quot;</span>, <span class="hljs-string">&quot;AND\t&quot;</span>, <span class="hljs-string">&quot;OR\t&quot;</span>);<br>  <span class="hljs-comment">//调用父类的构造方法，默认传where语句需要的参数</span><br>  <span class="hljs-keyword">public</span> <span class="hljs-title function_">WhereSqlNode</span><span class="hljs-params">(Configuration configuration, SqlNode contents)</span> &#123;<br>    <span class="hljs-built_in">super</span>(configuration, contents, <span class="hljs-string">&quot;WHERE&quot;</span>, prefixList, <span class="hljs-literal">null</span>, <span class="hljs-literal">null</span>);<br>  &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="子叶节点SetSqlNode"><a href="#子叶节点SetSqlNode" class="headerlink" title="子叶节点SetSqlNode"></a>子叶节点SetSqlNode</h5><p>原理同上</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">SetSqlNode</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">TrimSqlNode</span> &#123;<br><br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> List&lt;String&gt; suffixList = Arrays.asList(<span class="hljs-string">&quot;,&quot;</span>);<br><br>  <span class="hljs-keyword">public</span> <span class="hljs-title function_">SetSqlNode</span><span class="hljs-params">(Configuration configuration,SqlNode contents)</span> &#123;<br>    <span class="hljs-built_in">super</span>(configuration, contents, <span class="hljs-string">&quot;SET&quot;</span>, <span class="hljs-literal">null</span>, <span class="hljs-literal">null</span>, suffixList);<br>  &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="子叶节点ForEachSqlNode"><a href="#子叶节点ForEachSqlNode" class="headerlink" title="子叶节点ForEachSqlNode"></a>子叶节点ForEachSqlNode</h5><h6 id="案例-1"><a href="#案例-1" class="headerlink" title="案例"></a>案例</h6><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-comment">&lt;!--</span><br><span class="hljs-comment">if标签中的array表示数组，</span><br><span class="hljs-comment">collection表示要遍历的集合类型。其中array表示数组，list表示集合。</span><br><span class="hljs-comment">open、close、separator为对遍历内容的SQL拼接</span><br><span class="hljs-comment">--&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">select</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;selectStudentsForeachArray&quot;</span> <span class="hljs-attr">resultType</span>=<span class="hljs-string">&quot;org.example.pojo.Student&quot;</span>&gt;</span><br>    select * from student<br>    <span class="hljs-tag">&lt;<span class="hljs-name">if</span> <span class="hljs-attr">test</span>=<span class="hljs-string">&quot;array != null and array.length &gt; 0&quot;</span>&gt;</span><br>        where id in<br>        <span class="hljs-tag">&lt;<span class="hljs-name">foreach</span> <span class="hljs-attr">collection</span>=<span class="hljs-string">&quot;array&quot;</span> <span class="hljs-attr">open</span>=<span class="hljs-string">&quot;(&quot;</span> <span class="hljs-attr">close</span>=<span class="hljs-string">&quot;)&quot;</span> <span class="hljs-attr">separator</span>=<span class="hljs-string">&quot;,&quot;</span> <span class="hljs-attr">item</span>=<span class="hljs-string">&quot;item&quot;</span>&gt;</span><br>            #&#123;item&#125;<br>        <span class="hljs-tag">&lt;/<span class="hljs-name">foreach</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">if</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span><br><br>        <span class="hljs-comment">&lt;!--遍历泛型--&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">select</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;selectStudentsForeachList2&quot;</span> <span class="hljs-attr">resultType</span>=<span class="hljs-string">&quot;org.example.pojo.Student&quot;</span>&gt;</span><br>select * from student<br><span class="hljs-tag">&lt;<span class="hljs-name">if</span> <span class="hljs-attr">test</span>=<span class="hljs-string">&quot;list != null and list.size &gt; 0&quot;</span>&gt;</span><br>    where id in<br>    <span class="hljs-tag">&lt;<span class="hljs-name">foreach</span> <span class="hljs-attr">collection</span>=<span class="hljs-string">&quot;list&quot;</span> <span class="hljs-attr">open</span>=<span class="hljs-string">&quot;(&quot;</span> <span class="hljs-attr">close</span>=<span class="hljs-string">&quot;)&quot;</span> <span class="hljs-attr">separator</span>=<span class="hljs-string">&quot;,&quot;</span> <span class="hljs-attr">item</span>=<span class="hljs-string">&quot;item&quot;</span>&gt;</span><br>        #&#123;item.id&#125;<br>    <span class="hljs-tag">&lt;/<span class="hljs-name">foreach</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">if</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h6 id="原理-1"><a href="#原理-1" class="headerlink" title="原理"></a>原理</h6><p>说明样例：<code>&lt;foreach collection=&quot;list&quot; open=&quot;(&quot; close=&quot;)&quot; separator=&quot;,&quot; item=&quot;item&quot;&gt;</code></p>
+<ul>
+<li>open，close，参数为简单的参数拼接</li>
+<li>collection会利用ognl类库来实现参数的获取，array标识获取数组类型，list标识获取集合类型</li>
+<li>separator会通过装饰着PrefixedContext来扩展实现DynamicContext的功能，来逐步为后续sqlNode拼接上述样例中的“，”</li>
+<li>由于参数集是以map集合来实现的，item会用于设定索引，来存储遍历出的每个对象；儿后续子叶sqlNode中会通过DynamicContext获取到这个map并从中获取value值来拼接</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ForEachSqlNode</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">SqlNode</span> &#123;<br>  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">ITEM_PREFIX</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;__frch_&quot;</span>;<br>  <span class="hljs-comment">//表达式解析器</span><br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> ExpressionEvaluator evaluator;<br>  <span class="hljs-comment">//集合解析器：用于解析传参中的集合类型如list为集合，array为数组  </span><br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String collectionExpression;<br>  <span class="hljs-comment">//内部的子叶sqlNode  </span><br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> SqlNode contents;<br>  <span class="hljs-comment">//封装传参&lt;foreach collection=&quot;list&quot; open=&quot;(&quot; close=&quot;)&quot; separator=&quot;,&quot; item=&quot;item&quot;&gt;</span><br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String open;<br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String close;<br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String separator;<br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String item;<br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String index;<br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Configuration configuration;<br><br>  <span class="hljs-meta">@Override</span><br>  <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">apply</span><span class="hljs-params">(DynamicContext context)</span> &#123;<br>    <span class="hljs-comment">//获取参数集合  </span><br>    Map&lt;String, Object&gt; bindings = context.getBindings();<br>    <span class="hljs-comment">//通过Ognl类库获取请求参数集合，根据collectionExpression表达式来判断集合和数组</span><br>    <span class="hljs-keyword">final</span> Iterable&lt;?&gt; iterable = evaluator.evaluateIterable(collectionExpression, bindings);<br>    <span class="hljs-keyword">if</span> (!iterable.iterator().hasNext()) &#123;<br>      <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>    &#125;<br>    <span class="hljs-type">boolean</span> <span class="hljs-variable">first</span> <span class="hljs-operator">=</span> <span class="hljs-literal">true</span>;<br>    <span class="hljs-comment">//拼接open参数，这里的案例是拼接“(”</span><br>    applyOpen(context);<br>    <span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>    <span class="hljs-comment">//遍历参数集合或数组中 </span><br>    <span class="hljs-keyword">for</span> (Object o : iterable) &#123;<br>      <span class="hljs-type">DynamicContext</span> <span class="hljs-variable">oldContext</span> <span class="hljs-operator">=</span> context;<br>      <span class="hljs-comment">//为 PrefixedContext工具类添加separator参数，样例中的separator是“，”，后续sqlNode中会继续利用PrefixedContext来辅助实现参数的拼接</span><br>      <span class="hljs-keyword">if</span> (first || separator == <span class="hljs-literal">null</span>) &#123;<br>        context = <span class="hljs-keyword">new</span> <span class="hljs-title class_">PrefixedContext</span>(context, <span class="hljs-string">&quot;&quot;</span>);<br>      &#125; <span class="hljs-keyword">else</span> &#123;<br>        context = <span class="hljs-keyword">new</span> <span class="hljs-title class_">PrefixedContext</span>(context, separator);<br>      &#125;<br>      <span class="hljs-type">int</span> <span class="hljs-variable">uniqueNumber</span> <span class="hljs-operator">=</span> context.getUniqueNumber();<br>      <span class="hljs-comment">// Issue #709 </span><br>      <span class="hljs-comment">//根据请求参数类型来绑定参数集，参数集以map的形式存储在DynamicContext中，以便后续SqlNode通过$&#123;&#125;或#&#123;&#125;来从参数集中获取参数；mybatis的参数集是mybatis实现ognl语法的核销，以后的文档中会分析mybatis参数的获取传递以及ognl的利用实现</span><br>      <span class="hljs-keyword">if</span> (o <span class="hljs-keyword">instanceof</span> Map.Entry) &#123;<br>        <span class="hljs-meta">@SuppressWarnings(&quot;unchecked&quot;)</span> <br>        Map.Entry&lt;Object, Object&gt; mapEntry = (Map.Entry&lt;Object, Object&gt;) o;<br>        applyIndex(context, mapEntry.getKey(), uniqueNumber);<br>        applyItem(context, mapEntry.getValue(), uniqueNumber);<br>      &#125; <span class="hljs-keyword">else</span> &#123;<br>        applyIndex(context, i, uniqueNumber);<br>        applyItem(context, o, uniqueNumber);<br>      &#125;<br>      contents.apply(<span class="hljs-keyword">new</span> <span class="hljs-title class_">FilteredDynamicContext</span>(configuration, context, index, item, uniqueNumber));<br>      <span class="hljs-keyword">if</span> (first) &#123;<br>        first = !((PrefixedContext) context).isPrefixApplied();<br>      &#125;<br>      context = oldContext;<br>      i++;<br>    &#125;<br>    applyClose(context);<br>    context.getBindings().remove(item);<br>    context.getBindings().remove(index);<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>  &#125;<br><br>  <span class="hljs-comment">//DynamicContext的装饰者实现，以便扩展参数集功能</span><br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">PrefixedContext</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">DynamicContext</span> &#123;...&#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>剩下的标签还有ChooseSqlNode,WhenSqlNode,OtherWiseSqlNode等，他们的原理与之前将的几个SqlNode相差无几,后面不多赘述;</p>
+<h2 id="SqlNode组合构成实现"><a href="#SqlNode组合构成实现" class="headerlink" title="SqlNode组合构成实现"></a>SqlNode组合构成实现</h2><h3 id="启动类的初始化"><a href="#启动类的初始化" class="headerlink" title="启动类的初始化"></a>启动类的初始化</h3><ul>
+<li>mybatis的sqlNode构成实现启动类为XMLScriptBuilder，XMLScriptBuilder在初始化时会分别为context(解析xml中的sql)<br>,parameterType(与动态sql无关)赋值,以及初始化initNodeHandlerMap()方法，该方法用于初始化形成SqlNode组合的工具内部类们；该方法如下图</li>
+</ul>
+<p><img src="D:\Andrew_pro\blog\upload_image\mybatis\initNodeHandler.png" srcset="/img/loading.gif" lazyload alt="image-20201210105834529"></p>
+<h3 id="启动类启动"><a href="#启动类启动" class="headerlink" title="启动类启动"></a>启动类启动</h3><ul>
+<li>parseScriptNode()方法是在初始化后被直接调用，也是启动类的启动方法，具体可查看XMLLanguageDriver类</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> SqlSource <span class="hljs-title function_">parseScriptNode</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-comment">//parseDynamicTags方法为具体sqlNode的封装方法，它返回封装后的sqlNode结果</span><br>        <span class="hljs-type">MixedSqlNode</span> <span class="hljs-variable">rootSqlNode</span> <span class="hljs-operator">=</span> <span class="hljs-built_in">this</span>.parseDynamicTags(<span class="hljs-built_in">this</span>.context);<br>        <span class="hljs-type">SqlSource</span> <span class="hljs-variable">sqlSource</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<br>    <span class="hljs-comment">//parseDynamicTags()在封装过程中判断是否有$&#123;&#125;符号（及参数是否有以动态sql的形式注入）  注意：$&#123;&#125;和#&#123;&#125;的区别</span><br>        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.isDynamic) &#123;<br>            <span class="hljs-comment">//如果有$&#123;&#125;或则存储到动态SQL源中，如下以DynamicSqlSource来封装</span><br>            <span class="hljs-comment">//将来在Executer执行器执行sql参数注入时会通过DynamicSqlSource的getBoundSql方法来封装参数</span><br>            sqlSource = <span class="hljs-keyword">new</span> <span class="hljs-title class_">DynamicSqlSource</span>(<span class="hljs-built_in">this</span>.configuration, rootSqlNode);<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-comment">//如果有没有$&#123;&#125;则用RawSqlSource封装</span><br>            sqlSource = <span class="hljs-keyword">new</span> <span class="hljs-title class_">RawSqlSource</span>(<span class="hljs-built_in">this</span>.configuration, rootSqlNode, <span class="hljs-built_in">this</span>.parameterType);<br>        &#125;<br><br>        <span class="hljs-keyword">return</span> (SqlSource)sqlSource;<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="封装SqlNode"><a href="#封装SqlNode" class="headerlink" title="封装SqlNode"></a>封装SqlNode</h3><ol>
+<li>启动方法的主要逻辑实现在parseDynamicTags()方法，如下</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment">*该方法核心逻辑为for循环中的if，else判断；</span><br><span class="hljs-comment">*前置步骤是从node节点中获取子节点，注意，子节点并不包括孙子节点</span><br><span class="hljs-comment">**/</span><br><span class="hljs-keyword">protected</span> MixedSqlNode <span class="hljs-title function_">parseDynamicTags</span><span class="hljs-params">(XNode node)</span> &#123;<br>    List&lt;SqlNode&gt; contents = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;SqlNode&gt;();<br>    <span class="hljs-type">NodeList</span> <span class="hljs-variable">children</span> <span class="hljs-operator">=</span> node.getNode().getChildNodes();<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; children.getLength(); i++) &#123;<br>      <span class="hljs-type">XNode</span> <span class="hljs-variable">child</span> <span class="hljs-operator">=</span> node.newXNode(children.item(i));<br>      <span class="hljs-comment">//当子节点Node是Text文本时，新建TextSqlNode封装文本</span><br>      <span class="hljs-keyword">if</span> (child.getNode().getNodeType() == Node.CDATA_SECTION_NODE || child.getNode().getNodeType() == Node.TEXT_NODE) &#123;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">data</span> <span class="hljs-operator">=</span> child.getStringBody(<span class="hljs-string">&quot;&quot;</span>);<br>        <span class="hljs-type">TextSqlNode</span> <span class="hljs-variable">textSqlNode</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">TextSqlNode</span>(data);<br>        <span class="hljs-comment">//根据text文本中是否有$&#123;&#125;来判断是否是动态sql，如#&#123;&#125;则不是动态sql</span><br>        <span class="hljs-keyword">if</span> (textSqlNode.isDynamic()) &#123;<br>          contents.add(textSqlNode);<br>          isDynamic = <span class="hljs-literal">true</span>;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>          contents.add(<span class="hljs-keyword">new</span> <span class="hljs-title class_">StaticTextSqlNode</span>(data));<br>        &#125;<br>      <span class="hljs-comment">//当子节点Node为Node时，调用HandleNode方法处理这个子节点</span><br>      &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (child.getNode().getNodeType() == Node.ELEMENT_NODE) &#123; <span class="hljs-comment">// issue #628</span><br>        <span class="hljs-type">String</span> <span class="hljs-variable">nodeName</span> <span class="hljs-operator">=</span> child.getNode().getNodeName();<br>        <span class="hljs-comment">//根据节点名称获取特定的handler，这些handler在这个Builder类的构造函数中初始化  </span><br>        <span class="hljs-type">NodeHandler</span> <span class="hljs-variable">handler</span> <span class="hljs-operator">=</span> nodeHandlerMap.get(nodeName);<br>        <span class="hljs-keyword">if</span> (handler == <span class="hljs-literal">null</span>) &#123;<br>          <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BuilderException</span>(<span class="hljs-string">&quot;Unknown element &lt;&quot;</span> + nodeName + <span class="hljs-string">&quot;&gt; in SQL statement.&quot;</span>);<br>        &#125;<br>        <span class="hljs-comment">//传入集合容器contents,child子节点</span><br>        handler.handleNode(child, contents);<br>        isDynamic = <span class="hljs-literal">true</span>;<br>      &#125;<br>    &#125;<br>    <span class="hljs-comment">//返回这个容器list</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">MixedSqlNode</span>(contents);<br>  &#125;<br></code></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>不同handler会有特有的自定义封装初始化以及特定的handleNode(child, contents)方法的操作，但大体流程一致<ol>
+<li>再次调用parseDynamicTags()方法封装这个子节点child内部子节点，递归的方式；并返回一个容器即MixedSqlNode，这个容器则是这个树状分支的分支即组合模式的component</li>
+<li>解析Node标签中的属性如test等</li>
+<li>新建特定的SqlNode(不同Handler处理不同的SqlNode)将获取的component分支以及Node标签属性传入它们的构造函数</li>
+<li>将这个封装好的子叶SqlNode加入contents</li>
+</ol>
+</li>
+</ol>
+<h2 id="DynamicContext类"><a href="#DynamicContext类" class="headerlink" title="DynamicContext类"></a>DynamicContext类</h2><p>DynamicContext用于封装请求参数，即我们查询数据库的实体类或基本数据类型等，该参数会以Object类型以DefaultSqlSession-&gt;<br>Exector-&gt;DynamicContix的流程传入;</p>
+<p>而它最终应用于先前的各种SqlNode的apply方法中，以达到各种参数的获取，表达式的实现等；</p>
+<p>下面对DynamicContext进行解析</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><code class="hljs java"><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">DynamicContext</span> &#123;<br>  <br>  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">PARAMETER_OBJECT_KEY</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;_parameter&quot;</span>;<br>  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">DATABASE_ID_KEY</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;_databaseId&quot;</span>;<br>  <span class="hljs-comment">//注册存取器，这个一个OGNL类库的功能，如下案例，它注册了一个ContextAccessor存取器，当OGNL解析表达式解析出ContextMap类时，则会用存取器的get方法来获取数据，达到自定义的作用</span><br>  <span class="hljs-keyword">static</span> &#123;<br>    OgnlRuntime.setPropertyAccessor(ContextMap.class, <span class="hljs-keyword">new</span> <span class="hljs-title class_">ContextAccessor</span>());<br>  &#125;<br><br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> ContextMap bindings;<br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-type">StringBuilder</span> <span class="hljs-variable">sqlBuilder</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">StringBuilder</span>();<br>  <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> <span class="hljs-variable">uniqueNumber</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br><br>  <span class="hljs-keyword">public</span> <span class="hljs-title function_">DynamicContext</span><span class="hljs-params">(Configuration configuration, Object parameterObject)</span> &#123;<br>    <span class="hljs-comment">/*</span><br><span class="hljs-comment">     *若参数类型不是map类型，则将参数存入ContextMap的MetaObject成员中</span><br><span class="hljs-comment">     *contextMap是存储参数的容器，它分别用继承自HashMap的map空间和自身的MetaObject成员来存储请求参数</span><br><span class="hljs-comment">    */</span><br>    <span class="hljs-keyword">if</span> (parameterObject != <span class="hljs-literal">null</span> &amp;&amp; !(parameterObject <span class="hljs-keyword">instanceof</span> Map)) &#123;<br>      <span class="hljs-comment">//初始化metaObject</span><br>      <span class="hljs-type">MetaObject</span> <span class="hljs-variable">metaObject</span> <span class="hljs-operator">=</span> configuration.newMetaObject(parameterObject);<br>      bindings = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ContextMap</span>(metaObject);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>      bindings = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ContextMap</span>(<span class="hljs-literal">null</span>);<br>    &#125;<br>    bindings.put(PARAMETER_OBJECT_KEY, parameterObject);<br>    bindings.put(DATABASE_ID_KEY, configuration.getDatabaseId());<br>  &#125;<br><br>  <span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ContextMap</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">HashMap</span>&lt;String, Object&gt; &#123;<br>    <span class="hljs-comment">//MetaObject是mybatis通过反射封装的实体工具类，</span><br>    <span class="hljs-comment">//它封装了请求参数对象的反射方法，类等信息以便后续通过反射获取get方法获取参数类的值</span><br>    <span class="hljs-keyword">private</span> MetaObject parameterMetaObject;<br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">ContextMap</span><span class="hljs-params">(MetaObject parameterMetaObject)</span> &#123;<br>      <span class="hljs-built_in">this</span>.parameterMetaObject = parameterMetaObject;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> Object <span class="hljs-title function_">get</span><span class="hljs-params">(Object key)</span> &#123;<br>      <span class="hljs-type">String</span> <span class="hljs-variable">strKey</span> <span class="hljs-operator">=</span> (String) key;<br>      <span class="hljs-keyword">if</span> (<span class="hljs-built_in">super</span>.containsKey(strKey)) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-built_in">super</span>.get(strKey);<br>      &#125;<br><br>      <span class="hljs-keyword">if</span> (parameterMetaObject != <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-comment">// issue #61 do not modify the context when reading</span><br>        <span class="hljs-keyword">return</span> parameterMetaObject.getValue(strKey);<br>      &#125;<br><br>      <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>    &#125;<br>  &#125;<br><br>  <span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ContextAccessor</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">PropertyAccessor</span> &#123;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> Object <span class="hljs-title function_">getProperty</span><span class="hljs-params">(Map context, Object target, Object name)</span><br>        <span class="hljs-keyword">throws</span> OgnlException &#123;<br>      <span class="hljs-type">Map</span> <span class="hljs-variable">map</span> <span class="hljs-operator">=</span> (Map) target;<br>      <span class="hljs-type">Object</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> map.get(name);<br>      <span class="hljs-keyword">if</span> (map.containsKey(name) || result != <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-keyword">return</span> result;<br>      &#125;<br>      <span class="hljs-type">Object</span> <span class="hljs-variable">parameterObject</span> <span class="hljs-operator">=</span> map.get(PARAMETER_OBJECT_KEY);<br>      <span class="hljs-keyword">if</span> (parameterObject <span class="hljs-keyword">instanceof</span> Map) &#123;<br>        <span class="hljs-keyword">return</span> ((Map)parameterObject).get(name);<br>      &#125;<br>      <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>使用流程：</p>
+<ol>
+<li>在映射参数之前，程序会初始化DynamicContext，并在构造函数中，为其成员ContextMap注入MetaObject；MetaObject封装请求参数param对象相关的反射信息</li>
+<li>程序通过组合模式的树状结构，逐层向下调用apply方法，并传入DynamicContext</li>
+<li>当有SqlNode需要映射<code>#&#123;&#125;</code>符号中的参数时，会调用对应的TokenParser方法从Ognl表达式中取值;</li>
+<li>由于我们先前注册过ContextAccessor存取器，因此会Ognl表达式会优先通过存取器从ContextMap取值</li>
+<li>最后通过DynamicContext的appendSql方法来拼接对应的#{}符号(这个符号会在特定方法中别替换，具体看GenericTokenParser.parse(<br>text)方法)，拼接替换的sql都会存在成员变量sqlBuilder中</li>
+<li>此外DynamicContext也是实现动态sql的核心，实际上拼接映射参数和动态同时进行，例如TextSqlNode负责拼接#{}参数，而ifSqlNode负责动态sql根据不同的sqlNode实现不同的功能；</li>
+</ol>
+<h1 id="Sql封装"><a href="#Sql封装" class="headerlink" title="Sql封装"></a>Sql封装</h1><p>Sql封装分为两部分，分别为表达式封装，参数封装，以及Sql封装</p>
+<ul>
+<li>表达式封装，参考下一节“表达式#{}操作”</li>
+<li>Sql封装，参考上一节“动态Mapper分析”以及”DynamicContext类“</li>
+<li>封装容器为SqlSource</li>
+</ul>
+<p><strong>SqlSource最终返回BoundSql，而里面的成员数据也均赋值于BoundSql，BoundSql参与后续的Sql语句执行</strong></p>
+<h2 id="SqlSource分析"><a href="#SqlSource分析" class="headerlink" title="SqlSource分析"></a>SqlSource分析</h2><p>实际上在XMLStatementBuilder篇章就讲了SqlSource的部分功能，它用于封装已成树状结构的SqlNode；</p>
+<p>SqlSource分为三种DynamicSqlSource，RawSqlSource，StaticSqlSource，下面逐一分析</p>
+<ul>
+<li>*SqlSource有两个主要成员，初始化构造函数，和getBoundSql()方法<ul>
+<li>以上三种sqlSource的<strong>初始化即是封装</strong>，封装过程在mapper配置加载阶段</li>
+<li><u>getBoundSql()方法在执行sql操作时被调用</u></li>
+</ul>
+</li>
+</ul>
+<h3 id="DynamicSqlSource"><a href="#DynamicSqlSource" class="headerlink" title="DynamicSqlSource"></a>DynamicSqlSource</h3><p>顾名思义，当xml中的sql语句为动态sql时，默认用DynamicSqlSource封装数据，（sql中有${}也用该方案封装)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">DynamicSqlSource</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">SqlSource</span> &#123;<br><br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Configuration configuration;<br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> SqlNode rootSqlNode;<br><span class="hljs-comment">//在配置加载阶段执行</span><br>  <span class="hljs-keyword">public</span> <span class="hljs-title function_">DynamicSqlSource</span><span class="hljs-params">(Configuration configuration, SqlNode rootSqlNode)</span> &#123;<br>    <span class="hljs-built_in">this</span>.configuration = configuration;<br>    <span class="hljs-built_in">this</span>.rootSqlNode = rootSqlNode;<br>  &#125;<br><br>    <br>  <span class="hljs-meta">@Override</span><br>  <span class="hljs-keyword">public</span> BoundSql <span class="hljs-title function_">getBoundSql</span><span class="hljs-params">(Object parameterObject)</span> &#123;<br>    <span class="hljs-type">DynamicContext</span> <span class="hljs-variable">context</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">DynamicContext</span>(configuration, parameterObject);<br>      <span class="hljs-comment">//解析动态sql</span><br>    rootSqlNode.apply(context);<br>      <span class="hljs-comment">//表达式封装工具类初始化，用于表达式封装，将请求中的#&#123;&#125;标识替换为？，并生成parameterMapping</span><br>    <span class="hljs-type">SqlSourceBuilder</span> <span class="hljs-variable">sqlSourceParser</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">SqlSourceBuilder</span>(configuration);<br>    Class&lt;?&gt; parameterType = parameterObject == <span class="hljs-literal">null</span> ? Object.class : parameterObject.getClass();<br>      <span class="hljs-comment">//返回StaticSqlSource</span><br>    <span class="hljs-type">SqlSource</span> <span class="hljs-variable">sqlSource</span> <span class="hljs-operator">=</span> sqlSourceParser.parse(context.getSql(), parameterType, context.getBindings());<br>    <span class="hljs-type">BoundSql</span> <span class="hljs-variable">boundSql</span> <span class="hljs-operator">=</span> sqlSource.getBoundSql(parameterObject);<br>      <span class="hljs-comment">//为bondSql注入请求参数</span><br>    context.getBindings().forEach(boundSql::setAdditionalParameter);<br>    <span class="hljs-keyword">return</span> boundSql;<br>  &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="RawSqlSource"><a href="#RawSqlSource" class="headerlink" title="RawSqlSource"></a>RawSqlSource</h3><p>当mapper文件里的sql语句时文本时则使用RawSqlSource</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">RawSqlSource</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">SqlSource</span> &#123;<br><br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> SqlSource sqlSource;<br>	<span class="hljs-comment">//初始化步骤1</span><br>  <span class="hljs-keyword">public</span> <span class="hljs-title function_">RawSqlSource</span><span class="hljs-params">(Configuration configuration, SqlNode rootSqlNode, Class&lt;?&gt; parameterType)</span> &#123;<br>    <span class="hljs-built_in">this</span>(configuration, getSql(configuration, rootSqlNode), parameterType);<br>  &#125;<br>	<span class="hljs-comment">//初始化步骤3</span><br>  <span class="hljs-keyword">public</span> <span class="hljs-title function_">RawSqlSource</span><span class="hljs-params">(Configuration configuration, String sql, Class&lt;?&gt; parameterType)</span> &#123;<br>      <span class="hljs-comment">//调用SqlSourceBuilder表达式封装工具类封装默认配置</span><br>    <span class="hljs-type">SqlSourceBuilder</span> <span class="hljs-variable">sqlSourceParser</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">SqlSourceBuilder</span>(configuration);<br>    Class&lt;?&gt; clazz = parameterType == <span class="hljs-literal">null</span> ? Object.class : parameterType;<br>      <span class="hljs-comment">//此处返回的是staticSqlsource</span><br>    sqlSource = sqlSourceParser.parse(sql, clazz, <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;&gt;());<br>  &#125;<br>	<span class="hljs-comment">//初始化步骤2 初始化DynamicContext执行动态sql拼接 </span><br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> String <span class="hljs-title function_">getSql</span><span class="hljs-params">(Configuration configuration, SqlNode rootSqlNode)</span> &#123;<br>    <span class="hljs-type">DynamicContext</span> <span class="hljs-variable">context</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">DynamicContext</span>(configuration, <span class="hljs-literal">null</span>);<br>    rootSqlNode.apply(context);<br>    <span class="hljs-keyword">return</span> context.getSql();<br>  &#125;<br>	<span class="hljs-comment">//调用staticSqlsource的getBoundSql新建boundSql并注入parameterObject</span><br>  <span class="hljs-meta">@Override</span><br>  <span class="hljs-keyword">public</span> BoundSql <span class="hljs-title function_">getBoundSql</span><span class="hljs-params">(Object parameterObject)</span> &#123;<br>    <span class="hljs-keyword">return</span> sqlSource.getBoundSql(parameterObject);<br>  &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="StaticSqlSource"><a href="#StaticSqlSource" class="headerlink" title="StaticSqlSource"></a>StaticSqlSource</h3><p>已完成封装的sqlSource，以上两种最终都会封装到staticSqlSource中</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">StaticSqlSource</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">SqlSource</span> &#123;<br><br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String sql;<br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> List&lt;ParameterMapping&gt; parameterMappings;<br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Configuration configuration;<br><br>  <span class="hljs-keyword">public</span> <span class="hljs-title function_">StaticSqlSource</span><span class="hljs-params">(Configuration configuration, String sql)</span> &#123;<br>    <span class="hljs-built_in">this</span>(configuration, sql, <span class="hljs-literal">null</span>);<br>  &#125;<br><br>  <span class="hljs-keyword">public</span> <span class="hljs-title function_">StaticSqlSource</span><span class="hljs-params">(Configuration configuration, String sql, List&lt;ParameterMapping&gt; parameterMappings)</span> &#123;<br>    <span class="hljs-built_in">this</span>.sql = sql;<br>    <span class="hljs-built_in">this</span>.parameterMappings = parameterMappings;<br>    <span class="hljs-built_in">this</span>.configuration = configuration;<br>  &#125;<br><br>  <span class="hljs-meta">@Override</span><br>    <span class="hljs-comment">//注入请求参数</span><br>  <span class="hljs-keyword">public</span> BoundSql <span class="hljs-title function_">getBoundSql</span><span class="hljs-params">(Object parameterObject)</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BoundSql</span>(configuration, sql, parameterMappings, parameterObject);<br>  &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><ol>
+<li>无论是DynamicSqlSource还是RawSqlSource，最终都会转化为StaticSqlSource执行getBoundSql方法获取boundSql；</li>
+<li>DynamicSqlSource和RawSqlSource差异<ul>
+<li>DynamicSqlSource动态sql部分在请求数据库时执行，而RawSqlSource的动态sql部分在mybatis组件加载时执行，因此DynamicSqlSource有性能损失</li>
+</ul>
+</li>
+</ol>
+<h1 id="表达式-操作"><a href="#表达式-操作" class="headerlink" title="表达式#{}操作"></a>表达式#{}操作</h1><ol>
+<li>表达式封装位于SqlSourceBuilder类中，它会在Executor执行器执行时被调用</li>
+<li>SqlSourceBuilder实际只是作为封装的启动类或初始化类，其主要操作通过成员内部类ParameterMappingTokenHandler执行</li>
+<li>它返回一个StaticSqlSource</li>
+</ol>
+<h2 id="表达式解析（ParameterExpression）"><a href="#表达式解析（ParameterExpression）" class="headerlink" title="表达式解析（ParameterExpression）"></a>表达式解析（ParameterExpression）</h2><ul>
+<li><p>已知Mybatis中通过#{表达式}来插入请求的参数，一般情况下我们仅仅插入单一的字符串值作为请求参数，但实际上mybatis还支持更多表达式功能；如下</p>
+<ul>
+<li><code>#&#123;age,javaType=int,jdbcType=NUMERIC,typeHandler=MyTypeHandler&#125;</code><br>：JavaType，JdbcType，和TypeHandle顾名思义用于指定java类型，jdbc类型和类型处理器（类型处理器需要自行实现）</li>
+<li><code>#&#123;height,javaType=double,jdbcType=NUMERIC,numericScale=2&#125;</code>： numericScale用于指定小数点后面几位</li>
+</ul>
+</li>
+<li><p>ParameterExpression时表达式的解析类同事也是解析后的数据封装类，它继承了HashMap以key-Value的形式存解析出来的表达式</p>
+</li>
+<li><p>表达式解析类通过ParameterExpression.java解析，具体分析如下</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> org.learn.mybatis;<span class="hljs-comment">//</span><br><span class="hljs-comment">// Source code recreated from a .class file by IntelliJ IDEA</span><br><span class="hljs-comment">// (powered by FernFlower decompiler)</span><br><span class="hljs-comment">//</span><br><br><span class="hljs-keyword">import</span> org.junit.Test;<br><br><span class="hljs-keyword">import</span> java.util.HashMap;<br><span class="hljs-keyword">import</span> java.util.Iterator;<br><span class="hljs-keyword">import</span> java.util.Set;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ParameterExpression</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">HashMap</span>&lt;String, String&gt; &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">long</span> <span class="hljs-variable">serialVersionUID</span> <span class="hljs-operator">=</span> -<span class="hljs-number">2417552199605158680L</span>;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">ParameterExpression</span><span class="hljs-params">()</span> &#123;<br><br>    &#125;<br><span class="hljs-comment">//    public ParameterExpression(String expression) throws Exception &#123;</span><br><span class="hljs-comment">//        this.parse(expression);</span><br><span class="hljs-comment">//    &#125;</span><br><br>    <span class="hljs-meta">@Test</span><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 解析表达式案例</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">testParamExpression</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> Exception &#123;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">s</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot; middleInitial, mode=OUT, jdbcType=STRUCT, jdbcTypeName=MY_TYPE, resultMap=departmentResultMap&quot;</span>;<br>        <span class="hljs-built_in">this</span>.parse(s);<br>        Set&lt;Entry&lt;String, String&gt;&gt; entries = <span class="hljs-built_in">this</span>.entrySet();<br>        Iterator&lt;Entry&lt;String, String&gt;&gt; iterator = entries.iterator();<br>        <span class="hljs-keyword">while</span> (iterator.hasNext()) &#123;<br>            Entry&lt;String, String&gt; next = iterator.next();<br>            System.out.println(<span class="hljs-string">&quot;key=&quot;</span> + next.getKey() + <span class="hljs-string">&quot;,value=&quot;</span> + next.getValue());<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 表达式解析启动类</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">parse</span><span class="hljs-params">(String expression)</span> <span class="hljs-keyword">throws</span> Exception &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">p</span> <span class="hljs-operator">=</span> <span class="hljs-built_in">this</span>.skipWS(expression, <span class="hljs-number">0</span>);<br>        <span class="hljs-keyword">if</span> (expression.charAt(p) == <span class="hljs-string">&#x27;(&#x27;</span>) &#123;<br>            <span class="hljs-built_in">this</span>.expression(expression, p + <span class="hljs-number">1</span>);<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-built_in">this</span>.property(expression, p);<br>        &#125;<br><br>    &#125;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">expression</span><span class="hljs-params">(String expression, <span class="hljs-type">int</span> left)</span> <span class="hljs-keyword">throws</span> Exception &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">match</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br><br>        <span class="hljs-type">int</span> right;<br>        <span class="hljs-keyword">for</span> (right = left + <span class="hljs-number">1</span>; match &gt; <span class="hljs-number">0</span>; ++right) &#123;<br>            <span class="hljs-keyword">if</span> (expression.charAt(right) == <span class="hljs-string">&#x27;)&#x27;</span>) &#123;<br>                --match;<br>            &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (expression.charAt(right) == <span class="hljs-string">&#x27;(&#x27;</span>) &#123;<br>                ++match;<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-built_in">this</span>.put(<span class="hljs-string">&quot;expression&quot;</span>, expression.substring(left, right - <span class="hljs-number">1</span>));<br>        <span class="hljs-built_in">this</span>.jdbcTypeOpt(expression, right);<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     *从left左边界快开始，向</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> expression 表达式</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> left  左边界</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@throws</span> Exception</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">property</span><span class="hljs-params">(String expression, <span class="hljs-type">int</span> left)</span> <span class="hljs-keyword">throws</span> Exception &#123;<br>        <span class="hljs-keyword">if</span> (left &lt; expression.length()) &#123;<br>            <span class="hljs-comment">//找到有边界</span><br>            <span class="hljs-type">int</span> <span class="hljs-variable">right</span> <span class="hljs-operator">=</span> <span class="hljs-built_in">this</span>.skipUntil(expression, left, <span class="hljs-string">&quot;,:&quot;</span>);<br>            <span class="hljs-comment">//截取propoty并插值</span><br>            <span class="hljs-built_in">this</span>.put(<span class="hljs-string">&quot;property&quot;</span>, <span class="hljs-built_in">this</span>.trimmedStr(expression, left, right));<br>            <span class="hljs-built_in">this</span>.jdbcTypeOpt(expression, right);<br>        &#125;<br><br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 识别空格分开的表达式，当有一个空格时，</span><br><span class="hljs-comment">     * 返回这个空格位置，</span><br><span class="hljs-comment">     * 以便后续截取空格前的表达式</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> expression</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> p</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> <span class="hljs-title function_">skipWS</span><span class="hljs-params">(String expression, <span class="hljs-type">int</span> p)</span> &#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> p; i &lt; expression.length(); ++i) &#123;<br>            <span class="hljs-keyword">if</span> (expression.charAt(i) &gt; <span class="hljs-string">&#x27; &#x27;</span>) &#123;<br>                <span class="hljs-keyword">return</span> i;<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-keyword">return</span> expression.length();<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 寻找endChars在表达式中的位置，</span><br><span class="hljs-comment">     * 用于找到一个表达式的右边界</span><br><span class="hljs-comment">     * 返回右边界位置</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> expression 表达式</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> p 查询起始位置</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> endChars 需要找的字符</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> <span class="hljs-title function_">skipUntil</span><span class="hljs-params">(String expression, <span class="hljs-type">int</span> p, String endChars)</span> &#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> p; i &lt; expression.length(); ++i) &#123;<br>            <span class="hljs-type">char</span> <span class="hljs-variable">c</span> <span class="hljs-operator">=</span> expression.charAt(i);<br>            <span class="hljs-keyword">if</span> (endChars.indexOf(c) &gt; -<span class="hljs-number">1</span>) &#123;<br>                <span class="hljs-keyword">return</span> i;<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-keyword">return</span> expression.length();<br>    &#125;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">jdbcTypeOpt</span><span class="hljs-params">(String expression, <span class="hljs-type">int</span> p)</span> <span class="hljs-keyword">throws</span> Exception &#123;<br>        p = <span class="hljs-built_in">this</span>.skipWS(expression, p);<br>        <span class="hljs-keyword">if</span> (p &lt; expression.length()) &#123;<br>                <span class="hljs-keyword">if</span> (expression.charAt(p) == <span class="hljs-string">&#x27;:&#x27;</span>) &#123;<br>                <span class="hljs-built_in">this</span>.jdbcType(expression, p + <span class="hljs-number">1</span>);<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-keyword">if</span> (expression.charAt(p) != <span class="hljs-string">&#x27;,&#x27;</span>) &#123;<br>                    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Exception</span>(<span class="hljs-string">&quot;Parsing error in &#123;&quot;</span> + expression + <span class="hljs-string">&quot;&#125; in position &quot;</span> + p);<br>                &#125;<br><br>                <span class="hljs-built_in">this</span>.option(expression, p + <span class="hljs-number">1</span>);<br>            &#125;<br>        &#125;<br><br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 当有jdbcType属性时，插入这个属性</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> expression</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> p</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@throws</span> Exception</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">jdbcType</span><span class="hljs-params">(String expression, <span class="hljs-type">int</span> p)</span> <span class="hljs-keyword">throws</span> Exception &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">left</span> <span class="hljs-operator">=</span> <span class="hljs-built_in">this</span>.skipWS(expression, p);<br>        <span class="hljs-type">int</span> <span class="hljs-variable">right</span> <span class="hljs-operator">=</span> <span class="hljs-built_in">this</span>.skipUntil(expression, left, <span class="hljs-string">&quot;,&quot;</span>);<br>        <span class="hljs-keyword">if</span> (right &gt; left) &#123;<br>            <span class="hljs-built_in">this</span>.put(<span class="hljs-string">&quot;jdbcType&quot;</span>, <span class="hljs-built_in">this</span>.trimmedStr(expression, left, right));<br>            <span class="hljs-built_in">this</span>.option(expression, right + <span class="hljs-number">1</span>);<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Exception</span>(<span class="hljs-string">&quot;Parsing error in &#123;&quot;</span> + expression + <span class="hljs-string">&quot;&#125; in position &quot;</span> + p);<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 通过递归的方式识别“=”两别的key和value，将表达式中的值插入map</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> expression</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> p</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">option</span><span class="hljs-params">(String expression, <span class="hljs-type">int</span> p)</span> &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">left</span> <span class="hljs-operator">=</span> <span class="hljs-built_in">this</span>.skipWS(expression, p);<br>        <span class="hljs-keyword">if</span> (left &lt; expression.length()) &#123;<br>            <span class="hljs-type">int</span> <span class="hljs-variable">right</span> <span class="hljs-operator">=</span> <span class="hljs-built_in">this</span>.skipUntil(expression, left, <span class="hljs-string">&quot;=&quot;</span>);<br>            <span class="hljs-type">String</span> <span class="hljs-variable">name</span> <span class="hljs-operator">=</span> <span class="hljs-built_in">this</span>.trimmedStr(expression, left, right);<br>            left = right + <span class="hljs-number">1</span>;<br>            right = <span class="hljs-built_in">this</span>.skipUntil(expression, left, <span class="hljs-string">&quot;,&quot;</span>);<br>            <span class="hljs-type">String</span> <span class="hljs-variable">value</span> <span class="hljs-operator">=</span> <span class="hljs-built_in">this</span>.trimmedStr(expression, left, right);<br>            <span class="hljs-built_in">this</span>.put(name, value);<br>            <span class="hljs-built_in">this</span>.option(expression, right + <span class="hljs-number">1</span>);<br>        &#125;<br><br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 截取字符串，从star到end</span><br><span class="hljs-comment">     * 倘若star或者end有空格，则向前或向后移一位</span><br><span class="hljs-comment">     * 便于保证截出来的值不带空格</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> str</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> start</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> end</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> String <span class="hljs-title function_">trimmedStr</span><span class="hljs-params">(String str, <span class="hljs-type">int</span> start, <span class="hljs-type">int</span> end)</span> &#123;<br>        <span class="hljs-keyword">while</span> (str.charAt(start) &lt;= <span class="hljs-string">&#x27; &#x27;</span>) &#123;<br>            ++start;<br>        &#125;<br><br>        <span class="hljs-keyword">while</span> (str.charAt(end - <span class="hljs-number">1</span>) &lt;= <span class="hljs-string">&#x27; &#x27;</span>) &#123;<br>            --end;<br>        &#125;<br><br>        <span class="hljs-keyword">return</span> start &gt;= end ? <span class="hljs-string">&quot;&quot;</span> : str.substring(start, end);<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<h2 id="表达式封装（ParameterMappingTokenHandler）"><a href="#表达式封装（ParameterMappingTokenHandler）" class="headerlink" title="表达式封装（ParameterMappingTokenHandler）"></a>表达式封装（ParameterMappingTokenHandler）</h2><h3 id="表达式识别"><a href="#表达式识别" class="headerlink" title="表达式识别"></a>表达式识别</h3><p>表达式识别通过工具类GenericTokenParser来实现，该工具类会根据参数识别需要的表达式，并自动调用handler中的handleToken()<br>方法处理表达式</p>
+<p><img src="D:\Andrew_pro\blog\upload_image\mybatis\ParameterMapping.png" srcset="/img/loading.gif" lazyload alt="image-20210129144106148"></p>
+<h3 id="表达式封装"><a href="#表达式封装" class="headerlink" title="表达式封装"></a>表达式封装</h3><p>该方法会将表达式替换为？以便后续sql注入，具体的封装在buildParameterMapping()中</p>
+<p><img src="D:\Andrew_pro\blog\upload_image\mybatis\handleToken.png" srcset="/img/loading.gif" lazyload alt="image-20210129145643124"></p>
+<p>方法具体内容如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> ParameterMapping <span class="hljs-title function_">buildParameterMapping</span><span class="hljs-params">(String content)</span> &#123;<br>  <span class="hljs-comment">//上一节已分析过，会返回表达式所有内容的map集合  </span><br>  Map&lt;String, String&gt; propertiesMap = parseParameterMapping(content);<br>    <span class="hljs-comment">//注意，这个property是表达式的值即#&#123;value&#125;，不是参数变量里面的值</span><br>  <span class="hljs-type">String</span> <span class="hljs-variable">property</span> <span class="hljs-operator">=</span> propertiesMap.get(<span class="hljs-string">&quot;property&quot;</span>);<br>  Class&lt;?&gt; propertyType;<br>    <span class="hljs-comment">//该步骤尝试从各种方案中获取 参数的类型</span><br>  <span class="hljs-keyword">if</span> (metaParameters.hasGetter(property)) &#123; <span class="hljs-comment">// issue #448 get type from additional params</span><br>    propertyType = metaParameters.getGetterType(property);<br>  &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (typeHandlerRegistry.hasTypeHandler(parameterType)) &#123;<br>    propertyType = parameterType;<br>  &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (JdbcType.CURSOR.name().equals(propertiesMap.get(<span class="hljs-string">&quot;jdbcType&quot;</span>))) &#123;<br>    propertyType = java.sql.ResultSet.class;<br>  &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (property == <span class="hljs-literal">null</span> || Map.class.isAssignableFrom(parameterType)) &#123;<br>    propertyType = Object.class;<br>  &#125; <span class="hljs-keyword">else</span> &#123;<br>    <span class="hljs-type">MetaClass</span> <span class="hljs-variable">metaClass</span> <span class="hljs-operator">=</span> MetaClass.forClass(parameterType, configuration.getReflectorFactory());<br>    <span class="hljs-keyword">if</span> (metaClass.hasGetter(property)) &#123;<br>      propertyType = metaClass.getGetterType(property);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>      propertyType = Object.class;<br>    &#125;<br>  &#125;<br>  <span class="hljs-comment">//初始化ParameterMapping，通过它的内部类构造者builder封装数据，这里的propertyType参数将用于指定“TypeHandler”</span><br>  <span class="hljs-comment">//从集合遍历通过if-else方法块逐步封装  </span><br>  ParameterMapping.<span class="hljs-type">Builder</span> <span class="hljs-variable">builder</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ParameterMapping</span>.Builder(configuration, property, propertyType);<br>  Class&lt;?&gt; javaType = propertyType;<br>  <span class="hljs-type">String</span> <span class="hljs-variable">typeHandlerAlias</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<br>  <span class="hljs-keyword">for</span> (Map.Entry&lt;String, String&gt; entry : propertiesMap.entrySet()) &#123;<br>    <span class="hljs-type">String</span> <span class="hljs-variable">name</span> <span class="hljs-operator">=</span> entry.getKey();<br>    <span class="hljs-type">String</span> <span class="hljs-variable">value</span> <span class="hljs-operator">=</span> entry.getValue();<br>    <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;javaType&quot;</span>.equals(name)) &#123;<br>      javaType = resolveClass(value);<br>      builder.javaType(javaType);<br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;jdbcType&quot;</span>.equals(name)) &#123;<br>      builder.jdbcType(resolveJdbcType(value));<br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;mode&quot;</span>.equals(name)) &#123;<br>      builder.mode(resolveParameterMode(value));<br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;numericScale&quot;</span>.equals(name)) &#123;<br>      builder.numericScale(Integer.valueOf(value));<br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;resultMap&quot;</span>.equals(name)) &#123;<br>      builder.resultMapId(value);<br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;typeHandler&quot;</span>.equals(name)) &#123;<br>      typeHandlerAlias = value;<br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;jdbcTypeName&quot;</span>.equals(name)) &#123;<br>      builder.jdbcTypeName(value);<br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;property&quot;</span>.equals(name)) &#123;<br>      <span class="hljs-comment">// Do Nothing</span><br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;expression&quot;</span>.equals(name)) &#123;<br>      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BuilderException</span>(<span class="hljs-string">&quot;Expression based parameters are not supported yet&quot;</span>);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BuilderException</span>(<span class="hljs-string">&quot;An invalid property &#x27;&quot;</span> + name + <span class="hljs-string">&quot;&#x27; was found in mapping #&#123;&quot;</span> + content + <span class="hljs-string">&quot;&#125;.  Valid properties are &quot;</span> + PARAMETER_PROPERTIES);<br>    &#125;<br>  &#125;<br>  <span class="hljs-comment">//当我们实现类型转换器时，也从这里加入</span><br>  <span class="hljs-keyword">if</span> (typeHandlerAlias != <span class="hljs-literal">null</span>) &#123;<br>    builder.typeHandler(resolveTypeHandler(javaType, typeHandlerAlias));<br>  &#125;<br>  <span class="hljs-keyword">return</span> builder.build();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>注意：ParameterMapping从始至终中只存放了查询表达式’#{value}‘，类型，类型转换器等特性，并未封装请求参数的值</strong></p>
+<h1 id="Sql执行"><a href="#Sql执行" class="headerlink" title="Sql执行"></a>Sql执行</h1><p>通过mybatis主架构得知，mybatis的具体语句执行需要通过执行器Executor语句执行</p>
+<p>以查询为例，以下是SimpleExecutor中调用查询方法的代码,可见已经传入了执行sql所需要的所有变量</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> &lt;E&gt; List&lt;E&gt; <span class="hljs-title function_">doQuery</span><span class="hljs-params">(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql)</span> <span class="hljs-keyword">throws</span> SQLException &#123;<br>    <span class="hljs-type">Statement</span> <span class="hljs-variable">stmt</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<br>    <span class="hljs-keyword">try</span> &#123;<br>      <span class="hljs-type">Configuration</span> <span class="hljs-variable">configuration</span> <span class="hljs-operator">=</span> ms.getConfiguration();<br>      <span class="hljs-comment">//1.初始化StatementHandler</span><br>      <span class="hljs-type">StatementHandler</span> <span class="hljs-variable">handler</span> <span class="hljs-operator">=</span> configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, resultHandler, boundSql);<br>      <span class="hljs-comment">//2.生成jdbc的Statement对象</span><br>      stmt = prepareStatement(handler, ms.getStatementLog());<br>      <span class="hljs-comment">//5.执行statement</span><br>      <span class="hljs-keyword">return</span> handler.query(stmt, resultHandler);<br>    &#125; <span class="hljs-keyword">finally</span> &#123;<br>      closeStatement(stmt);<br>    &#125;<br>  &#125;<br><span class="hljs-comment">//3.方法可见是通过StatementHandler利用Connection对象生成</span><br><span class="hljs-keyword">private</span> Statement <span class="hljs-title function_">prepareStatement</span><span class="hljs-params">(StatementHandler handler, Log statementLog)</span> <span class="hljs-keyword">throws</span> SQLException &#123;<br>    Statement stmt;<br>    <span class="hljs-type">Connection</span> <span class="hljs-variable">connection</span> <span class="hljs-operator">=</span> getConnection(statementLog);<br>    stmt = handler.prepare(connection, transaction.getTimeout());<br>    <span class="hljs-comment">//4.此步骤为statement参数赋值，即通过jdbc函数，为sql中的？赋值</span><br>    handler.parameterize(stmt);<br>    <span class="hljs-keyword">return</span> stmt;<br>  &#125;<br></code></pre></td></tr></table></figure>
+
+<p>可见sql的执行过程在handler类的辅助下变得简单，接下来具体分析这个handler类</p>
+<h2 id="StatementHandler-statement辅助类"><a href="#StatementHandler-statement辅助类" class="headerlink" title="StatementHandler(statement辅助类)"></a>StatementHandler(statement辅助类)</h2><h3 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h3><p>StatementHandler<strong>初始化</strong>通过Configuration对象的newStatementHandler()实现</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> StatementHandler <span class="hljs-title function_">newStatementHandler</span><span class="hljs-params">(Executor executor, MappedStatement mappedStatement, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql)</span> &#123;<br>    <span class="hljs-comment">//初始化一个RoutingStatementHandler</span><br>    <span class="hljs-type">StatementHandler</span> <span class="hljs-variable">statementHandler</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RoutingStatementHandler</span>(executor, mappedStatement, parameterObject, rowBounds, resultHandler, boundSql);<br>    <span class="hljs-comment">//拦截器相关逻辑</span><br>    statementHandler = (StatementHandler) interceptorChain.pluginAll(statementHandler);<br>    <span class="hljs-keyword">return</span> statementHandler;<br>  &#125;<br></code></pre></td></tr></table></figure>
+
+<p>可见核心是RoutingStatementHandler类的初始化</p>
+<h3 id="RoutingStatementHandler"><a href="#RoutingStatementHandler" class="headerlink" title="RoutingStatementHandler"></a>RoutingStatementHandler</h3><p>观察这个类不难发现其实他是一个任务委派者，而真正执行的是下述代码中的三种Handler。</p>
+<ol>
+<li>SimpleStatementHandler</li>
+<li>PreparedStatementHandler</li>
+<li>CallableStatementHandler</li>
+</ol>
+<p>委派模式的核心是成员变量delegate（delegete将指向具体的委派者），并且委派者同被委派者们都实现了StatementHandler接口，因此需要实现接口中的方法，而这些方法实际的实现都是通过delegate来调用对应的同名方法；具体参考下例中的委派案例</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//成员变量delegate</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> StatementHandler delegate;<br><br><span class="hljs-keyword">public</span> <span class="hljs-title function_">RoutingStatementHandler</span><span class="hljs-params">(Executor executor, MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql)</span> &#123;<br>    <span class="hljs-comment">//通过StatementType判断需要实现的StatementHandler，mybatsi默认使用PreparedStatementHandler，可以在xml中自行定义各种Handler</span><br>    <span class="hljs-keyword">switch</span> (ms.getStatementType()) &#123;<br>      <span class="hljs-keyword">case</span> STATEMENT:<br>        delegate = <span class="hljs-keyword">new</span> <span class="hljs-title class_">SimpleStatementHandler</span>(executor, ms, parameter, rowBounds, resultHandler, boundSql);<br>        <span class="hljs-keyword">break</span>;<br>      <span class="hljs-keyword">case</span> PREPARED:<br>        delegate = <span class="hljs-keyword">new</span> <span class="hljs-title class_">PreparedStatementHandler</span>(executor, ms, parameter, rowBounds, resultHandler, boundSql);<br>        <span class="hljs-keyword">break</span>;<br>      <span class="hljs-keyword">case</span> CALLABLE:<br>        delegate = <span class="hljs-keyword">new</span> <span class="hljs-title class_">CallableStatementHandler</span>(executor, ms, parameter, rowBounds, resultHandler, boundSql);<br>        <span class="hljs-keyword">break</span>;<br>      <span class="hljs-keyword">default</span>:<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ExecutorException</span>(<span class="hljs-string">&quot;Unknown statement type: &quot;</span> + ms.getStatementType());<br>    &#125;<br>  &#125;<br><span class="hljs-comment">//委派案例</span><br><span class="hljs-keyword">public</span> ParameterHandler <span class="hljs-title function_">getParameterHandler</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">return</span> delegate.getParameterHandler();<br>  &#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="PreparedStatementHandler"><a href="#PreparedStatementHandler" class="headerlink" title="PreparedStatementHandler"></a>PreparedStatementHandler</h3><p>根据上述SimpleExecutor的doQuary()方法及后续分析得知，jdbc的api调用分为一下几个阶段,通过以下代码分析</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> Clinton Begin</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">PreparedStatementHandler</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">BaseStatementHandler</span> &#123;<br>	<span class="hljs-comment">//1.调用父类构造函数初始化</span><br>  <span class="hljs-keyword">public</span> <span class="hljs-title function_">PreparedStatementHandler</span><span class="hljs-params">(Executor executor, MappedStatement mappedStatement, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql)</span> &#123;<br>    <span class="hljs-built_in">super</span>(executor, mappedStatement, parameter, rowBounds, resultHandler, boundSql);<br>  &#125;<br>	<span class="hljs-comment">//4.调用statement执行sql语句，并通过resultSetHandler进行结果集映射</span><br>  <span class="hljs-meta">@Override</span><br>  <span class="hljs-keyword">public</span> &lt;E&gt; List&lt;E&gt; <span class="hljs-title function_">query</span><span class="hljs-params">(Statement statement, ResultHandler resultHandler)</span> <span class="hljs-keyword">throws</span> SQLException &#123;<br>    <span class="hljs-type">PreparedStatement</span> <span class="hljs-variable">ps</span> <span class="hljs-operator">=</span> (PreparedStatement) statement;<br>    ps.execute();<br>    <span class="hljs-keyword">return</span> resultSetHandler.handleResultSets(ps);<br>  &#125;<br>	<span class="hljs-comment">//2.通过connector和sql初始化PreparedStatement对象</span><br>  <span class="hljs-meta">@Override</span><br>  <span class="hljs-keyword">protected</span> Statement <span class="hljs-title function_">instantiateStatement</span><span class="hljs-params">(Connection connection)</span> <span class="hljs-keyword">throws</span> SQLException &#123;<br>      <span class="hljs-comment">//sql可以从之前封装的boundSql中获取</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">sql</span> <span class="hljs-operator">=</span> boundSql.getSql();<br>    <span class="hljs-keyword">if</span> (mappedStatement.getKeyGenerator() <span class="hljs-keyword">instanceof</span> Jdbc3KeyGenerator) &#123;<br>      String[] keyColumnNames = mappedStatement.getKeyColumns();<br>      <span class="hljs-keyword">if</span> (keyColumnNames == <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-keyword">return</span> connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);<br>      &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-keyword">return</span> connection.prepareStatement(sql, keyColumnNames);<br>      &#125;<br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (mappedStatement.getResultSetType() == ResultSetType.DEFAULT) &#123;<br>      <span class="hljs-keyword">return</span> connection.prepareStatement(sql);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>      <span class="hljs-keyword">return</span> connection.prepareStatement(sql, mappedStatement.getResultSetType().getValue(), ResultSet.CONCUR_READ_ONLY);<br>    &#125;<br>  &#125;<br>  <span class="hljs-comment">//3. 调用parameterHandler未statement中的？分别插入值</span><br>  <span class="hljs-meta">@Override</span><br>  <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">parameterize</span><span class="hljs-params">(Statement statement)</span> <span class="hljs-keyword">throws</span> SQLException &#123;<br>    parameterHandler.setParameters((PreparedStatement) statement);<br>  &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>上述代码有两个疑问</p>
+<p>parameterHandler和resultSetHandler这两个处理器来自何处？</p>
+<p>它们在PreparedStatementHandler的父类BaseStatementHandler构造函数中处生成</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">protected</span> <span class="hljs-title function_">BaseStatementHandler</span><span class="hljs-params">(Executor executor, MappedStatement mappedStatement, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql)</span> &#123;<br>    <span class="hljs-built_in">this</span>.configuration = mappedStatement.getConfiguration();<br>    <span class="hljs-built_in">this</span>.executor = executor;<br>    <span class="hljs-built_in">this</span>.mappedStatement = mappedStatement;<br>    <span class="hljs-built_in">this</span>.rowBounds = rowBounds;<br><br>    <span class="hljs-built_in">this</span>.typeHandlerRegistry = configuration.getTypeHandlerRegistry();<br>    <span class="hljs-built_in">this</span>.objectFactory = configuration.getObjectFactory();<br><br>    <span class="hljs-keyword">if</span> (boundSql == <span class="hljs-literal">null</span>) &#123; <span class="hljs-comment">// issue #435, get the key before calculating the statement</span><br>      generateKeys(parameterObject);<br>      boundSql = mappedStatement.getBoundSql(parameterObject);<br>    &#125;<br><br>    <span class="hljs-built_in">this</span>.boundSql = boundSql;<br>	<span class="hljs-comment">//初始化参数处理器 提供了boundSql(内涵parameterMapping)和parameterObject(请求参数对象)</span><br>    <span class="hljs-built_in">this</span>.parameterHandler = configuration.newParameterHandler(mappedStatement, parameterObject, boundSql);<br>    <span class="hljs-comment">//初始化结果集处理器</span><br>    <span class="hljs-built_in">this</span>.resultSetHandler = configuration.newResultSetHandler(executor, mappedStatement, rowBounds, parameterHandler, resultHandler, boundSql);<br>  &#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="ParameterHandler"><a href="#ParameterHandler" class="headerlink" title="ParameterHandler"></a>ParameterHandler</h3><h4 id="初始化-1"><a href="#初始化-1" class="headerlink" title="初始化"></a>初始化</h4><p>ParameterHandler默认只有一种实现DefaultParameterHandler，它在configuration对象的方法中创建</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> ParameterHandler <span class="hljs-title function_">newParameterHandler</span><span class="hljs-params">(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql)</span> &#123;<br>    <span class="hljs-comment">//初始化</span><br>    <span class="hljs-type">ParameterHandler</span> <span class="hljs-variable">parameterHandler</span> <span class="hljs-operator">=</span> mappedStatement.getLang().createParameterHandler(mappedStatement, parameterObject, boundSql);<br>    <span class="hljs-comment">//拦截器</span><br>    parameterHandler = (ParameterHandler) interceptorChain.pluginAll(parameterHandler);<br>    <span class="hljs-keyword">return</span> parameterHandler;<br>  &#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="注入参数"><a href="#注入参数" class="headerlink" title="注入参数"></a>注入参数</h4><p>核心方法分析如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br>  <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setParameters</span><span class="hljs-params">(PreparedStatement ps)</span> &#123;<br>    ErrorContext.instance().activity(<span class="hljs-string">&quot;setting parameters&quot;</span>).object(mappedStatement.getParameterMap().getId());<br>      <span class="hljs-comment">//1.获取parameterMappings</span><br>    List&lt;ParameterMapping&gt; parameterMappings = boundSql.getParameterMappings();<br>    <span class="hljs-keyword">if</span> (parameterMappings != <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-comment">//2.遍历parameterMappings然后解析parameterMapping，该类在ParameterMappingTokenHandler处已分析过</span><br>      <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; parameterMappings.size(); i++) &#123;<br>        <span class="hljs-type">ParameterMapping</span> <span class="hljs-variable">parameterMapping</span> <span class="hljs-operator">=</span> parameterMappings.get(i);<br>        <span class="hljs-keyword">if</span> (parameterMapping.getMode() != ParameterMode.OUT) &#123;<br>          Object value;<br>          <span class="hljs-type">String</span> <span class="hljs-variable">propertyName</span> <span class="hljs-operator">=</span> parameterMapping.getProperty();<br>            <span class="hljs-comment">//3.通过xml中的#&#123;value&#125;表达式获取parameterObject中的对象</span><br>          <span class="hljs-keyword">if</span> (boundSql.hasAdditionalParameter(propertyName)) &#123; <span class="hljs-comment">// issue #448 ask first for additional params</span><br>            value = boundSql.getAdditionalParameter(propertyName);<br>          &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (parameterObject == <span class="hljs-literal">null</span>) &#123;<br>            value = <span class="hljs-literal">null</span>;<br>          &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) &#123;<br>            value = parameterObject;<br>          &#125; <span class="hljs-keyword">else</span> &#123;<br>              <span class="hljs-comment">//4.mybatis默认用自己实现的表达式解析类MetaObject来实现，它的实现目的类似OGNL的API，通过分析OGNL表达式来获取对象</span><br>            <span class="hljs-type">MetaObject</span> <span class="hljs-variable">metaObject</span> <span class="hljs-operator">=</span> configuration.newMetaObject(parameterObject);<br>            value = metaObject.getValue(propertyName);<br>          &#125;<br>            <span class="hljs-comment">//5.获取TypeHandler，TypeHandler通过</span><br>          <span class="hljs-type">TypeHandler</span> <span class="hljs-variable">typeHandler</span> <span class="hljs-operator">=</span> parameterMapping.getTypeHandler();<br>          <span class="hljs-type">JdbcType</span> <span class="hljs-variable">jdbcType</span> <span class="hljs-operator">=</span> parameterMapping.getJdbcType();<br>          <span class="hljs-keyword">if</span> (value == <span class="hljs-literal">null</span> &amp;&amp; jdbcType == <span class="hljs-literal">null</span>) &#123;<br>            jdbcType = configuration.getJdbcTypeForNull();<br>          &#125;<br>          <span class="hljs-keyword">try</span> &#123;<br>              <br>            typeHandler.setParameter(ps, i + <span class="hljs-number">1</span>, value, jdbcType);<br>          &#125; <span class="hljs-keyword">catch</span> (TypeException | SQLException e) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">TypeException</span>(<span class="hljs-string">&quot;Could not set parameters for mapping: &quot;</span> + parameterMapping + <span class="hljs-string">&quot;. Cause: &quot;</span> + e, e);<br>          &#125;<br>        &#125;<br>      &#125;<br>    &#125;<br>  &#125;<br></code></pre></td></tr></table></figure>
+
+<p>可以看到ParameterHandler<strong>仅仅是通过#{value}表达式获取到了实际请求参数中的值，并解析了ParameterMapping中配置</strong><br>，如jdbc类型等；而实际为Statement插入请求参数则需要TypeHandler；</p>
+<h2 id="TypeHandler"><a href="#TypeHandler" class="headerlink" title="TypeHandler"></a>TypeHandler</h2><p>mybatis默认为这个接口实现了N多种实现类（实现了大部分传统数据类型），并初始化了它们，但实际用哪种需要用户指定。例如在表达式中写入<br><code>#&#123;value,javaType=&quot;int&quot;&#125;</code>;<strong>当用户未指定时则默认使用实现类UnknownTypeHandler</strong>，指定流程在ParameterMapping对象构造时完成；</p>
+<p>TypeHandler和它的子类基于模板方法模式实现</p>
+<h3 id="BaseTypeHandler（模板方法类）"><a href="#BaseTypeHandler（模板方法类）" class="headerlink" title="BaseTypeHandler（模板方法类）"></a>BaseTypeHandler（模板方法类）</h3><p>TypeHandler有一个抽象类BaseTypeHandler，它实现了setParameter方法，该方法将作为模板成为TypeHandler的该方法的唯一实现；相应的模板方法中自然会调用元素方法（由具体的TypeHandler实现类实现，而这些元素方法根据不的实现类实现了不同的功能，如：本例中根据情况对不同类型的请求参数为Statement对象赋值）；以上是对模板方法模式的描述</p>
+<p>模板方法代码如下，仅仅只有几个判断</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setParameter</span><span class="hljs-params">(PreparedStatement ps, <span class="hljs-type">int</span> i, T parameter, JdbcType jdbcType)</span> <span class="hljs-keyword">throws</span> SQLException &#123;<br>    <span class="hljs-keyword">if</span> (parameter == <span class="hljs-literal">null</span>) &#123;<br>      <span class="hljs-keyword">if</span> (jdbcType == <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">TypeException</span>(<span class="hljs-string">&quot;JDBC requires that the JdbcType must be specified for all nullable parameters.&quot;</span>);<br>      &#125;<br>      <span class="hljs-keyword">try</span> &#123;<br>        ps.setNull(i, jdbcType.TYPE_CODE);<br>      &#125; <span class="hljs-keyword">catch</span> (SQLException e) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">TypeException</span>(<span class="hljs-string">&quot;Error setting null for parameter #&quot;</span> + i + <span class="hljs-string">&quot; with JdbcType &quot;</span> + jdbcType + <span class="hljs-string">&quot; . &quot;</span><br>              + <span class="hljs-string">&quot;Try setting a different JdbcType for this parameter or a different jdbcTypeForNull configuration property. &quot;</span><br>              + <span class="hljs-string">&quot;Cause: &quot;</span> + e, e);<br>      &#125;<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>      <span class="hljs-keyword">try</span> &#123;<br>          <span class="hljs-comment">//参数部位null执行该方法</span><br>        setNonNullParameter(ps, i, parameter, jdbcType);<br>      &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">TypeException</span>(<span class="hljs-string">&quot;Error setting non null for parameter #&quot;</span> + i + <span class="hljs-string">&quot; with JdbcType &quot;</span> + jdbcType + <span class="hljs-string">&quot; . &quot;</span><br>              + <span class="hljs-string">&quot;Try setting a different JdbcType for this parameter or a different configuration property. &quot;</span><br>              + <span class="hljs-string">&quot;Cause: &quot;</span> + e, e);<br>      &#125;<br>    &#125;<br>  &#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="UnknownTypeHandler-默认Handler"><a href="#UnknownTypeHandler-默认Handler" class="headerlink" title="UnknownTypeHandler(默认Handler)"></a>UnknownTypeHandler(默认Handler)</h3><p>作为默认实现，当不知道或没有请求参数类型时，使用该Handler；它实际是一个路由，用来动态发现传入的数据是什么类型</p>
+<p>有一个核心变量<strong>typeHandlerRegistrySupplier 保存了所有基本类型Handler的map集合</strong>（实际这些集合存储在TypeHandlerRegistry类中）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UnknownTypeHandler</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">BaseTypeHandler</span>&lt;Object&gt; &#123;<br><br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">ObjectTypeHandler</span> <span class="hljs-variable">OBJECT_TYPE_HANDLER</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ObjectTypeHandler</span>();<br>  <span class="hljs-comment">// TODO Rename to &#x27;configuration&#x27; after removing the &#x27;configuration&#x27; property(deprecated property) on parent class</span><br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Configuration config;<br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Supplier&lt;TypeHandlerRegistry&gt; typeHandlerRegistrySupplier;<br>  <span class="hljs-keyword">public</span> <span class="hljs-title function_">UnknownTypeHandler</span><span class="hljs-params">(Configuration configuration)</span> &#123;<br>    <span class="hljs-built_in">this</span>.config = configuration;<br>    <span class="hljs-built_in">this</span>.typeHandlerRegistrySupplier = configuration::getTypeHandlerRegistry;<br>  &#125;<br>    <span class="hljs-comment">//通过setNonNullParameter()启动查询</span><br>  <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setNonNullParameter</span><span class="hljs-params">(PreparedStatement ps, <span class="hljs-type">int</span> i, Object parameter, JdbcType jdbcType)</span><br>      <span class="hljs-keyword">throws</span> SQLException &#123;<br>      <span class="hljs-comment">//动态发现</span><br>    <span class="hljs-type">TypeHandler</span> <span class="hljs-variable">handler</span> <span class="hljs-operator">=</span> resolveTypeHandler(parameter, jdbcType);<br>      <span class="hljs-comment">//用发现的Handler的setParameter方法为statement插入参数和类型</span><br>    handler.setParameter(ps, i, parameter, jdbcType);<br>  &#125;<br>    <span class="hljs-comment">//动态发现方法</span><br> <span class="hljs-keyword">private</span> TypeHandler&lt;?&gt; resolveTypeHandler(Object parameter, JdbcType jdbcType) &#123;<br>    TypeHandler&lt;?&gt; handler;<br>    <span class="hljs-keyword">if</span> (parameter == <span class="hljs-literal">null</span>) &#123;<br>      handler = OBJECT_TYPE_HANDLER;<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-comment">//获取TypeHandlerRegistry对象，并调用getTypeHandler获取handler</span><br>      handler = typeHandlerRegistrySupplier.get().getTypeHandler(parameter.getClass(), jdbcType);<br>      <span class="hljs-comment">// check if handler is null (issue #270)</span><br>      <span class="hljs-keyword">if</span> (handler == <span class="hljs-literal">null</span> || handler <span class="hljs-keyword">instanceof</span> UnknownTypeHandler) &#123;<br>        handler = OBJECT_TYPE_HANDLER;<br>      &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> handler;<br>  &#125;<br></code></pre></td></tr></table></figure>
+
+<p>篇幅限制不介绍TypeHandlerRegistry类和getTypeHandler()方法了，简单说明一下</p>
+<ul>
+<li>TypeHandlerRegistry注册了所有的TypeHandler并通过Map集合管理，key为对象Type类型，value为</li>
+<li>getTypeHandler（）具体操作分以下几步</li>
+</ul>
+<ol>
+<li>根据要注入的parameter对象的反射类型，从集合中获取对应的jdbcTypeHandler的map（注意，是map）</li>
+<li>如果有jdbc类型设置则从这个map中获取，如果没有则根据要注入的parameter对象的类型从map中获取</li>
+</ol>
+<p>下述代码是实际handler执行的statement参数的设置代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setNonNullParameter</span><span class="hljs-params">(PreparedStatement ps, <span class="hljs-type">int</span> i, String parameter, JdbcType jdbcType)</span><br>      <span class="hljs-keyword">throws</span> SQLException &#123;<br>    ps.setString(i, parameter);<br>  &#125;<br></code></pre></td></tr></table></figure>
+
+<h1 id="辅助类"><a href="#辅助类" class="headerlink" title="辅助类"></a>辅助类</h1><h2 id="表达式识别-GenericTokenParser"><a href="#表达式识别-GenericTokenParser" class="headerlink" title="表达式识别(GenericTokenParser)"></a>表达式识别(GenericTokenParser)</h2><p>表达式工具类只有一个方法，大致逻辑有三步</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">GenericTokenParser</span> &#123;<br><br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String openToken;<br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String closeToken;<br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> TokenHandler handler;<br><br>  <span class="hljs-keyword">public</span> <span class="hljs-title function_">GenericTokenParser</span><span class="hljs-params">(String openToken, String closeToken, TokenHandler handler)</span> &#123;<br>    <span class="hljs-built_in">this</span>.openToken = openToken;<br>    <span class="hljs-built_in">this</span>.closeToken = closeToken;<br>    <span class="hljs-built_in">this</span>.handler = handler;<br>  &#125;<br><br>  <span class="hljs-keyword">public</span> String <span class="hljs-title function_">parse</span><span class="hljs-params">(String text)</span> &#123;<br>   <span class="hljs-comment">//通过openToken和closeToken识别text中所有的表达式 </span><br>   <span class="hljs-comment">//    for 识别出来的表达式</span><br>   <span class="hljs-comment">//		 调用handler的handleToken(表达式)方法处理识别出来的表达式</span><br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>表达式调用逻辑可参考<a href="ParameterMappingTokenHandler">ParameterMappingTokenHandler</a></p>
+<h2 id="参数处理类（TypeHandler）"><a href="#参数处理类（TypeHandler）" class="headerlink" title="参数处理类（TypeHandler）"></a>参数处理类（TypeHandler）</h2><p>TypeHandler用于辅助注入请求参数并指定jdbc的type类型</p>
+<h3 id="类型注册中心（TypeHandlerRegistry）"><a href="#类型注册中心（TypeHandlerRegistry）" class="headerlink" title="类型注册中心（TypeHandlerRegistry）"></a>类型注册中心（TypeHandlerRegistry）</h3><ul>
+<li>初始化</li>
+</ul>
+<p>TypeHandlerRegistry跟随configuration对象生成，作为它的成员变量伴随configuration终生</p>
+<ul>
+<li>主要成员</li>
+</ul>
+<p><code>private final Map&lt;Type, Map&lt;JdbcType, TypeHandler&lt;?&gt;&gt;&gt; typeHandlerMap = new ConcurrentHashMap&lt;&gt;();</code><br>：基于两个map实现，由于可能发生一个java类型对应多个jdbc类型，如在mybatis中字符串可以转化为varchar，clob，char…等类型，因此需要第二个map集合用来映射可能带jdbc类型</p>
+<ul>
+<li>主要方法：注册handler</li>
+</ul>
+<p>向typeHandlerMap集合放置数据</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">register</span><span class="hljs-params">(Type javaType, JdbcType jdbcType, TypeHandler&lt;?&gt; handler)</span> &#123;<br>    <span class="hljs-keyword">if</span> (javaType != <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-comment">//查询是否已有相关javatype对应map数据</span><br>      Map&lt;JdbcType, TypeHandler&lt;?&gt;&gt; map = typeHandlerMap.get(javaType);<br>        <span class="hljs-comment">//没有则新建map</span><br>      <span class="hljs-keyword">if</span> (map == <span class="hljs-literal">null</span> || map == NULL_TYPE_HANDLER_MAP) &#123;<br>        map = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;&gt;();<br>      &#125;<br>        <span class="hljs-comment">//向子map存入jdbcType和handler</span><br>      map.put(jdbcType, handler);<br>        <span class="hljs-comment">//向父map存入javatype和子map</span><br>      typeHandlerMap.put(javaType, map);<br>    &#125;<br>    allTypeHandlersMap.put(handler.getClass(), handler);<br>  &#125;<br></code></pre></td></tr></table></figure>
+
+
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/object-Object/" class="category-chain-item">[object Object]</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>mybatis</div>
+      <div>https://andrewjiao.github.io/2019/12/21/mybatis/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Andrew_Jiao</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2019年12月21日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/03/17/%E7%BD%91%E5%9D%80%E6%94%B6%E8%97%8F/" title="一些网址收藏">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">一些网址收藏</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2019/10/24/Orcal/" title="orcal学习">
+                        <span class="hidden-mobile">orcal学习</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/assets/shizuku.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"log":false});</script></body>
+</html>
