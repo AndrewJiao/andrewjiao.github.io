@@ -19,22 +19,23 @@
   <meta name="author" content="Andrew_Jiao">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Eureka工作流程1、Eureka Server 启动成功，等待服务端注册。在启动过程中如果配置了集群，集群之间定时通过 Replicate 同步注册表，每个 Eureka Server 都存在独立完整的服务注册表信息 2、Eureka Client 启动时根据配置的 Eureka Server 地址去注册中心注册服务 3、Eureka Client 会每 30s 向 Eureka Server">
+    <meta name="description" content="JVM方法调用重写与重载重载针对java编译器约定方法签名为方法名+参数列表，故此java中允许方法重载，即方法名相同，参数列表不同的方法。 但也会出现以下异常情况 123456789101112131415161718192021public class Main &#123;    public static void main(String[] args) &#123;        &#x2F;&#x2F;调">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Eureka-客户端与服务端">
-<meta property="og:url" content="https://andrewjiao.github.io/2013/12/24/Eureka-%E5%88%86%E6%9E%90/index.html">
+<meta property="og:title" content="深入理解java（二）">
+<meta property="og:url" content="https://andrewjiao.github.io/2022/03/14/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JAVA/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3java%EF%BC%88%E4%BA%8C%EF%BC%89/index.html">
 <meta property="og:site_name" content="good day">
-<meta property="og:description" content="Eureka工作流程1、Eureka Server 启动成功，等待服务端注册。在启动过程中如果配置了集群，集群之间定时通过 Replicate 同步注册表，每个 Eureka Server 都存在独立完整的服务注册表信息 2、Eureka Client 启动时根据配置的 Eureka Server 地址去注册中心注册服务 3、Eureka Client 会每 30s 向 Eureka Server">
+<meta property="og:description" content="JVM方法调用重写与重载重载针对java编译器约定方法签名为方法名+参数列表，故此java中允许方法重载，即方法名相同，参数列表不同的方法。 但也会出现以下异常情况 123456789101112131415161718192021public class Main &#123;    public static void main(String[] args) &#123;        &#x2F;&#x2F;调">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2013-12-24T15:31:30.000Z">
-<meta property="article:modified_time" content="2021-05-16T17:13:20.681Z">
+<meta property="article:published_time" content="2022-03-14T00:01:32.000Z">
+<meta property="article:modified_time" content="2025-04-01T09:08:21.659Z">
 <meta property="article:author" content="Andrew_Jiao">
-<meta property="article:tag" content="eureka">
+<meta property="article:tag" content="JAVA">
+<meta property="article:tag" content="JVM">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>Eureka-客户端与服务端 - good day</title>
+  <title>深入理解java（二） - good day</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -200,7 +201,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Eureka-客户端与服务端"></span>
+            <span id="subtitle" data-typed-text="深入理解java（二）"></span>
           
         </div>
 
@@ -211,8 +212,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2013-12-24 23:31" pubdate>
-          2013年12月24日 晚上
+        <time datetime="2022-03-14 08:01" pubdate>
+          2022年3月14日 早上
         </time>
       </span>
     
@@ -223,7 +224,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          332 字
+          2.3k 字
         
       </span>
     
@@ -234,7 +235,7 @@
         
         
         
-          3 分钟
+          20 分钟
         
       </span>
     
@@ -271,21 +272,132 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Eureka-客户端与服务端</h1>
+            <h1 id="seo-header">深入理解java（二）</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="Eureka工作流程"><a href="#Eureka工作流程" class="headerlink" title="Eureka工作流程"></a>Eureka工作流程</h2><p>1、Eureka Server 启动成功，等待服务端注册。在启动过程中如果配置了集群，集群之间定时通过 Replicate 同步注册表，每个 Eureka Server 都存在独立完整的服务注册表信息</p>
-<p>2、Eureka Client 启动时根据配置的 Eureka Server 地址去注册中心注册服务</p>
-<p>3、Eureka Client 会每 30s 向 Eureka Server 发送一次心跳请求，证明客户端服务正常</p>
-<p>4、当 Eureka Server 90s 内没有收到 Eureka Client 的心跳，注册中心则认为该节点失效，会注销该实例</p>
-<p>5、单位时间内 Eureka Server 统计到有大量的 Eureka Client 没有上送心跳，则认为可能为网络异常，进入自我保护机制，不再剔除没有上送心跳的客户端</p>
-<p>6、当 Eureka Client 心跳请求恢复正常之后，Eureka Server 自动退出自我保护模式</p>
-<p>7、Eureka Client 定时全量或者增量从注册中心获取服务注册表，并且将获取到的信息缓存到本地</p>
-<p>8、服务调用时，Eureka Client 会先从本地缓存找寻调取的服务。如果获取不到，先从注册中心刷新注册表，再同步到本地缓存</p>
-<p>9、Eureka Client 获取到目标服务器信息，发起服务调用</p>
-<p>10、Eureka Client 程序关闭时向 Eureka Server 发送取消请求，Eureka Server 将实例从注册表中删除</p>
+                <h1 id="JVM方法调用"><a href="#JVM方法调用" class="headerlink" title="JVM方法调用"></a>JVM方法调用</h1><h2 id="重写与重载"><a href="#重写与重载" class="headerlink" title="重写与重载"></a>重写与重载</h2><h3 id="重载"><a href="#重载" class="headerlink" title="重载"></a>重载</h3><p>针对java编译器约定方法签名为<code>方法名+参数列表</code>，故此java中允许<strong>方法重载</strong>，即方法名相同，参数列表不同的方法。</p>
+<p>但也会出现以下异常情况</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Main</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        <span class="hljs-comment">//调用第一个</span><br>        test(<span class="hljs-string">&quot;a&quot;</span>, <span class="hljs-keyword">new</span> <span class="hljs-title class_">String</span>[]&#123;<span class="hljs-string">&quot;a&quot;</span>&#125;);<br>        <span class="hljs-comment">//调用第二个</span><br>        test(<span class="hljs-string">&quot;a&quot;</span>, <span class="hljs-string">&quot;b&quot;</span>, <span class="hljs-keyword">new</span> <span class="hljs-title class_">String</span>[]&#123;<span class="hljs-string">&quot;a&quot;</span>&#125;);<br><br>        <span class="hljs-comment">//以下均无法通过编译</span><br><span class="hljs-comment">//        test(&quot;a&quot;, &quot;b&quot;);</span><br><span class="hljs-comment">//        test(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;);</span><br>    &#125;<br>    <span class="hljs-comment">//第一个方法</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">test</span><span class="hljs-params">(String a,String... c)</span> &#123;<br>        System.out.println(<span class="hljs-string">&quot;echo first&quot;</span>);<br>    &#125;<br><br>     <span class="hljs-comment">//第二个</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">test</span><span class="hljs-params">(String a, String b, String... c)</span> &#123;<br>        System.out.println(<span class="hljs-string">&quot;echo second&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>java在编译阶段就能识别重载，识别方案如下：</p>
+<ol>
+<li>优先选取不需要自动装箱拆箱的方法，和不需要可变长参数的方法；</li>
+<li>考虑自动装箱，但不考虑可变长参数；</li>
+<li>考虑自动装箱，考虑可变长参数；</li>
+<li>如果在同一阶段由多个匹配的方法，会选择最贴切的方法（关键在于形参继承关系）。</li>
+</ol>
+<blockquote>
+<blockquote>
+<p>如果子类也可以去重载父类的方法，他们的效果一样。</p>
+</blockquote>
+</blockquote>
+<h3 id="重写"><a href="#重写" class="headerlink" title="重写"></a>重写</h3><p>java中允许<strong>方法重写</strong>，即子类可以重写父类的方法，但需要满足以下条件：</p>
+<ol>
+<li>子类方法的访问权限不能低于父类方法；</li>
+<li>子类方法的返回值类型不能大于父类方法；</li>
+<li>子类方法的异常类型不能大于父类方法；</li>
+<li>子类方法的方法名和参数列表必须与父类方法一致。</li>
+<li>子类方法不能覆盖父类的<code>private</code>方法，因为<code>private</code>方法是私有的，子类无法访问。</li>
+<li>子类方法不能覆盖父类的<code>final</code>方法，因为<code>final</code>方法是最终的，无法被覆盖。</li>
+</ol>
+<p><strong>关于静态字段</strong></p>
+<p>子类不能重写静态成员，因为静态不是对象的属性，是class类的成员。可以理解每一个class类都是一个单例的对象，故此静态成员是唯一的。</p>
+<ul>
+<li>在编译器眼里这是可以允许的，因为java编译器会将静态成员的调用转换为<code>类名.静态成员</code>，故此在编译阶段是可以通过的。</li>
+<li>运行阶段则不同，java虚拟机会根据对象的实际类型来调用方法，故此在运行阶段父类调用父类的静态成员。<blockquote>
+<blockquote>
+<p>我们管以上场景叫子类对父类属性的隐藏。</p>
+</blockquote>
+</blockquote>
+</li>
+</ul>
+<h2 id="JVM重写与重载判定"><a href="#JVM重写与重载判定" class="headerlink" title="JVM重写与重载判定"></a>JVM重写与重载判定</h2><p>在JVM中，方法签名的判定由<code>类名</code>，<code>方法名``方法描述符</code>共同判定。其中，<code>方法描述符</code>包括<code>参数列表</code>和<code>返回值</code>。这与编译器的判定有所不同，编译器只关注<code>方法名</code>和<code>参数列表</code>。</p>
+<ul>
+<li>针对JVM重写而编译器不是重写的情况，编译器通过生成桥接方法的形式来实现语义重写。</li>
+<li>针对重载方法而言，其重载特性在编译时已决定，故此JVM不会再次判定。</li>
+</ul>
+<h2 id="静态绑定和动态帮定"><a href="#静态绑定和动态帮定" class="headerlink" title="静态绑定和动态帮定"></a>静态绑定和动态帮定</h2><p>针对以上重载和重写的场景，对于在编译时已决定的方法，如重载方法，编译器会在编译阶段就确定方法的调用。这种方法调用方式叫做<strong>静态绑定</strong>。<br>但也有例外，如子类重写了父类的重载方法的场景，编译器无法确定方法的调用，故此在运行阶段才能确定方法的调用。这种方法调用方式叫做<strong>动态绑定</strong>。（包括大部分重写方法的调用）</p>
+<blockquote>
+<blockquote>
+<p>具体来说，java在解析阶段就能判定要调用的方法会使用<strong>静态绑定</strong>（私有方法），反之则使用<strong>动态绑定</strong>（除私有方法以外）。</p>
+</blockquote>
+</blockquote>
+<h3 id="java的方法调用指令"><a href="#java的方法调用指令" class="headerlink" title="java的方法调用指令"></a>java的方法调用指令</h3><p>java的方法调用指令主要有以下几种：</p>
+<ol>
+<li><code>invokestatic</code>：调用静态方法</li>
+<li><code>invokespecial</code>：调用私有方法，构造方法，父类方法</li>
+<li><code>invokevirtual</code>：非私有实例方法调用</li>
+<li><code>invokeinterface</code>：调用接口方法</li>
+<li><code>invokedynamic</code>：动态调用方法<br>对于JVM而言，<code>invokestatic</code>和<code>invokespecial</code>是<strong>静态绑定</strong>,因为他们可以被虚拟机在解析阶段确定调用的方法。其它场景则需要根据JVM上下文环境判断当前类型。</li>
+</ol>
+<h2 id="符号引用与实际引用替换"><a href="#符号引用与实际引用替换" class="headerlink" title="符号引用与实际引用替换"></a>符号引用与实际引用替换</h2><p>针对上文讲过<strong>静态绑定</strong>以外的场景，编译器会将方法的符号引用放在常量池中，而不是直接指向方法的内存地址。这种方式叫做<strong>符号引用</strong>。因此在编译器编译方法之后，所有的方法并不指向某一块内存地址，而是指向一个符号引用(目标所在类，方法名称，方法描述符）。<br>方法符号引用包括<code>接口符号引</code>,<code>非接口符号引用</code>用，以及他们在解析阶段如何查找实际引用;</p>
+<ul>
+<li>接口符号引用<ol>
+<li>在接口中找到符合签名的方法。</li>
+<li>在 Object 类中的公有实例方法中搜索。</li>
+<li>在接口的超接口中搜索。</li>
+</ol>
+</li>
+<li>非接口符号引用(假定该符号引用所指向的类为 C)<ol>
+<li>在 C 中找到符合签名的方法。</li>
+<li>如果没有找到，在 C 的父类中继续搜索，直至 Object 类。</li>
+<li>如果没有找到，在 C 所直接实现或间接实现的接口中搜索，这一步搜索得到的目标方法必须是非私有、非静态的。并且，如果目标方法在间接实现的接口中，则需满足 C 与该接口之间没有其他符合条件的目标方法。如果有多个符合条件的目标方法，则任意返回其中一个。</li>
+</ol>
+</li>
+</ul>
+<h2 id="虚方法"><a href="#虚方法" class="headerlink" title="虚方法"></a>虚方法</h2><p>上文提到静态绑定，包含<code>invokestatic</code>和<code>invokespecial</code>两种方法调用指令。这两种方法调用指令在编译阶段就能确定调用的方法，故此在运行阶段不需要再次判定。<br>而针对<code>invokevertual</code>和<code>invokeinterface</code>两种方法调用指令即为<strong>虚方法调用</strong>，属于<strong>动态绑定</strong></p>
+<p>虚方法则使用了一种空间换时间的策略，JVM会为每个类生成一个方法表（在类接在准备阶段创建），用于存储类的方法信息。<br>方法表中存储了方法的实际地址，以及方法的访问权限等信息。<br>在调用虚方法时，JVM会根据对象的实际类型来查找方法表，找到对应的方法地址，然后调用该方法。</p>
+<p><strong>关于方法表</strong></p>
+<ul>
+<li>方法表是一个二维数组，第一维是类的实际类型，第二维是方法的实际地址。</li>
+<li>方法表的生成是在类加载的准备阶段，即为每个类生成一个方法表。</li>
+<li>子类会拥有父类方法表的所有方法，对于同签名的方法子类的方法表会覆盖父类的方法表对应索引值的方法。</li>
+<li>由于子类会拥有所有父类的非私有方法，因此对应索引值位置的方法和父类会相同。</li>
+</ul>
+<p><strong>关于方法调用</strong></p>
+<ul>
+<li>虚方法绑定<ul>
+<li>解析阶段，根据类型，获取到虚方法对应类型的索引值。</li>
+<li>替换<strong>符号引用</strong>为当前方法表的索引值。（静态绑定则是直接替换为方法地址）</li>
+</ul>
+</li>
+<li>虚方法调用<ul>
+<li>根据对象的实际类型，获取到方法表。</li>
+<li>根据方法表的索引值，获取到方法地址。</li>
+<li>调用方法。</li>
+</ul>
+</li>
+</ul>
+<h2 id="内联缓存"><a href="#内联缓存" class="headerlink" title="内联缓存"></a>内联缓存</h2><p>针对虚方法调用，JVM会使用内联缓存来提高方法调用的效率。(解决虚方法调用需要多次解引用操作的性能问题)。</p>
+<p>简单说，内联缓存是一种空间换时间的策略。</p>
+<ul>
+<li>JVM会将方法调用的结果缓存起来，下次调用时直接使用缓存的结果，而不需要再次查找方法表。</li>
+<li>缓存无法命中则退化为普通的虚方法调用。</li>
+</ul>
+<p>内联缓存的调用场景</p>
+<ul>
+<li>单态：方法调用的接收者只有一个类型。<ul>
+<li>缓存单个类型，当触发这个类型的调用，直接调用缓存的方法地址。</li>
+</ul>
+</li>
+<li>多态：方法调用的接收者有两个或数个类型。<ul>
+<li>缓存多个类型，当触发这些类型的调用，直接调用缓存的方法地址。</li>
+</ul>
+</li>
+<li>超多太：方法调用的接收者有多个类型。<ul>
+<li>同上</li>
+</ul>
+</li>
+</ul>
+<p>JVM为了节约内存占用，且绝大部分方法都是单态调用，因而只使用了单态缓存。</p>
+<ul>
+<li>在二态场景下，AB两个类型调用相同的方法。在最坏的场景下（即AB交替调用），JVM无法使用内联缓存，并在原有虚方法调用基础上额外增加了替换原有缓存的写操作。（但这次写在下一次调用也不会被命中）<ul>
+<li>在上述场景下，JAVA选择抛弃内联缓存，而使用普通的虚方法调用（需要达到一定阈值）。</li>
+</ul>
+</li>
+<li>在超多态场景下，JVM会使用<strong>分支预测</strong>来提高方法调用的效率(软件层全局表和硬件分支预测)。</li>
+</ul>
 
                 
               </div>
@@ -304,7 +416,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/springBoot/" class="category-chain-item">springBoot</a>
+  <a href="/categories/JAVA/" class="category-chain-item">JAVA</a>
   
   
 
@@ -319,7 +431,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/eureka/" class="print-no-link">#eureka</a>
+        <a href="/tags/JAVA/" class="print-no-link">#JAVA</a>
+      
+        <a href="/tags/JVM/" class="print-no-link">#JVM</a>
       
     </div>
   
@@ -331,8 +445,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Eureka-客户端与服务端</div>
-      <div>https://andrewjiao.github.io/2013/12/24/Eureka-分析/</div>
+      <div>深入理解java（二）</div>
+      <div>https://andrewjiao.github.io/2022/03/14/深入理解JAVA/深入理解java（二）/</div>
     </div>
     <div class="license-meta">
       
@@ -344,7 +458,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2013年12月24日</div>
+          <div>2022年3月14日</div>
         </div>
       
       
@@ -376,18 +490,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2013/12/24/AAA_%E6%A8%A1%E6%9D%BF/" title="这是一个测试模板">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">这是一个测试模板</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2013/12/24/Ognl%E7%B1%BB%E5%BA%93/" title="OGNL类库">
-                        <span class="hidden-mobile">OGNL类库</span>
+                      <a href="/2021/12/24/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JAVA/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3java%EF%BC%88%E4%B8%80%EF%BC%89/" title="深入理解java（一）">
+                        <span class="hidden-mobile">深入理解java（一）</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
