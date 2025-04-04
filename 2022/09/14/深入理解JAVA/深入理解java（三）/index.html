@@ -1,0 +1,747 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="https://andrewblogs.oss-cn-heyuan.aliyuncs.com/base/toptag.png">
+  <link rel="icon" href="https://andrewblogs.oss-cn-heyuan.aliyuncs.com/base/toptag.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Andrew_Jiao">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="异常处理基本概念 异常基本组件 throw：异常抛出 try-catch：异常捕获   异常类型，所有异常都是 Throwable 类或者其子类的实例。Throwable 有两大直接子类。第一个是 Error，涵盖程序不应捕获的异常。 Error：系统级别异常，用户无需处理实现。（无法捕获） 当程序触发 Error 时，它的执行状态已经无法恢复，需要中止线程甚至是中止虚拟机。   Exceptio">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入理解java（异常）">
+<meta property="og:url" content="https://andrewjiao.github.io/2022/09/14/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JAVA/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3java%EF%BC%88%E4%B8%89%EF%BC%89/index.html">
+<meta property="og:site_name" content="good day">
+<meta property="og:description" content="异常处理基本概念 异常基本组件 throw：异常抛出 try-catch：异常捕获   异常类型，所有异常都是 Throwable 类或者其子类的实例。Throwable 有两大直接子类。第一个是 Error，涵盖程序不应捕获的异常。 Error：系统级别异常，用户无需处理实现。（无法捕获） 当程序触发 Error 时，它的执行状态已经无法恢复，需要中止线程甚至是中止虚拟机。   Exceptio">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-09-14T11:22:32.000Z">
+<meta property="article:modified_time" content="2025-04-04T17:45:37.408Z">
+<meta property="article:author" content="Andrew_Jiao">
+<meta property="article:tag" content="JAVA">
+<meta property="article:tag" content="JVM">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>深入理解java（异常） - good day</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"andrewjiao.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>hello there</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://andrewblogs.oss-cn-heyuan.aliyuncs.com/base/baseHeader.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="深入理解java（异常）"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-09-14 19:22" pubdate>
+          2022年9月14日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          13 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">深入理解java（异常）</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h1><h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><ul>
+<li>异常基本组件<ul>
+<li>throw：异常抛出</li>
+<li>try-catch：异常捕获</li>
+</ul>
+</li>
+<li>异常类型，所有异常都是 Throwable 类或者其子类的实例。Throwable 有两大直接子类。第一个是 Error，涵盖程序不应捕获的异常。<ul>
+<li>Error：系统级别异常，用户无需处理实现。（无法捕获）<ul>
+<li>当程序触发 Error 时，它的执行状态已经无法恢复，需要中止线程甚至是中止虚拟机。</li>
+</ul>
+</li>
+<li>Exception:由throw关键字抛出<ul>
+<li>显示异常：CheckedException，代表：IOException，SQLException；各模块业务异常，一般用户自定义。</li>
+<li>隐式异常：RuntimeException，代表：空指针，数组越界，表示程序基本逻辑错误。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>一些问题<ul>
+<li>异常性能问题：new 出一个异常非常耗费性能，因为他需要递归当前线程栈的所有栈帧，逐一的记录当前类，文件，代码行数，方法名等。</li>
+<li>不可缓存：异常堆栈信息是在异常new的那一刻记录，和throw语句无关。</li>
+<li>如果我们catch住某个异常，并重新抛出新的异常，会导致内存旧异常的堆栈消失。</li>
+</ul>
+</li>
+</ul>
+<h2 id="try-catch块"><a href="#try-catch块" class="headerlink" title="try-catch块"></a>try-catch块</h2><p>针对try-catch块，也就是异常处理代码块。其核心逻辑如下：</p>
+<ul>
+<li><strong>try块</strong>：用来监控用户的代码是否抛出异常。</li>
+<li><strong>catch块</strong>：用来捕获try块的异常。<ul>
+<li>一次能catch多个异常种类，并且可以多次生明catch块；</li>
+<li>上一层的catch块不能覆盖下面层级的catch块申明的异常；</li>
+<li>catch块也会抛出异常，但不会被下面层级的异常捕获，会直接抛出。</li>
+</ul>
+</li>
+<li><strong>finally块</strong>：执行必须执行的操作，如资源释放等。注意finally块代码<strong>在任何情况</strong>下都会执行。参考一下几种情况：<ul>
+<li>try{throw ex}-&gt;catch-&gt;finally</li>
+<li>try{throw ex}-&gt;no catch match-&gt;finally-&gt;method throw</li>
+<li>try{throw ex_a}-&gt;catch(ex_a){throw ex_b}-&gt;finally-&gt;method throw ex_b：即便catch抛出新的异常，finally也会执行。</li>
+</ul>
+</li>
+</ul>
+<h2 id="虚拟机捕获异常"><a href="#虚拟机捕获异常" class="headerlink" title="虚拟机捕获异常"></a>虚拟机捕获异常</h2><h3 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h3><p>虚拟机通过异常表来监控方法异常抛出和捕获（每个方法都会有一个异常表）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>  <span class="hljs-keyword">try</span> &#123;<br>    mayThrowException();<br>  &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>    e.printStackTrace();<br>  &#125;<br>&#125;<br><span class="hljs-comment">// 对应的Java字节码</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(java.lang.String[])</span>;<br>  Code:<br>    <span class="hljs-number">0</span>: invokestatic mayThrowException:()V<br>    <span class="hljs-number">3</span>: <span class="hljs-keyword">goto</span> <span class="hljs-number">11</span><br>    <span class="hljs-number">6</span>: astore_1<br>    <span class="hljs-number">7</span>: aload_1<br>    <span class="hljs-number">8</span>: invokevirtual java.lang.Exception.printStackTrace<br>   <span class="hljs-number">11</span>: <span class="hljs-keyword">return</span><br>  Exception table:<br>    from  to target type<br>      <span class="hljs-number">0</span>   <span class="hljs-number">3</span>   <span class="hljs-number">6</span>  Class java/lang/Exception  <span class="hljs-comment">// 异常表条目</span><br><br></code></pre></td></tr></table></figure>
+
+<p>如上图，异常表包含</p>
+<ul>
+<li>from：表达当前异常监控起始位置；</li>
+<li>to：表达当前异常监控截至位置；</li>
+<li>type：表达所匹配的异常类型；</li>
+<li>target：如果触发当前异常条目，则跳转到target指向的代码。</li>
+</ul>
+<blockquote>
+<p>具体执行流程：</p>
+<ol>
+<li>方法抛出异常；</li>
+<li>调用异常表逐一查看；</li>
+<li>判断是否在from-to范围内；</li>
+<li>判断是否匹配type异常类型；</li>
+<li>获取target指向的代码行，执行跳转；</li>
+<li>另外，如果无法找到匹配的异常type类型，会弹出当前方法堆栈，给到上一层调用者的异常表执行这个步骤。</li>
+</ol>
+</blockquote>
+<h3 id="关于finally块"><a href="#关于finally块" class="headerlink" title="关于finally块"></a>关于finally块</h3><p>finally块会比较特殊，在当前的java版本。</p>
+<ul>
+<li>正常流程：编译器会把finally块代码复制到try区域末尾和所有catch区域末尾，这样确保了正常流程均会执行finally块。</li>
+<li>抛出异常：编译器会额外生成一个异常表条目在末尾，监控整个try-catch块区域。<ul>
+<li>from-to：整个try-catch区域</li>
+<li>type：为any匹配所有异常，</li>
+<li>target：一个特殊的finally块，他会在最后重新抛出当前异常表匹配的异常。</li>
+</ul>
+</li>
+</ul>
+<p>如下所示：finally块有三分</p>
+<ol>
+<li>在catch代码块末尾，用于处理正常catch的流程</li>
+<li>在上一个finally块末尾（即22行开始），用于捕获上述代码未被捕获的异常和catch块抛出的新异常（即全局catch）<ul>
+<li>注意这一份finally块末尾会抛出新的异常。</li>
+</ul>
+</li>
+<li>即第五行程序goto指向的30行，表示程序正常结束。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Foo</span> &#123;<br>  <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> tryBlock;<br>  <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> catchBlock;<br>  <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> finallyBlock;<br>  <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> methodExit;<br><br>  <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">test</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">try</span> &#123;<br>      tryBlock = <span class="hljs-number">0</span>;<br>    &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>      catchBlock = <span class="hljs-number">1</span>;<br>    &#125; <span class="hljs-keyword">finally</span> &#123;<br>      finallyBlock = <span class="hljs-number">2</span>;<br>    &#125;<br>    methodExit = <span class="hljs-number">3</span>;<br>  &#125;<br>&#125;<br><br><br>$ javap -c Foo<br>...<br>  <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">test</span><span class="hljs-params">()</span>;<br>    Code:<br>       <span class="hljs-number">0</span>: aload_0<br>       <span class="hljs-number">1</span>: iconst_0<br>       <span class="hljs-number">2</span>: putfield      #<span class="hljs-number">20</span>                 <span class="hljs-comment">// Field tryBlock:I</span><br>       <span class="hljs-number">5</span>: <span class="hljs-keyword">goto</span>          <span class="hljs-number">30</span><br>       <span class="hljs-number">8</span>: astore_1<br>       <span class="hljs-number">9</span>: aload_0<br>      <span class="hljs-number">10</span>: iconst_1<br>      <span class="hljs-number">11</span>: putfield      #<span class="hljs-number">22</span>                 <span class="hljs-comment">// Field catchBlock:I</span><br>      <span class="hljs-number">14</span>: aload_0<br>      <span class="hljs-number">15</span>: iconst_2<br>      <span class="hljs-number">16</span>: putfield      #<span class="hljs-number">24</span>                 <span class="hljs-comment">// Field finallyBlock:I</span><br>      <span class="hljs-number">19</span>: <span class="hljs-keyword">goto</span>          <span class="hljs-number">35</span><br>      <span class="hljs-number">22</span>: astore_2<br>      <span class="hljs-number">23</span>: aload_0<br>      <span class="hljs-number">24</span>: iconst_2<br>      <span class="hljs-number">25</span>: putfield      #<span class="hljs-number">24</span>                 <span class="hljs-comment">// Field finallyBlock:I</span><br>      <span class="hljs-number">28</span>: aload_2<br>      <span class="hljs-number">29</span>: athrow<br>      <span class="hljs-number">30</span>: aload_0<br>      <span class="hljs-number">31</span>: iconst_2<br>      <span class="hljs-number">32</span>: putfield      #<span class="hljs-number">24</span>                 <span class="hljs-comment">// Field finallyBlock:I</span><br>      <span class="hljs-number">35</span>: aload_0<br>      <span class="hljs-number">36</span>: iconst_3<br>      <span class="hljs-number">37</span>: putfield      #<span class="hljs-number">26</span>                 <span class="hljs-comment">// Field methodExit:I</span><br>      <span class="hljs-number">40</span>: <span class="hljs-keyword">return</span><br>    Exception table:<br>       from    to  target type<br>           <span class="hljs-number">0</span>     <span class="hljs-number">5</span>     <span class="hljs-number">8</span>   Class java/lang/Exception<br>           <span class="hljs-number">0</span>    <span class="hljs-number">14</span>    <span class="hljs-number">22</span>   any<br><br>  ...<br><br></code></pre></td></tr></table></figure>
+
+<h2 id="Suppressed-异常和语法糖"><a href="#Suppressed-异常和语法糖" class="headerlink" title="Suppressed 异常和语法糖"></a>Suppressed 异常和语法糖</h2><h3 id="异常Suppressed问题"><a href="#异常Suppressed问题" class="headerlink" title="异常Suppressed问题"></a>异常Suppressed问题</h3><p>在某些特殊情况下，异常catch，finally代码块中也会抛出新的异常。如果我们不做特殊处理，新的异常会覆盖我们原有的异常。</p>
+<p>如何将这两种异常归并到一起呢？</p>
+<p><strong>catch块</strong>很好处理，因为它们获取到旧异常的指针，可以自定义归并，如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">catch</span>(Exception old)&#123;<br>    ...<br>    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Exception</span>(old);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>finally块</strong>并没有这个指针，我们要么选择抛出新的异常，要么原地catch。是否对如下代码很常见？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>    <span class="hljs-type">InputStream</span> <span class="hljs-variable">stream</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ByteArrayInputStream</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">byte</span>[]&#123;&#125;);<br>    <span class="hljs-keyword">try</span> &#123;<br>    &#125; <span class="hljs-keyword">finally</span> &#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>            stream.close();<br>        &#125; <span class="hljs-keyword">catch</span> (IOException e) &#123;<br>            <span class="hljs-comment">//简单处理异常</span><br>            <span class="hljs-comment">//to do noting</span><br>        &#125;<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>我们最多在内层的catch块打印一个新的日志用于排查。针对这个问题，我们需要用到<strong>try-with-resources 语法糖</strong>，它能自动帮助我们在字节码层面自动使用 Suppressed 异常（即将新的异常依附在原有异常之上）。</p>
+<h3 id="try-with-resources-语法糖"><a href="#try-with-resources-语法糖" class="headerlink" title="try-with-resources 语法糖"></a>try-with-resources 语法糖</h3><p>除了Suppressed异常外，该语法糖更多的用途是自动帮助我们处理资源回收等场景。只需要我们实现AutoClosable接口的内容即可；</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Foo</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">AutoCloseable</span> &#123;<br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String name;<br>  <span class="hljs-keyword">public</span> <span class="hljs-title function_">Foo</span><span class="hljs-params">(String name)</span> &#123; <span class="hljs-built_in">this</span>.name = name; &#125;<br><br>  <span class="hljs-meta">@Override</span><br>  <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">close</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(name);<br>  &#125;<br><br>  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>    <span class="hljs-keyword">try</span> (<span class="hljs-type">Foo</span> <span class="hljs-variable">foo0</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Foo</span>(<span class="hljs-string">&quot;Foo0&quot;</span>); <span class="hljs-comment">// try-with-resources</span><br>         <span class="hljs-type">Foo</span> <span class="hljs-variable">foo1</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Foo</span>(<span class="hljs-string">&quot;Foo1&quot;</span>);<br>         <span class="hljs-type">Foo</span> <span class="hljs-variable">foo2</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Foo</span>(<span class="hljs-string">&quot;Foo2&quot;</span>)) &#123;<br>      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(<span class="hljs-string">&quot;Initial&quot;</span>);<br>    &#125;<br>  &#125;<br>&#125;<br><br><span class="hljs-comment">// 运行结果：</span><br>Exception in thread <span class="hljs-string">&quot;main&quot;</span> java.lang.RuntimeException: Initial<br>        at Foo.main(Foo.java:<span class="hljs-number">18</span>)<br>        Suppressed: java.lang.RuntimeException: Foo2<br>                at Foo.close(Foo.java:<span class="hljs-number">13</span>)<br>                at Foo.main(Foo.java:<span class="hljs-number">19</span>)<br>        Suppressed: java.lang.RuntimeException: Foo1<br>                at Foo.close(Foo.java:<span class="hljs-number">13</span>)<br>                at Foo.main(Foo.java:<span class="hljs-number">19</span>)<br>        Suppressed: java.lang.RuntimeException: Foo0<br>                at Foo.close(Foo.java:<span class="hljs-number">13</span>)<br>                at Foo.main(Foo.java:<span class="hljs-number">19</span>)<br><br></code></pre></td></tr></table></figure>
+
+
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/JAVA/" class="category-chain-item">JAVA</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/JAVA/" class="print-no-link">#JAVA</a>
+      
+        <a href="/tags/JVM/" class="print-no-link">#JVM</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>深入理解java（异常）</div>
+      <div>https://andrewjiao.github.io/2022/09/14/深入理解JAVA/深入理解java（三）/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Andrew_Jiao</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年9月14日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/01/12/elasticsearch/ElasticSearch%E6%95%B0%E6%8D%AE%E6%9F%A5%E8%AF%A2/" title="Elasticsearch搜索引擎（搜索）">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Elasticsearch搜索引擎（搜索）</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/09/01/elasticsearch/ElasticSearch%E6%95%B0%E6%8D%AE%E6%93%8D%E4%BD%9C/" title="Elasticsearch搜索引擎（数据操作）">
+                        <span class="hidden-mobile">Elasticsearch搜索引擎（数据操作）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/assets/shizuku.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"log":false});</script></body>
+</html>
