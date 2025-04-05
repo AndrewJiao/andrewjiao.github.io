@@ -21,13 +21,13 @@
   
     <meta name="description" content="异常处理基本概念 异常基本组件 throw：异常抛出 try-catch：异常捕获   异常类型，所有异常都是 Throwable 类或者其子类的实例。Throwable 有两大直接子类。第一个是 Error，涵盖程序不应捕获的异常。 Error：系统级别异常，用户无需处理实现。（无法捕获） 当程序触发 Error 时，它的执行状态已经无法恢复，需要中止线程甚至是中止虚拟机。   Exceptio">
 <meta property="og:type" content="article">
-<meta property="og:title" content="深入理解java（异常）">
+<meta property="og:title" content="深入理解java（异常-反射）">
 <meta property="og:url" content="https://andrewjiao.github.io/2022/09/14/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JAVA/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3java%EF%BC%88%E4%B8%89%EF%BC%89/index.html">
 <meta property="og:site_name" content="good day">
 <meta property="og:description" content="异常处理基本概念 异常基本组件 throw：异常抛出 try-catch：异常捕获   异常类型，所有异常都是 Throwable 类或者其子类的实例。Throwable 有两大直接子类。第一个是 Error，涵盖程序不应捕获的异常。 Error：系统级别异常，用户无需处理实现。（无法捕获） 当程序触发 Error 时，它的执行状态已经无法恢复，需要中止线程甚至是中止虚拟机。   Exceptio">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-09-14T11:22:32.000Z">
-<meta property="article:modified_time" content="2025-04-04T17:45:37.408Z">
+<meta property="article:modified_time" content="2025-04-05T11:07:03.371Z">
 <meta property="article:author" content="Andrew_Jiao">
 <meta property="article:tag" content="JAVA">
 <meta property="article:tag" content="JVM">
@@ -35,7 +35,7 @@
   
   
   
-  <title>深入理解java（异常） - good day</title>
+  <title>深入理解java（异常-反射） - good day</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -201,7 +201,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="深入理解java（异常）"></span>
+            <span id="subtitle" data-typed-text="深入理解java（异常-反射）"></span>
           
         </div>
 
@@ -224,7 +224,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.5k 字
+          3.5k 字
         
       </span>
     
@@ -235,7 +235,7 @@
         
         
         
-          13 分钟
+          29 分钟
         
       </span>
     
@@ -272,7 +272,7 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">深入理解java（异常）</h1>
+            <h1 id="seo-header">深入理解java（异常-反射）</h1>
             
             
               <div class="markdown-body">
@@ -372,8 +372,138 @@
 <h3 id="try-with-resources-语法糖"><a href="#try-with-resources-语法糖" class="headerlink" title="try-with-resources 语法糖"></a>try-with-resources 语法糖</h3><p>除了Suppressed异常外，该语法糖更多的用途是自动帮助我们处理资源回收等场景。只需要我们实现AutoClosable接口的内容即可；</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Foo</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">AutoCloseable</span> &#123;<br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String name;<br>  <span class="hljs-keyword">public</span> <span class="hljs-title function_">Foo</span><span class="hljs-params">(String name)</span> &#123; <span class="hljs-built_in">this</span>.name = name; &#125;<br><br>  <span class="hljs-meta">@Override</span><br>  <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">close</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(name);<br>  &#125;<br><br>  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>    <span class="hljs-keyword">try</span> (<span class="hljs-type">Foo</span> <span class="hljs-variable">foo0</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Foo</span>(<span class="hljs-string">&quot;Foo0&quot;</span>); <span class="hljs-comment">// try-with-resources</span><br>         <span class="hljs-type">Foo</span> <span class="hljs-variable">foo1</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Foo</span>(<span class="hljs-string">&quot;Foo1&quot;</span>);<br>         <span class="hljs-type">Foo</span> <span class="hljs-variable">foo2</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Foo</span>(<span class="hljs-string">&quot;Foo2&quot;</span>)) &#123;<br>      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(<span class="hljs-string">&quot;Initial&quot;</span>);<br>    &#125;<br>  &#125;<br>&#125;<br><br><span class="hljs-comment">// 运行结果：</span><br>Exception in thread <span class="hljs-string">&quot;main&quot;</span> java.lang.RuntimeException: Initial<br>        at Foo.main(Foo.java:<span class="hljs-number">18</span>)<br>        Suppressed: java.lang.RuntimeException: Foo2<br>                at Foo.close(Foo.java:<span class="hljs-number">13</span>)<br>                at Foo.main(Foo.java:<span class="hljs-number">19</span>)<br>        Suppressed: java.lang.RuntimeException: Foo1<br>                at Foo.close(Foo.java:<span class="hljs-number">13</span>)<br>                at Foo.main(Foo.java:<span class="hljs-number">19</span>)<br>        Suppressed: java.lang.RuntimeException: Foo0<br>                at Foo.close(Foo.java:<span class="hljs-number">13</span>)<br>                at Foo.main(Foo.java:<span class="hljs-number">19</span>)<br><br></code></pre></td></tr></table></figure>
 
+<h1 id="反射"><a href="#反射" class="headerlink" title="反射"></a>反射</h1><p>反射的作用：</p>
+<ol>
+<li>提供编辑期查询可用方法，如eclips</li>
+<li>提供依据namespace+classname，创建对象，调用对象，如Spring-ioc框架</li>
+</ol>
+<h2 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h2><p>其原理就是JVM依据反射的对象类型，和参数，和方法名，可以找到方法内存地址，最终执行方法调用，将参数传递进去即可。</p>
+<p>如下时反射源码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Method</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Executable</span> &#123;<br>  <span class="hljs-keyword">public</span> Object <span class="hljs-title function_">invoke</span><span class="hljs-params">(Object obj, Object... args)</span>  &#123;<br>    <span class="hljs-type">MethodAccessor</span> <span class="hljs-variable">ma</span> <span class="hljs-operator">=</span> methodAccessor;<br>    <span class="hljs-keyword">if</span> (ma == <span class="hljs-literal">null</span>) &#123;<br>      ma = acquireMethodAccessor();<br>    &#125;<br>    <span class="hljs-keyword">return</span> ma.invoke(obj, args);<br>  &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>可见最终会通过MethodAccessor的指针去指向一个具体的类型去调用反射，它是一个Interface，实现有如下几个：</p>
+<ol>
+<li>DelegatingMethodAccessorImpl：代理实现（基于委派模式）</li>
+<li>NativeMethodAccessorImpl：本地实现，由c++代码提供反射调用</li>
+</ol>
+<p>上述<strong>DelegatingMethodAccessorImpl(委派实现)<strong>底层会最终调用</strong>NativeMethodAccessorImpl（本地实现）</strong>。而之所以还需要一个代理机制是因为JVM对反射进行了<strong>动态实现</strong>的优化，从而能够在<strong>本地实现以及动态实现中切换</strong>。</p>
+<ol start="3">
+<li>GeneratedMethodAccessor1（动态实现）：由JVM自动生成字节码触发调用<ul>
+<li>动态实现的调用性能更高，通常比NativeMethodAccessorImpl本地实现快20倍以上；</li>
+<li>反之，由于需要字节码生成，初始化过程较慢；仅仅调用一次的话反而本地实现快3-4倍。</li>
+</ul>
+</li>
+</ol>
+<p>java针对以上<strong>动态实现</strong>和<strong>本地实现</strong>的优劣，进行了优化</p>
+<ul>
+<li>默认16次调用之后启用动态实现；</li>
+<li><code>-Dsun.reflect.noInflation=true</code>可以关闭本地实现直接使用动态实现，会直接使用动态实现<strong>不会触发本地实现和委派实现</strong>；</li>
+<li><code>-Dsun.reflect.inflationThreshold</code>可以修改默认16次的动态实现触发阈值。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><code class="hljs java">    <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">test_invoke</span><span class="hljs-params">(<span class="hljs-type">int</span> count)</span>&#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-type">TestPrint</span> <span class="hljs-variable">testObj</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">TestPrint</span>();<br>            <span class="hljs-type">String</span> <span class="hljs-variable">name</span> <span class="hljs-operator">=</span> TestPrint.class.getName();<br>            Class&lt;?&gt; cls = Class.forName(name);<br>            <span class="hljs-type">Method</span> <span class="hljs-variable">method</span> <span class="hljs-operator">=</span> cls.getMethod(<span class="hljs-string">&quot;test&quot;</span>, <span class="hljs-type">int</span>.class);<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; i &lt; count; i++) &#123;<br>                <span class="hljs-keyword">try</span> &#123;<br>                    method.invoke(testObj, i);<br>                &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>                    e.printStackTrace();<br>                &#125;<br>            &#125;<br>        &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>        &#125;<br><br>    &#125;<br>    <span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TestPrint</span>&#123;<br>        <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">test</span><span class="hljs-params">(<span class="hljs-type">int</span> count)</span> <span class="hljs-keyword">throws</span> Exception &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Exception</span>(<span class="hljs-string">&quot;my expection = &quot;</span> + count);<br>        &#125;<br><br>    &#125;<br><br>java.lang.reflect.InvocationTargetException<br>	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)<br>    <span class="hljs-comment">//第16次打印错误时，使用的还是本地实现</span><br>	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:<span class="hljs-number">77</span>)<br>	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:<span class="hljs-number">43</span>)<br>	at java.base/java.lang.reflect.Method.invoke(Method.java:<span class="hljs-number">569</span>)<br>	at org.example.Main.test_invoke(Main.java:<span class="hljs-number">21</span>)<br>	at org.example.Main.main(Main.java:<span class="hljs-number">8</span>)<br>Caused by: java.lang.Exception: <span class="hljs-type">my</span> <span class="hljs-variable">expection</span> <span class="hljs-operator">=</span> <span class="hljs-number">16</span><br>	at org.example.Main$TestPrint.test(Main.java:<span class="hljs-number">32</span>)<br>	... <span class="hljs-number">6</span> more<br>java.lang.reflect.InvocationTargetException<br>    <span class="hljs-comment">//十七次开始使用动态实现</span><br>	at jdk.internal.reflect.GeneratedMethodAccessor1.invoke(Unknown Source)<br>	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:<span class="hljs-number">43</span>)<br>	at java.base/java.lang.reflect.Method.invoke(Method.java:<span class="hljs-number">569</span>)<br>	at org.example.Main.test_invoke(Main.java:<span class="hljs-number">21</span>)<br>	at org.example.Main.main(Main.java:<span class="hljs-number">8</span>)<br>Caused by: java.lang.Exception: <span class="hljs-type">my</span> <span class="hljs-variable">expection</span> <span class="hljs-operator">=</span> <span class="hljs-number">17</span><br>	at org.example.Main$TestPrint.test(Main.java:<span class="hljs-number">32</span>)<br>	... <span class="hljs-number">5</span> more<br></code></pre></td></tr></table></figure>
+
+<h2 id="反射调用开销"><a href="#反射调用开销" class="headerlink" title="反射调用开销"></a>反射调用开销</h2><p>反射调用成本计算</p>
+<ol>
+<li>Class.forName()：从JVM中根据命名空间查找类型class；</li>
+<li>Class.getMethod()：从class类型中查找方法；<ul>
+<li>此过程会遍历整个方法列表，如果本类没有回从父类等一次找；</li>
+<li>此过程会生成一个Method对象的副本返回，如果返回一整个方法列表，性能开销更大。</li>
+</ul>
+</li>
+<li>反射回重复校验访问权限，可以关闭<code>method.setAccessible(true);</code></li>
+</ol>
+<blockquote>
+<p>针对上述问题我们可以将Class和Method都缓存起来。</p>
+</blockquote>
+<p>剩下的就只需要关注Method.Invoke的性能开销 了。</p>
+<h3 id="关于Invoke性能开销"><a href="#关于Invoke性能开销" class="headerlink" title="关于Invoke性能开销"></a>关于Invoke性能开销</h3><p>以下代码用来观察<strong>反射调用</strong>和<strong>直接调用</strong>的性能差距，我们取最后五次的结果。</p>
+<h3 id="v1-方法参数int：128"><a href="#v1-方法参数int：128" class="headerlink" title="v1_方法参数int：128"></a>v1_方法参数int：128</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Main</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> Exception &#123;<br>        directInvoke(<span class="hljs-number">2_000_000_000</span>);<br>        reflectInvoke_v1(<span class="hljs-number">2_000_000_000</span>);<br>    &#125;<br>    <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">directInvoke</span><span class="hljs-params">(<span class="hljs-type">int</span> count)</span> &#123;<br>        <span class="hljs-type">long</span> <span class="hljs-variable">before</span> <span class="hljs-operator">=</span> System.currentTimeMillis();<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; i &lt; count; i++) &#123;<br>            <span class="hljs-comment">//每隔一个效目标打印一次耗时</span><br>            <span class="hljs-keyword">if</span> (i%<span class="hljs-number">100_000_000</span> == <span class="hljs-number">0</span>) &#123;<br>                <span class="hljs-type">long</span> <span class="hljs-variable">after</span> <span class="hljs-operator">=</span> System.currentTimeMillis();<br>                System.out.println(after-before);<br>                before = after;<br>            &#125;<br>            Test.test(<span class="hljs-number">128</span>);<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">reflectInvoke_v1</span><span class="hljs-params">(<span class="hljs-type">int</span> count)</span> <span class="hljs-keyword">throws</span> Exception &#123;<br>        <span class="hljs-type">long</span> <span class="hljs-variable">before</span> <span class="hljs-operator">=</span> System.currentTimeMillis();<br>            <span class="hljs-type">String</span> <span class="hljs-variable">name</span> <span class="hljs-operator">=</span> Test.class.getName();<br>            Class&lt;?&gt; cls = Class.forName(name);<br>            <span class="hljs-type">Method</span> <span class="hljs-variable">method</span> <span class="hljs-operator">=</span> cls.getMethod(<span class="hljs-string">&quot;test&quot;</span>, <span class="hljs-type">int</span>.class);<br>     	   <span class="hljs-comment">//避免校验权限也能提升部分性能</span><br>            method.setAccessible(<span class="hljs-literal">true</span>);<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; i &lt; count; i++) &#123;<br>                <span class="hljs-comment">//每隔一个效目标打印一次耗时</span><br>                <span class="hljs-keyword">if</span> (i%<span class="hljs-number">100_000_000</span> == <span class="hljs-number">0</span>) &#123;<br>                    <span class="hljs-type">long</span> <span class="hljs-variable">after</span> <span class="hljs-operator">=</span> System.currentTimeMillis();<br>                    System.out.println(after-before);<br>                    before = after;<br>                &#125;<br>                method.invoke(<span class="hljs-literal">null</span>, <span class="hljs-number">128</span>);<br>            &#125;<br>    &#125;<br>    <span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Test</span> &#123;<br>        <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">test</span><span class="hljs-params">(<span class="hljs-type">int</span> count)</span> &#123;<br>        &#125;<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>直接调用（毫秒）</th>
+<th>反射调用（毫秒）</th>
+<th>差距（倍数）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>82</td>
+<td>202</td>
+<td>2.46</td>
+</tr>
+<tr>
+<td>81</td>
+<td>204</td>
+<td>2.52</td>
+</tr>
+<tr>
+<td>81</td>
+<td>204</td>
+<td>2.52</td>
+</tr>
+<tr>
+<td>83</td>
+<td>194</td>
+<td>2.34</td>
+</tr>
+<tr>
+<td>82</td>
+<td>202</td>
+<td>2.46</td>
+</tr>
+</tbody></table>
+<p>得出平均基准差距2.46倍</p>
+<h3 id="v2-方法缓存参数数组"><a href="#v2-方法缓存参数数组" class="headerlink" title="v2_方法缓存参数数组"></a>v2_方法缓存参数数组</h3><ul>
+<li>由于反射接受的参数是一个数组，如果我们只传入一个int值，那么它会自动构建一个数组去封装这个参数。我们可以提前构建数组：<ul>
+<li>避免数组重复创建；</li>
+<li>避免Integer对象自动装配创建；</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">reflectInvoke_v1</span><span class="hljs-params">(<span class="hljs-type">int</span> count)</span> <span class="hljs-keyword">throws</span> Exception &#123;<br>    <span class="hljs-type">long</span> <span class="hljs-variable">before</span> <span class="hljs-operator">=</span> System.currentTimeMillis();<br>        <span class="hljs-type">String</span> <span class="hljs-variable">name</span> <span class="hljs-operator">=</span> Test.class.getName();<br>        Class&lt;?&gt; cls = Class.forName(name);<br>  	    <span class="hljs-comment">//避免校验权限也能提升部分性能</span><br>        method.setAccessible(<span class="hljs-literal">true</span>);<br>        <span class="hljs-type">Method</span> <span class="hljs-variable">method</span> <span class="hljs-operator">=</span> cls.getMethod(<span class="hljs-string">&quot;test&quot;</span>, <span class="hljs-type">int</span>.class);<br>    Object[] value = &#123;<span class="hljs-number">128</span>&#125;;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; i &lt; count; i++) &#123;<br>            <span class="hljs-comment">//每隔一个效目标打印一次耗时</span><br>            <span class="hljs-keyword">if</span> (i%<span class="hljs-number">100_000_000</span> == <span class="hljs-number">0</span>) &#123;<br>                <span class="hljs-type">long</span> <span class="hljs-variable">after</span> <span class="hljs-operator">=</span> System.currentTimeMillis();<br>                System.out.println(after-before);<br>                before = after;<br>            &#125;<br>            method.invoke(<span class="hljs-literal">null</span>, value);<br>        &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>比基准慢2.18略有提升</p>
+</blockquote>
+<h3 id="V3-使用常量池"><a href="#V3-使用常量池" class="headerlink" title="V3_使用常量池"></a>V3_使用常量池</h3><ul>
+<li>如果上述方案替换使用常量池，只避免重复创建Integer对象</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> Exception &#123;<br>    <span class="hljs-type">long</span> <span class="hljs-variable">before</span> <span class="hljs-operator">=</span> System.currentTimeMillis();<br>    <span class="hljs-type">String</span> <span class="hljs-variable">name</span> <span class="hljs-operator">=</span> Test.class.getName();<br>    Class&lt;?&gt; cls = Class.forName(name);<br>    <span class="hljs-type">Method</span> <span class="hljs-variable">method</span> <span class="hljs-operator">=</span> cls.getMethod(<span class="hljs-string">&quot;test&quot;</span>, <span class="hljs-type">int</span>.class);<br>    method.setAccessible(<span class="hljs-literal">true</span>);<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; i &lt; <span class="hljs-number">2_000_000_000</span>; i++) &#123;<br>        <span class="hljs-keyword">if</span> (i % <span class="hljs-number">100_000_000</span> == <span class="hljs-number">0</span>) &#123;<br>            <span class="hljs-type">long</span> <span class="hljs-variable">after</span> <span class="hljs-operator">=</span> System.currentTimeMillis();<br>            System.out.println(after - before);<br>            before = after;<br>        &#125;<br>        <span class="hljs-comment">//改成了 127，能使用常量池</span><br>        method.invoke(<span class="hljs-literal">null</span>, <span class="hljs-number">127</span>);<br>    &#125;<br>&#125;<br><span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Test</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">test</span><span class="hljs-params">(<span class="hljs-type">int</span> arg)</span>&#123;&#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>是基准的1.5倍，快很多。</p>
+</blockquote>
+<ul>
+<li>当前优化比V2版本少了缓存Object[]对象，为什么频繁创建Object[]数组对象反而会性能更快？<ul>
+<li>无GC触发：java会对方法内的栈变量进行逃逸分析，如果能确保其只在方法中使用便会将对象创建在栈空间内（实际更复杂）。从而避免了GC触发导致的性能损耗。</li>
+<li>即时编译器无法优化：V2版本由于数组在循环外面，编译器无法识别数组是否发生变更，因而无法优化对数组的访问操作。</li>
+</ul>
+</li>
+</ul>
+<h3 id="V4-添加NoInflation参数"><a href="#V4-添加NoInflation参数" class="headerlink" title="V4_添加NoInflation参数"></a>V4_添加NoInflation参数</h3><p>添加启动项参数，避免委派实现：<code>java -XX:+PrintGC -Dsun.reflect.noInflation=true org.example.Main</code></p>
+<p>1.2倍，很接近了！！</p>
+<p>之所以反射调用能够变得这么快，主要是因为即时编译器中的方法内联。在关闭了 Inflation 的情况下，<strong>内联的瓶颈在于 Method.invoke</strong> 方法中对 MethodAccessor.invoke 方法的调用。</p>
+<blockquote>
+<p>关于内联的瓶颈：原因在于MethodAccessor.invoke的调用点需要记录的类型可能有很多，即a.invoke,b.invoke,c.invoke…</p>
+</blockquote>
+<h3 id="无法内联的损耗"><a href="#无法内联的损耗" class="headerlink" title="无法内联的损耗"></a>无法内联的损耗</h3><p>上述优化都使用到了方法内联，但如果在调用者种类过多的情况下会发生啥。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Main</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> Exception &#123;<br>        <span class="hljs-type">long</span> <span class="hljs-variable">before</span> <span class="hljs-operator">=</span> System.currentTimeMillis();<br>        <span class="hljs-type">String</span> <span class="hljs-variable">name</span> <span class="hljs-operator">=</span> Test.class.getName();<br>        Class&lt;?&gt; cls = Class.forName(name);<br>        <span class="hljs-type">Method</span> <span class="hljs-variable">method</span> <span class="hljs-operator">=</span> cls.getMethod(<span class="hljs-string">&quot;test&quot;</span>, <span class="hljs-type">int</span>.class);<br>        method.setAccessible(<span class="hljs-literal">true</span>);<br>        polluteProfile();<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; i &lt; <span class="hljs-number">2_000_000_000</span>; i++) &#123;<br>            <span class="hljs-keyword">if</span> (i % <span class="hljs-number">100_000_000</span> == <span class="hljs-number">0</span>) &#123;<br>                <span class="hljs-type">long</span> <span class="hljs-variable">after</span> <span class="hljs-operator">=</span> System.currentTimeMillis();<br>                System.out.println(after - before);<br>                before = after;<br>            &#125;<br>            method.invoke(<span class="hljs-literal">null</span>, <span class="hljs-number">127</span>);<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">polluteProfile</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> Exception &#123;<br>        <span class="hljs-type">Method</span> <span class="hljs-variable">method1</span> <span class="hljs-operator">=</span> Test.class.getMethod(<span class="hljs-string">&quot;test1&quot;</span>, <span class="hljs-type">int</span>.class);<br>        <span class="hljs-type">Method</span> <span class="hljs-variable">method2</span> <span class="hljs-operator">=</span> Test.class.getMethod(<span class="hljs-string">&quot;test2&quot;</span>, <span class="hljs-type">int</span>.class);<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">2000</span>; i++) &#123;<br>            method1.invoke(<span class="hljs-literal">null</span>, <span class="hljs-number">0</span>);<br>            method2.invoke(<span class="hljs-literal">null</span>, <span class="hljs-number">0</span>);<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Test</span> &#123;<br>        <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">test</span><span class="hljs-params">(<span class="hljs-type">int</span> arg)</span> &#123;&#125;<br>        <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">test1</span><span class="hljs-params">(<span class="hljs-type">int</span> i)</span> &#123;&#125;<br>        <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">test2</span><span class="hljs-params">(<span class="hljs-type">int</span> i)</span> &#123;&#125;<br>    &#125;<br><br>&#125;<br>console结果<br><span class="hljs-number">712</span><br>[GC (Allocation Failure)  276789K-&gt;821K(610304K), <span class="hljs-number">0.0019333</span> secs]<br>[GC (Allocation Failure)  267573K-&gt;821K(601600K), <span class="hljs-number">0.0010575</span> secs]<br>[GC (Allocation Failure)  258869K-&gt;821K(593408K), <span class="hljs-number">0.0012190</span> secs]<br>[GC (Allocation Failure)  250677K-&gt;821K(585216K), <span class="hljs-number">0.0015212</span> secs]<br>[GC (Allocation Failure)  242485K-&gt;821K(633856K), <span class="hljs-number">0.0020997</span> secs]<br>[GC (Allocation Failure)  291125K-&gt;821K(624128K), <span class="hljs-number">0.0013386</span> secs]<br>[GC (Allocation Failure)  281397K-&gt;821K(614912K), <span class="hljs-number">0.0012273</span> secs]<br>[GC (Allocation Failure)  272181K-&gt;821K(606208K), <span class="hljs-number">0.0014130</span> secs]<br>[GC (Allocation Failure)  263477K-&gt;821K(597504K), <span class="hljs-number">0.0012301</span> secs]<br><span class="hljs-number">728</span><br>[GC (Allocation Failure)  254773K-&gt;821K(589312K), <span class="hljs-number">0.0009970</span> secs]<br>[GC (Allocation Failure)  246581K-&gt;821K(581632K), <span class="hljs-number">0.0019493</span> secs]<br>[GC (Allocation Failure)  238901K-&gt;821K(629248K), <span class="hljs-number">0.0021713</span> secs]<br>[GC (Allocation Failure)  286517K-&gt;821K(686592K), <span class="hljs-number">0.0014060</span> secs]<br>[GC (Allocation Failure)  343861K-&gt;821K(755200K), <span class="hljs-number">0.0017024</span> secs]<br>[GC (Allocation Failure)  412469K-&gt;821K(837632K), <span class="hljs-number">0.0017687</span> secs]<br>[GC (Allocation Failure)  494901K-&gt;821K(818176K), <span class="hljs-number">0.0009257</span> secs]<br><span class="hljs-number">711</span><br>[GC (Allocation Failure)  475445K-&gt;821K(799744K), <span class="hljs-number">0.0011703</span> secs]<br>[GC (Allocation Failure)  457013K-&gt;821K(782336K), <span class="hljs-number">0.0010471</span> secs]<br>[GC (Allocation Failure)  439605K-&gt;821K(765440K), <span class="hljs-number">0.0011883</span> secs]<br>[GC (Allocation Failure)  422709K-&gt;821K(749568K), <span class="hljs-number">0.0011071</span> secs]<br>[GC (Allocation Failure)  406837K-&gt;821K(734208K), <span class="hljs-number">0.0014714</span> secs]<br><br></code></pre></td></tr></table></figure>
 
 
+
+<p>8.59倍，差很多了</p>
+<p>原因是：</p>
+<ul>
+<li>JVM只会缓存部分调用者类型，超过两个则会放弃内联（XX:TypeProfileWidth&#x3D;x可以修改）；</li>
+<li>逃逸分析也不再生效，会触发若干GC。</li>
+</ul>
+<h4 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h4><ul>
+<li><p>用V2版本提前缓存，约提升至5.4倍</p>
+</li>
+<li><p>使用TypeProfileWidth修改监控缓存，即：XX:TypeProfileWidth&#x3D;3：</p>
+</li>
+</ul>
 
                 
               </div>
@@ -421,7 +551,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>深入理解java（异常）</div>
+      <div>深入理解java（异常-反射）</div>
       <div>https://andrewjiao.github.io/2022/09/14/深入理解JAVA/深入理解java（三）/</div>
     </div>
     <div class="license-meta">
